@@ -3,7 +3,7 @@ let app = express();
 
 app.set('views', './src/blocks');
 
-var exphbs = require('express-handlebars');
+let exphbs = require('express-handlebars');
 
 app.engine('handlebars', exphbs({
     defaultLayout: 'main',
