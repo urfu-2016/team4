@@ -20,6 +20,7 @@ let babel = require("gulp-babel");
 let path = {
     build: { //Тут мы укажем куда складывать готовые после сборки файлы
         html: 'build/',
+        hb: 'build/',
         js: 'build/js/',
         css: 'build/css/',
         img: 'build/img/',
@@ -29,6 +30,7 @@ let path = {
     },
     src: { //Пути откуда брать исходники
         html: 'src/blocks/**/*.html', //мы хотим взять все файлы с расширением .html
+        hb: 'src/blocks/**/*.hb', //мы хотим взять все файлы с расширением .html
         js: 'src/blocks/**/*.js',//В стилях и скриптах нам понадобятся только main файлы
         style: 'src/blocks/**/*.css',
         img: 'src/blocks/**/img/*.*', //Синтаксис /**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
@@ -38,6 +40,7 @@ let path = {
     },
     watch: { //Ослеживаем изменения тих файлов
         html: 'src/**/*.html',
+        hb: 'src/**/*.hb',
         js: 'src/**/*.js',
         style: 'src/**/*.css',
         img: 'src/**/img/*.*',
@@ -51,6 +54,12 @@ let path = {
 gulp.task('html:build', () => {
     gulp.src(path.src.html) //Выберем файлы по нужному пути
         .pipe(gulp.dest(path.build.html)) //Выплюнем их в папку build
+        .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
+});
+
+gulp.task('hb:build', () => {
+    gulp.src(path.src.hb) //Выберем файлы по нужному пути
+        .pipe(gulp.dest(path.build.hb)) //Выплюнем их в папку build
         .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
 });
 
@@ -103,8 +112,8 @@ gulp.task('sjs:build', () => {
 });
 
 gulp.task('build', [
-
     'html:build',
+    'hb:build',
     'js:build',
     'style:build',
     'fonts:build',
