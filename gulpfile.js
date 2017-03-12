@@ -57,9 +57,9 @@ gulp.task('html:build', () => {
 gulp.task('js:build', () => {
     gulp.src(path.src.js) //Найдем наш main файл
         .pipe(sourcemaps.init()) //Инициализируем sourcemap
+        .pipe(babel()) //переводим ES6 => ES5
         .pipe(uglify()) //Сожмем наш js
         .pipe(concat('all.js')) //Конкатинируем js
-        .pipe(babel()) //переводим ES6 => ES5
         .pipe(sourcemaps.write()) //Пропишем карты
         .pipe(gulp.dest(path.build.js)) //Выплюнем готовый файл в build
         .pipe(reload({stream: true})); //И перезагрузим сервер
