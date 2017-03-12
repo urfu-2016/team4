@@ -5,12 +5,13 @@ app.set('views', './src/blocks');
 
 var exphbs = require('express-handlebars');
 
-app.engine('handlebars', exphbs({
+app.engine('.hbs', exphbs({
     defaultLayout: 'main',
+    extname: '.hbs',
     layoutsDir:'src/blocks/layouts/',
     partialsDir:'src/blocks/partials/'
 }));
-app.set('view engine', 'handlebars');
+app.set('view engine', '.hbs');
 
 app.set('port', process.env.PORT || 8080);
 
