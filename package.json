@@ -9,6 +9,7 @@
     "babel": "^6.23.0",
     "body-parser": "~1.16.0",
     "browser-sync": "^2.18.8",
+    "cloudinary": "^1.8.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.0",
     "express": "^4.15.2",

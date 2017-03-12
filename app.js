@@ -1,15 +1,15 @@
 let express = require('express');
 let app = express();
 
-app.set('views', './src/blocks');
+app.set('views', './build');
 
 let exphbs = require('express-handlebars');
 
 app.engine('.hbs', exphbs({
     defaultLayout: 'main',
     extname: '.hbs',
-    layoutsDir:'src/blocks/layouts/',
-    partialsDir:'src/blocks/partials/'
+    layoutsDir:'./build/layouts',
+    partialsDir: '/build/hbs'
 }));
 app.set('view engine', '.hbs');
 
