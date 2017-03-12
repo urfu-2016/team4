@@ -13,13 +13,6 @@ app.engine('.hbs', exphbs({
 }));
 app.set('view engine', '.hbs');
 
-app.engine('handlebars', exphbs({
-    defaultLayout: 'main',
-    layoutsDir:'src/blocks/layouts/',
-    partialsDir:'src/blocks/partials/'
-}));
-app.set('view engine', 'handlebars');
-
 app.set('port', process.env.PORT || 8080);
 
 var mongoose = require('mongoose');
