@@ -30,7 +30,7 @@
     "gulp-sourcemaps": "^2.4.1",
     "gulp-uglify": "^2.1.0",
     "gulp-watch": "4.3.11",
-    "imagemin-jpegtran": "^5.0.2"
+    "imagemin-jpegtran": "^5.0.2",
     "serve-favicon": "~2.3.2"
   },
   "engines": {

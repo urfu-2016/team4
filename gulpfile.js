@@ -160,7 +160,6 @@ gulp.task('nodemon', (cb) => {
 gulp.task('webserver', ['nodemon'], () => {
     browserSync({
         proxy: "localhost:8080",  // порт приложения
-        port: 5000,  // другой порт
         notify: true
     });
 });
