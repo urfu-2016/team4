@@ -1,18 +1,18 @@
 'use strict';
 
-let gulp = require('gulp'),
-    watch = require('gulp-watch'),
-    prefixer = require('gulp-autoprefixer'),
-    sourcemaps = require('gulp-sourcemaps'),
-    uglify = require('gulp-uglify'),
-    concat = require("gulp-concat"),
-    cssmin = require('gulp-minify-css'),
-    less = require('gulp-less'),
-    imagemin = require('gulp-imagemin'),
-    browserSync = require("browser-sync"),
-    jpegtran = require('imagemin-jpegtran'),
-    nodemon = require('gulp-nodemon'),
-    reload = browserSync.reload;
+let gulp = require('gulp');
+let watch = require('gulp-watch');
+let prefixer = require('gulp-autoprefixer');
+let sourcemaps = require('gulp-sourcemaps');
+let uglify = require('gulp-uglify');
+let concat = require("gulp-concat");
+let cssmin = require('gulp-minify-css');
+let less = require('gulp-less');
+let imagemin = require('gulp-imagemin');
+let browserSync = require("browser-sync");
+let jpegtran = require('imagemin-jpegtran');
+let nodemon = require('gulp-nodemon');
+let reload = browserSync.reload;
 
 
 let babel = require("gulp-babel");
