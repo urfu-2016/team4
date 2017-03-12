@@ -1,8 +1,14 @@
 language: node_js
 node_js:
-- "6"
+  - "6"
 install:
-- npm install
+  - npm install
+branches:
+  only:
+  - master
+before_script:
+  - npm run lint
+script: gulp
 deploy:
   provider: heroku
   app: super-photo-quest  
