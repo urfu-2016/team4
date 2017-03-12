@@ -9,7 +9,7 @@ app.engine('.hbs', exphbs({
     defaultLayout: 'main',
     extname: '.hbs',
     layoutsDir:'src/blocks/layouts/',
-    partialsDir:'src/blocks/partials/'
+    partialsDir: 'src/blocks/partials/'
 }));
 app.set('view engine', '.hbs');
 
