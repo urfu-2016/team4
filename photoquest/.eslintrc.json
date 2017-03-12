@@ -1,0 +1,7 @@
+{
+    "extends": "xo",
+    "rules": {
+        "max-len": [2, 120],
+        "max-params": [2, 4]
+    }
+}
