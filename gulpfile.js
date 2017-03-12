@@ -1,5 +1,6 @@
 'use strict';
 
+let rename = require('gulp-rename');
 let gulp = require('gulp');
 let watch = require('gulp-watch');
 let prefixer = require('gulp-autoprefixer');
@@ -19,8 +20,8 @@ let babel = require("gulp-babel");
 
 let path = {
     build: { //Тут мы укажем куда складывать готовые после сборки файлы
-        html: 'build/',
-        hb: 'build/',
+        html: 'build/html',
+        hb: 'build/hbs',
         js: 'build/js/',
         css: 'build/css/',
         img: 'build/img/',
@@ -59,6 +60,7 @@ gulp.task('html:build', () => {
 
 gulp.task('hb:build', () => {
     gulp.src(path.src.hb) //Выберем файлы по нужному пути
+        .pipe(rename({dirname: ''}))
         .pipe(gulp.dest(path.build.hb)) //Выплюнем их в папку build
         .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
 });
@@ -113,7 +115,7 @@ gulp.task('sjs:build', () => {
 
 gulp.task('build', [
     'html:build',
-    'hbs:build',
+    'hb:build',
     'js:build',
     'style:build',
     'fonts:build',
