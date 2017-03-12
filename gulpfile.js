@@ -28,6 +28,7 @@ let path = {
         fonts: 'build/fonts/',
         models: 'build/models/',
         view_models: 'build/view_models/',
+        controllers: 'build/controllers/'
     },
     src: { //Пути откуда брать исходники
         html: 'src/blocks/**/*.html', //мы хотим взять все файлы с расширением .html
@@ -38,6 +39,7 @@ let path = {
         fonts: 'src/fonts/**/*.*',
         models: 'src/models/**/*.*',
         view_models: 'src/view_models/**/*.*',
+        controllers: 'src/controllers/**/*.*'
     },
     watch: { //Ослеживаем изменения тих файлов
         html: 'src/**/*.html',
@@ -48,6 +50,7 @@ let path = {
         fonts: 'src/*/fonts/**/*.*',
         models: 'src/models/**/*.*',
         view_models: 'src/view_models/**/*.*',
+        controllers: 'src/controllers/**/*.*'
     },
     clean: './build'
 };
@@ -111,6 +114,8 @@ gulp.task('sjs:build', () => {
         .pipe(gulp.dest(path.build.view_models));
     gulp.src(path.src.models)
         .pipe(gulp.dest(path.build.models));
+    gulp.src(path.src.controllers)
+        .pipe(gulp.dest(path.build.controllers));
 });
 
 gulp.task('build', [
