@@ -1,16 +1,19 @@
 let express = require('express');
 let app = express();
 
-app.set('views', './build');
+app.set('views', './build/views');
 
 let exphbs = require('express-handlebars');
 
 app.engine('.hbs', exphbs({
     defaultLayout: 'main',
     extname: '.hbs',
-    layoutsDir:'./build/layouts',
-    partialsDir: '/build/hbs'
+    layoutsDir: 'build/layouts',
+    partialsDir: 'build/hbs'
 }));
+
+app.use(express.static('build/public'));
+
 app.set('view engine', '.hbs');
 
 app.set('port', process.env.PORT || 8080);
@@ -28,7 +31,7 @@ let mongoOpt = {
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://admin:1qazXSW@ds129090.mlab.com:29090/yaheckaton', mongoOpt);
 
-let routers = require('./src/controllers/routes');
+let routers = require('./build/controllers/routes');
 
 routers.initRouters(app);
 
