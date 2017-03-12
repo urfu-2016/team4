@@ -30,7 +30,7 @@ let path = {
     },
     src: { //Пути откуда брать исходники
         html: 'src/blocks/**/*.html', //мы хотим взять все файлы с расширением .html
-        hb: 'src/blocks/**/*.hb', //мы хотим взять все файлы с расширением .html
+        hb: 'src/blocks/**/*.hbs', //мы хотим взять все файлы с расширением .html
         js: 'src/blocks/**/*.js',//В стилях и скриптах нам понадобятся только main файлы
         style: 'src/blocks/**/*.css',
         img: 'src/blocks/**/img/*.*', //Синтаксис /**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
@@ -40,7 +40,7 @@ let path = {
     },
     watch: { //Ослеживаем изменения тих файлов
         html: 'src/**/*.html',
-        hb: 'src/**/*.hb',
+        hb: 'src/**/*.hbs',
         js: 'src/**/*.js',
         style: 'src/**/*.css',
         img: 'src/**/img/*.*',
@@ -113,7 +113,7 @@ gulp.task('sjs:build', () => {
 
 gulp.task('build', [
     'html:build',
-    'hb:build',
+    'hbs:build',
     'js:build',
     'style:build',
     'fonts:build',
