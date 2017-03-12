@@ -5,6 +5,14 @@ app.set('views', './src/blocks');
 
 var exphbs = require('express-handlebars');
 
+app.engine('.hbs', exphbs({
+    defaultLayout: 'main',
+    extname: '.hbs',
+    layoutsDir:'src/blocks/layouts/',
+    partialsDir:'src/blocks/partials/'
+}));
+app.set('view engine', '.hbs');
+
 app.engine('handlebars', exphbs({
     defaultLayout: 'main',
     layoutsDir:'src/blocks/layouts/',
