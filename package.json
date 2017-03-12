@@ -4,8 +4,6 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/gulp/bin/gulp build && node app.js",
-    "test:watch": "npm run test -- -w",
-    "test": "mocha tests/",
     "lint:js": "eslint src/**/*.js",
     "lint:css": "stylelint src/**/*.css",
     "lint": "npm run lint:js"
