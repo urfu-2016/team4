@@ -113,7 +113,7 @@ gulp.task('sjs:build', () => {
 
 gulp.task('build', [
     'html:build',
-    'hbs:build',
+    'hb:build',
     'js:build',
     'style:build',
     'fonts:build',
