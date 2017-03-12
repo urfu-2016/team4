@@ -1,7 +1,7 @@
 let express = require('express');
 let app = express();
 
-app.set('views', './build/views');
+app.set('views', 'build/views');
 
 let exphbs = require('express-handlebars');
 
@@ -12,7 +12,7 @@ app.engine('.hbs', exphbs({
     partialsDir: 'build/hbs'
 }));
 
-app.use(express.static('build/public'));
+app.use('/static', express.static('build/public'));
 
 app.set('view engine', '.hbs');
 
