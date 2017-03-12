@@ -3,6 +3,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+/* eslint new-cap: 0 */
 const photoSchema = new Schema({
     url: String,
     geoPosition: {

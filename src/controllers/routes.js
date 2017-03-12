@@ -5,6 +5,7 @@ const QuestFilter = require('../view_models/quest-filter');
 require('../models/user');
 require('../models/photo');
 let questFilter = new QuestFilter();
+
 exports.initRouters = app => {
     app.get('/', (req, res) => {
         res.render('main-page', {
@@ -36,43 +37,43 @@ exports.initRouters = app => {
     });
 
     app.get('/profile', () => {
-        //
+        /* eslint no-unused-vars: 0 */
     });
 
     app.get('/profile/:id', () => {
-        //
+        /* eslint no-unused-vars: 0 */
     });
 
     app.get('/quest/:id', () => {
-        //
+        /* eslint no-unused-vars: 0 */
     });
 
     app.get('/quest/:id/details', () => {
-        //
+        /* eslint no-unused-vars: 0 */
     });
 
     app.get('/myquests', () => {
-        //
+        /* eslint no-unused-vars: 0 */
     });
 
     app.get('/newquest', () => {
-        //
+        /* eslint no-unused-vars: 0 */
     });
 
     app.get('/editquest/:id', () => {
-        //
+        /* eslint no-unused-vars: 0 */
     });
 
     app.post('/signin', () => {
-        //
+        /* eslint no-unused-vars: 0 */
     });
 
     app.post('/signup', () => {
-        //
+        /* eslint no-unused-vars: 0 */
     });
 
     app.post('/rating', () => {
-        //
+        /* eslint no-unused-vars: 0 */
     });
 
     app.use((req, res) => {

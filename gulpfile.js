@@ -21,6 +21,7 @@ const babel = require('gulp-babel');
 const Path = require('path');
 const tap = require('gulp-tap');
 const util = require('util');
+<<<<<<< ec08867e7a8bb3b20ca5d58c5dfff6eee9346c4e
 const merge = require('merge-stream');
 const plumber = require('gulp-plumber');
 const lesshint = require('gulp-lesshint');
@@ -34,8 +35,16 @@ const htmlmin = require('gulp-htmlmin');
 let path = {
 
     build: { // тут мы укажем куда складывать готовые после сборки файлы
+=======
+const path = {
+
+    build: { // Тут мы укажем куда складывать готовые после сборки файлы
+>>>>>>> починила линт
         html: 'build/html',
         hb: 'build/hbs',
+        js: 'build/js/',
+        css: 'build/css/',
+        img: 'build/img/',
         layouts: 'build/layouts/',
         js: 'build/public/js/',
         css: 'build/public/css/',
@@ -45,6 +54,7 @@ let path = {
         viewModels: 'build/view_models/',
         controllers: 'build/controllers/'
     },
+<<<<<<< ec08867e7a8bb3b20ca5d58c5dfff6eee9346c4e
     src: { // пути откуда брать исходники
         html: 'src/blocks/**/*.html', // мы хотим взять все файлы с расширением .html
         hb: 'src/blocks/**/*.hbs', // мы хотим взять все файлы с расширением .html
@@ -54,6 +64,28 @@ let path = {
         styleRaw: 'src/blocks/**/*.css',
         img: 'src/blocks/**/img/*.*',
         // синтаксис /**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
+=======
+    src: { // Пути откуда брать исходники
+        html: 'src/blocks/**/*.html', // мы хотим взять все файлы с расширением .html
+        hb: 'src/blocks/**/*.hbs', // мы хотим взять все файлы с расширением .html
+        layouts: 'src/blocks/layouts/*.hbs', //layouts берем отсюда
+        js: 'src/blocks/**/*.js', // В стилях и скриптах нам понадобятся только main файлы
+        style: 'src/blocks/**/*.less',
+        img: 'src/blocks/**/img/*.*', //Синтаксис /**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
+        fonts: 'src/fonts/**/*.*',
+        models: 'src/models/**/*.*',
+        view_models: 'src/view_models/**/*.*',
+        controllers: 'src/controllers/**/*.*'
+    },
+
+    watch: { //Ослеживаем изменения тих файлов
+        html: 'src/**/*.html',
+        hb: 'src/**/*.hbs',
+        js: 'src/**/*.js',
+        style: 'src/**/*.css',
+        img: 'src/**/img/*.*',
+        fonts: 'src/*/fonts/**/*.*',
+>>>>>>> починила линт
         fonts: 'src/fonts/**/*.*',
         models: 'src/models/**/*.*',
         viewModels: 'src/view_models/**/*.*',
@@ -146,11 +178,21 @@ gulp.task('hb:build', () => {
         .pipe(gulp.dest(path.build.hb)) // выплюнем их в папку build
         .pipe(livereload()); // и перезагрузим наш сервер для обновлений
 
+<<<<<<< ec08867e7a8bb3b20ca5d58c5dfff6eee9346c4e
     gulp.src(path.src.layouts) // выберем файлы по нужному пути
         .pipe(plumber())
         .pipe(gulp.dest(path.build.layouts)) // выплюнем их в папку build
         .pipe(changed({firstPass: firstPass}))
         .pipe(livereload()); // и перезагрузим наш сервер для обновлений
+=======
+        .pipe(gulp.dest(path.build.hb)) // Выплюнем их в папку build
+        .pipe(reload({stream: true})); // И перезагрузим наш сервер для обновлений
+
+    gulp.src(path.src.layouts) //Выберем файлы по нужному пути
+        .pipe(gulp.dest(path.build.layouts)) //Выплюнем их в папку build
+        .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
+
+>>>>>>> починила линт
 });
 
 gulp.task('js:build', () => {
@@ -170,9 +212,16 @@ gulp.task('js:build', () => {
 });
 
 gulp.task('style:build', () => {
+<<<<<<< ec08867e7a8bb3b20ca5d58c5dfff6eee9346c4e
     let lessStream = gulp.src(path.src.style)
         .pipe(plumber())
         .pipe(tap(file => {
+=======
+    gulp.src(path.src.style) //Выберем наши less файлы
+        .pipe(sourcemaps.init()) // То же самое что и с js
+        .pipe(tap((file, t) => {
+
+>>>>>>> починила линт
             let className = getUniqueBlockName(Path.dirname(file.relative));
             if (!className) {
                 return;
@@ -188,6 +237,7 @@ gulp.task('style:build', () => {
         .pipe(less())
         .pipe(concat('less-files.css'));
 
+<<<<<<< ec08867e7a8bb3b20ca5d58c5dfff6eee9346c4e
     let cssStream = gulp.src(path.src.styleRaw)
         .pipe(concat('css-files.css'));
 
@@ -201,6 +251,15 @@ gulp.task('style:build', () => {
         .pipe(gulp.dest(path.build.css)) // и в build
         .pipe(changed({firstPass: firstPass}))
         .pipe(livereload());
+=======
+        .pipe(less()) // Скомпилируем
+        .pipe(prefixer()) // Добавим вендорные префиксы
+        .pipe(cssmin()) // Сожмем
+        .pipe(concat('all.css')) // Конкатинируем css
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(path.build.css)) // И в build
+        .pipe(reload({stream: true}));
+>>>>>>> починила линт
 });
 
 gulp.task('image:build', () => {
