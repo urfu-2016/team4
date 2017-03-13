@@ -36,7 +36,6 @@ const path = {
     },
     src: { //Пути откуда брать исходники
         html: 'src/blocks/**/*.html', //мы хотим взять все файлы с расширением .html
-
         hb: 'src/blocks/**/*.hbs', //мы хотим взять все файлы с расширением .html
         views: 'src/blocks/*.hbs', //туту будут лежать вьюхи
         layouts: 'src/blocks/layouts/*.hbs', //layouts берем отсюда
@@ -66,6 +65,10 @@ const path = {
 };
 
 function getUniqueBlockName(directory) {
+    if (directory === '.') {
+
+        return '';
+    }
 
     return directory.split(Path.sep).join('-');
 }
@@ -77,9 +80,8 @@ gulp.task('html:build', () => {
 });
 
 gulp.task('hb:build', () => {
-    gulp.src([path.src.hb, '!' + path.src.layouts]) //Выберем файлы по нужному пути
+    gulp.src([path.src.hb, '!' + path.src.layouts, '!' + path.src.views]) //Выберем файлы по нужному пути
         .pipe(tap((file, t) => {
-
             let className = getUniqueBlockName(Path.dirname(file.relative));
             file.contents = Buffer.concat([
                 new Buffer(util.format('<div class="%s">\n', className)),
@@ -125,11 +127,16 @@ gulp.task('style:build', () => {
         .pipe(tap((file, t) => {
 
             let className = getUniqueBlockName(Path.dirname(file.relative));
+            if (!className) {
+
+                return;
+            }
             file.contents = Buffer.concat([
                 new Buffer('.' + className),
                 file.contents
             ]);
         }))
+
         .pipe(less()) //Скомпилируем
         .pipe(prefixer()) //Добавим вендорные префиксы
         .pipe(cssmin()) //Сожмем
