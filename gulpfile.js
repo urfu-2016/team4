@@ -14,9 +14,6 @@ let browserSync = require("browser-sync");
 let jpegtran = require('imagemin-jpegtran');
 let nodemon = require('gulp-nodemon');
 let reload = browserSync.reload;
-
-
-
 let babel = require("gulp-babel");
 
 let path = {
