@@ -1,7 +1,7 @@
 let express = require('express');
 let app = express();
 
-app.set('views', 'build/views');
+app.set('views', 'build/hbs');
 
 let exphbs = require('express-handlebars');
 
