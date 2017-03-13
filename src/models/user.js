@@ -23,6 +23,10 @@ var userSchema = mongoose.Schema({
             ref: 'photo'
         }],
         whoAmI: Number
+    }],
+    likeQuests: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'quest'
     }]
 });
 

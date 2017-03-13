@@ -28,8 +28,13 @@ let mongoOpt = {
     }
 };
 
+// user и пароль от монго
+const credentials = require('./credentials');
+
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://admin:1qazXSW@ds129090.mlab.com:29090/yaheckaton', mongoOpt);
+mongoose.connect(
+    'mongodb://' + credentials.MONGO_USER + ':' +
+    credentials.MONGO_PASS + '@ds129090.mlab.com:29090/yaheckaton', mongoOpt);
 
 let routers = require('./build/controllers/routes');
 
