@@ -10,12 +10,14 @@ const concat = require('gulp-concat');
 const cssmin = require('gulp-minify-css');
 const less = require('gulp-less');
 const imagemin = require('gulp-imagemin');
-const browserSync = require("browser-sync");
+const browserSync = require('browser-sync');
 const jpegtran = require('imagemin-jpegtran');
 const nodemon = require('gulp-nodemon');
 const reload = browserSync.reload;
 const babel = require('gulp-babel');
 const Path = require('path');
+const tap = require('gulp-tap');
+const util = require('util');
 
 const path = {
 
@@ -63,6 +65,11 @@ const path = {
     clean: './build'
 };
 
+function getUniqueBlockName(directory) {
+
+    return directory.split(Path.sep).join('-');
+}
+
 gulp.task('html:build', () => {
     gulp.src(path.src.html) //Выберем файлы по нужному пути
         .pipe(gulp.dest(path.build.html)) //Выплюнем их в папку build
@@ -71,14 +78,24 @@ gulp.task('html:build', () => {
 
 gulp.task('hb:build', () => {
     gulp.src([path.src.hb, '!' + path.src.layouts]) //Выберем файлы по нужному пути
+        .pipe(tap((file, t) => {
+
+            let className = getUniqueBlockName(Path.dirname(file.relative));
+            file.contents = Buffer.concat([
+                new Buffer(util.format('<div class="%s">\n', className)),
+                file.contents,
+                new Buffer('<\div>')
+            ]);
+        }))
         .pipe(rename((path) => {
             //для того чтобы не было колизий в partials имена в build
             //будут выглядеть так: путь-до-файла-из-blocks-файл.hbs
             //в шаблонах partials нужно будет указывать именно так
             let dir = path.dirname;
             path.dirname = '';
-            path.basename = dir.split(Path.sep).join('-')
+            path.basename = getUniqueBlockName(dir);
         }))
+
         .pipe(gulp.dest(path.build.hb)) //Выплюнем их в папку build
         .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
 
@@ -105,6 +122,14 @@ gulp.task('js:build', () => {
 gulp.task('style:build', () => {
     gulp.src(path.src.style) //Выберем наши less файлы
         .pipe(sourcemaps.init()) //То же самое что и с js
+        .pipe(tap((file, t) => {
+
+            let className = getUniqueBlockName(Path.dirname(file.relative));
+            file.contents = Buffer.concat([
+                new Buffer('.' + className),
+                file.contents
+            ]);
+        }))
         .pipe(less()) //Скомпилируем
         .pipe(prefixer()) //Добавим вендорные префиксы
         .pipe(cssmin()) //Сожмем
@@ -183,6 +208,9 @@ gulp.task('watch', () => {
     });
     watch([path.watch.fonts], (event, cb) => {
         gulp.start('fonts:build');
+    });
+    watch(['gulpfile.js'], (event, cb) => {
+        gulp.start('build');
     });
 });
 
