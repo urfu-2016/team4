@@ -25,7 +25,6 @@ const path = {
         html: 'build/html',
         hb: 'build/hbs',
         layouts: 'build/layouts/',
-        views: 'build/views',
         js: 'build/public/js/',
         css: 'build/public/css/',
         img: 'build/public/img/',
@@ -37,7 +36,6 @@ const path = {
     src: { //Пути откуда брать исходники
         html: 'src/blocks/**/*.html', //мы хотим взять все файлы с расширением .html
         hb: 'src/blocks/**/*.hbs', //мы хотим взять все файлы с расширением .html
-        views: 'src/blocks/*.hbs', //туту будут лежать вьюхи
         layouts: 'src/blocks/layouts/*.hbs', //layouts берем отсюда
         js: 'src/blocks/**/*.js',//В стилях и скриптах нам понадобятся только main файлы
         style: 'src/blocks/**/*.less',
@@ -51,7 +49,6 @@ const path = {
     watch: { //Ослеживаем изменения тих файлов
         html: 'src/blocks/**/*.html',
         hb: 'src/blocks/**/*.hbs',
-        views: 'src/blocks/*.hbs',
         layouts: 'src/blocks/*.hbs',
         js: 'src/blocks/**/*.js',
         style: 'src/blocks/**/*.less',
@@ -80,7 +77,7 @@ gulp.task('html:build', () => {
 });
 
 gulp.task('hb:build', () => {
-    gulp.src([path.src.hb, '!' + path.src.layouts, '!' + path.src.views]) //Выберем файлы по нужному пути
+    gulp.src([path.src.hb, '!' + path.src.layouts]) //Выберем файлы по нужному пути
         .pipe(tap((file, t) => {
             let className = getUniqueBlockName(Path.dirname(file.relative));
             file.contents = Buffer.concat([
@@ -105,9 +102,6 @@ gulp.task('hb:build', () => {
         .pipe(gulp.dest(path.build.layouts)) //Выплюнем их в папку build
         .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
 
-    gulp.src(path.src.views) //Выберем файлы по нужному пути
-        .pipe(gulp.dest(path.build.views)) //Выплюнем их в папку build
-        .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
 });
 
 gulp.task('js:build', () => {
@@ -191,9 +185,6 @@ gulp.task('watch', () => {
         gulp.start('style:build');
     });
     watch([path.watch.layouts], (event, cb) => {
-        gulp.start('hb:build');
-    });
-    watch([path.watch.views], (event, cb) => {
         gulp.start('hb:build');
     });
     watch([path.watch.js], (event, cb) => {
