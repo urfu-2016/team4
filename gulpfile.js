@@ -18,6 +18,7 @@ const babel = require('gulp-babel');
 const Path = require('path');
 
 const path = {
+
     build: { //Тут мы укажем куда складывать готовые после сборки файлы
         html: 'build/html',
         hb: 'build/hbs',
@@ -33,24 +34,26 @@ const path = {
     },
     src: { //Пути откуда брать исходники
         html: 'src/blocks/**/*.html', //мы хотим взять все файлы с расширением .html
+
         hb: 'src/blocks/**/*.hbs', //мы хотим взять все файлы с расширением .html
         views: 'src/blocks/*.hbs', //туту будут лежать вьюхи
         layouts: 'src/blocks/layouts/*.hbs', //layouts берем отсюда
         js: 'src/blocks/**/*.js',//В стилях и скриптах нам понадобятся только main файлы
-        style: 'src/blocks/**/*.css',
+        style: 'src/blocks/**/*.less',
         img: 'src/blocks/**/img/*.*', //Синтаксис /**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
         fonts: 'src/fonts/**/*.*',
         models: 'src/models/**/*.*',
         view_models: 'src/view_models/**/*.*',
         controllers: 'src/controllers/**/*.*'
     },
+
     watch: { //Ослеживаем изменения тих файлов
         html: 'src/blocks/**/*.html',
         hb: 'src/blocks/**/*.hbs',
         views: 'src/blocks/*.hbs',
         layouts: 'src/blocks/*.hbs',
         js: 'src/blocks/**/*.js',
-        style: 'src/blocks/**/*.css',
+        style: 'src/blocks/**/*.less',
         img: 'src/blocks/**/img/*.*',
         fonts: 'src/fonts/**/*.*',
         models: 'src/models/**/*.*',
@@ -100,7 +103,7 @@ gulp.task('js:build', () => {
 });
 
 gulp.task('style:build', () => {
-    gulp.src(path.src.style) //Выберем наш main.scss
+    gulp.src(path.src.style) //Выберем наши less файлы
         .pipe(sourcemaps.init()) //То же самое что и с js
         .pipe(less()) //Скомпилируем
         .pipe(prefixer()) //Добавим вендорные префиксы
@@ -127,7 +130,6 @@ gulp.task('fonts:build', () => {
     gulp.src(path.src.fonts)
         .pipe(gulp.dest(path.build.fonts))
 });
-
 
 gulp.task('sjs:build', () => {
     gulp.src(path.src.view_models)
@@ -209,7 +211,6 @@ gulp.task('nodemon', (cb) => {
             }, 1000);
         });
 });
-
 
 gulp.task('webserver', ['nodemon'], () => {
     browserSync({
