@@ -34,8 +34,8 @@ const credentials = require('./credentials');
 mongoose.Promise = global.Promise;
 mongoose.connect(
     'mongodb://' +
-    process.env.MONGO_USER || credentials.MONGO_USER + ':' +
-    process.env.MONGO_PASS || credentials.MONGO_PASS + '@ds129090.mlab.com:29090/yaheckaton', mongoOpt);
+    (process.env.MONGO_USER || credentials.MONGO_USER) + ':' +
+    (process.env.MONGO_PASS || credentials.MONGO_PASS) + '@ds129090.mlab.com:29090/yaheckaton', mongoOpt);
 
 let routers = require('./build/controllers/routes');
 
