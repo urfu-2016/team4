@@ -6,10 +6,10 @@ app.set('views', 'build/hbs');
 let exphbs = require('express-handlebars');
 
 app.engine('.hbs', exphbs({
-    defaultLayout: 'main',
-    extname: '.hbs',
-    layoutsDir: 'build/layouts',
-    partialsDir: 'build/hbs'
+	defaultLayout: 'main',
+	extname: '.hbs',
+	layoutsDir: 'build/layouts',
+	partialsDir: 'build/hbs'
 }));
 
 middlewares.init(app);
@@ -21,11 +21,11 @@ app.set('port', process.env.PORT || 8080);
 let mongoose = require('mongoose');
 
 let mongoOpt = {
-    server: {
-        socketOptions: {
-            keepAlive: 1
-        }
-    }
+	server: {
+		socketOptions: {
+			keepAlive: 1
+		}
+	}
 };
 
 mongoose.Promise = global.Promise;
@@ -40,7 +40,7 @@ let routers = require('./build/controllers/routes');
 routers.initRouters(app);
 
 app.listen(app.get('port'), function () {
-    console.log('Server start on ' +
+	console.log('Server start on ' +
         app.get('port') +
         '. Ctrl + C for exit.');
 });

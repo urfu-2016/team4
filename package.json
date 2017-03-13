@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/gulp/bin/gulp build && node app.js",
+    "test:watch": "npm run test -- -w",
+    "test": "mocha tests/",
     "lint:js": "eslint src/**/*.js",
     "lint:css": "stylelint src/**/*.css",
-    "lint": "npm run lint:js"
+    "lint": "npm test & npm run lint:js"
   },
   "dependencies": {
     "babel": "^6.23.0",
@@ -49,6 +51,7 @@
     "npm": "3.10.x"
   },
   "devDependencies": {
+<<<<<<< 95980db34d85aed4141607dd4b9ed02483bd02ac
     "babel-plugin-transform-es2015-arrow-functions": "^6.22.0",
     "babel-plugin-transform-es2015-block-scoping": "^6.23.0",
     "babel-plugin-transform-es2015-parameters": "^6.23.0",
@@ -68,6 +71,9 @@
     "rimraf": "^2.6.1",
     "run-sequence": "^1.2.2",
     "stylelint-config-standard": "^16.0.0"
+=======
+    "assert": "^1.4.1",
+>>>>>>> настроила тесты
     "eslint": "^3.17.1",
     "eslint-config-xo": "^0.17.0",
     "mocha": "^3.2.0",
