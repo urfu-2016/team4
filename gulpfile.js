@@ -132,8 +132,9 @@ gulp.task('style:build', () => {
                 return;
             }
             file.contents = Buffer.concat([
-                new Buffer('.' + className),
-                file.contents
+                new Buffer('.' + className+"{\n"),
+                file.contents,
+                new Buffer("}"),
             ]);
         }))
 
