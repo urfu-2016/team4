@@ -16,6 +16,7 @@ let nodemon = require('gulp-nodemon');
 let reload = browserSync.reload;
 
 
+
 let babel = require("gulp-babel");
 
 let path = {
@@ -32,20 +33,20 @@ let path = {
     },
     src: { //Пути откуда брать исходники
         html: 'src/blocks/**/*.html', //мы хотим взять все файлы с расширением .html
-        hb: 'src/blocks/**/*.hbs', //мы хотим взять все файлы с расширением .html
-        js: 'src/blocks/**/*.js',//В стилях и скриптах нам понадобятся только main файлы
-        style: 'src/blocks/**/*.css',
+        hb: 'src/blocks/**/*.hbs', //мы хотим взять все файлы с расширением .hbs
+        js: 'src/blocks/**/*.js',
+        style: 'src/blocks/**/*.less', //less файлы скомпилятся в all.css
         img: 'src/blocks/**/img/*.*', //Синтаксис /**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
         fonts: 'src/fonts/**/*.*',
         models: 'src/models/**/*.*',
         view_models: 'src/view_models/**/*.*',
         controllers: 'src/controllers/**/*.*'
     },
-    watch: { //Ослеживаем изменения тих файлов
+    watch: { //Ослеживаем изменения этих файлов
         html: 'src/**/*.html',
         hb: 'src/**/*.hbs',
         js: 'src/**/*.js',
-        style: 'src/**/*.css',
+        style: 'src/**/*.less',
         img: 'src/**/img/*.*',
         fonts: 'src/*/fonts/**/*.*',
         models: 'src/models/**/*.*',
@@ -80,7 +81,7 @@ gulp.task('js:build', () => {
 });
 
 gulp.task('style:build', () => {
-    gulp.src(path.src.style) //Выберем наш main.scss
+    gulp.src(path.src.style) //Выберем наши less файлы
         .pipe(sourcemaps.init()) //То же самое что и с js
         .pipe(less()) //Скомпилируем
         .pipe(prefixer()) //Добавим вендорные префиксы
@@ -107,7 +108,6 @@ gulp.task('fonts:build', () => {
     gulp.src(path.src.fonts)
         .pipe(gulp.dest(path.build.fonts))
 });
-
 
 gulp.task('sjs:build', () => {
     gulp.src(path.src.view_models)
@@ -171,7 +171,6 @@ gulp.task('nodemon', (cb) => {
             }, 1000);
         });
 });
-
 
 gulp.task('webserver', ['nodemon'], () => {
     browserSync({

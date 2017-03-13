@@ -29,6 +29,7 @@
     "gulp-watch": "4.3.11",
     "hbs": "~4.0.1",
     "imagemin-jpegtran": "^5.0.2",
+    "less": "^2.7.2",
     "mongoose": "^4.7.7",
     "morgan": "~1.7.0",
     "serve-favicon": "~2.3.2"
