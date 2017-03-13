@@ -1,30 +1,31 @@
 'use strict';
 
-let rename = require('gulp-rename');
-let gulp = require('gulp');
-let watch = require('gulp-watch');
-let prefixer = require('gulp-autoprefixer');
-let sourcemaps = require('gulp-sourcemaps');
-let uglify = require('gulp-uglify');
-let concat = require("gulp-concat");
-let cssmin = require('gulp-minify-css');
-let less = require('gulp-less');
-let imagemin = require('gulp-imagemin');
-let browserSync = require("browser-sync");
-let jpegtran = require('imagemin-jpegtran');
-let nodemon = require('gulp-nodemon');
-let reload = browserSync.reload;
+const rename = require('gulp-rename');
+const gulp = require('gulp');
+const watch = require('gulp-watch');
+const prefixer = require('gulp-autoprefixer');
+const sourcemaps = require('gulp-sourcemaps');
+const uglify = require('gulp-uglify');
+const concat = require('gulp-concat');
+const cssmin = require('gulp-minify-css');
+const less = require('gulp-less');
+const imagemin = require('gulp-imagemin');
+const browserSync = require("browser-sync");
+const jpegtran = require('imagemin-jpegtran');
+const nodemon = require('gulp-nodemon');
+const reload = browserSync.reload;
+const babel = require('gulp-babel');
+const Path = require('path');
 
-
-let babel = require("gulp-babel");
-
-let path = {
+const path = {
     build: { //Тут мы укажем куда складывать готовые после сборки файлы
         html: 'build/html',
         hb: 'build/hbs',
-        js: 'build/js/',
-        css: 'build/css/',
-        img: 'build/img/',
+        layouts: 'build/layouts/',
+        views: 'build/views',
+        js: 'build/public/js/',
+        css: 'build/public/css/',
+        img: 'build/public/img/',
         fonts: 'build/fonts/',
         models: 'build/models/',
         view_models: 'build/view_models/',
@@ -33,6 +34,8 @@ let path = {
     src: { //Пути откуда брать исходники
         html: 'src/blocks/**/*.html', //мы хотим взять все файлы с расширением .html
         hb: 'src/blocks/**/*.hbs', //мы хотим взять все файлы с расширением .html
+        views: 'src/blocks/*.hbs', //туту будут лежать вьюхи
+        layouts: 'src/blocks/layouts/*.hbs', //layouts берем отсюда
         js: 'src/blocks/**/*.js',//В стилях и скриптах нам понадобятся только main файлы
         style: 'src/blocks/**/*.css',
         img: 'src/blocks/**/img/*.*', //Синтаксис /**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
@@ -42,12 +45,14 @@ let path = {
         controllers: 'src/controllers/**/*.*'
     },
     watch: { //Ослеживаем изменения тих файлов
-        html: 'src/**/*.html',
-        hb: 'src/**/*.hbs',
-        js: 'src/**/*.js',
-        style: 'src/**/*.css',
-        img: 'src/**/img/*.*',
-        fonts: 'src/*/fonts/**/*.*',
+        html: 'src/blocks/**/*.html',
+        hb: 'src/blocks/**/*.hbs',
+        views: 'src/blocks/*.hbs',
+        layouts: 'src/blocks/*.hbs',
+        js: 'src/blocks/**/*.js',
+        style: 'src/blocks/**/*.css',
+        img: 'src/blocks/**/img/*.*',
+        fonts: 'src/fonts/**/*.*',
         models: 'src/models/**/*.*',
         view_models: 'src/view_models/**/*.*',
         controllers: 'src/controllers/**/*.*'
@@ -62,9 +67,24 @@ gulp.task('html:build', () => {
 });
 
 gulp.task('hb:build', () => {
-    gulp.src(path.src.hb) //Выберем файлы по нужному пути
-        .pipe(rename({dirname: ''}))
+    gulp.src([path.src.hb, '!' + path.src.layouts]) //Выберем файлы по нужному пути
+        .pipe(rename((path) => {
+            //для того чтобы не было колизий в partials имена в build
+            //будут выглядеть так: путь-до-файла-из-blocks-файл.hbs
+            //в шаблонах partials нужно будет указывать именно так
+            let dir = path.dirname;
+            path.dirname = '';
+            path.basename = dir.split(Path.sep).join('-')
+        }))
         .pipe(gulp.dest(path.build.hb)) //Выплюнем их в папку build
+        .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
+
+    gulp.src(path.src.layouts) //Выберем файлы по нужному пути
+        .pipe(gulp.dest(path.build.layouts)) //Выплюнем их в папку build
+        .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
+
+    gulp.src(path.src.views) //Выберем файлы по нужному пути
+        .pipe(gulp.dest(path.build.views)) //Выплюнем их в папку build
         .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
 });
 
@@ -135,8 +155,26 @@ gulp.task('watch', () => {
     watch([path.watch.style], (event, cb) => {
         gulp.start('style:build');
     });
+    watch([path.watch.layouts], (event, cb) => {
+        gulp.start('hb:build');
+    });
+    watch([path.watch.views], (event, cb) => {
+        gulp.start('hb:build');
+    });
     watch([path.watch.js], (event, cb) => {
         gulp.start('js:build');
+    });
+    watch([path.watch.hb], (event, cb) => {
+        gulp.start('hb:build');
+    });
+    watch([path.watch.controllers], (event, cb) => {
+        gulp.start('sjs:build');
+    });
+    watch([path.watch.models], (event, cb) => {
+        gulp.start('sjs:build');
+    });
+    watch([path.watch.view_models], (event, cb) => {
+        gulp.start('sjs:build');
     });
     watch([path.watch.img], (event, cb) => {
         gulp.start('image:build');
