@@ -29,7 +29,7 @@ let mongoOpt = {
 };
 
 // user и пароль от монго
-const credentials = require('./credentials');
+// const credentials = require('./credentials');
 
 mongoose.Promise = global.Promise;
 mongoose.connect(
