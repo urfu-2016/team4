@@ -6,8 +6,7 @@
 
 exports.initRouters = function (app) {
     app.get('/', function (req, res) {
-        // res.render('main-page');
-        res.send("123");
+        res.render('main-page');
     });
 
     app.get('/profile', function (req, res) {
