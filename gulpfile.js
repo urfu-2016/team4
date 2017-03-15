@@ -62,6 +62,10 @@ const path = {
 };
 
 function getUniqueBlockName(directory) {
+    /**
+     * @param directory: String - директория относительно src/blocks/
+     * @returns String - уникальное имя компоненты
+     */
     if (directory === '.') {
 
         return '';
@@ -76,15 +80,28 @@ gulp.task('html:build', () => {
         .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
 });
 
+function bufferReplace(file, match, str) {
+    /**
+     * @param file: File - Файл в котором заменяем даные
+     * @param match: String/RegEx - шаблон, по которому будем сравнивать строки
+     * @param str: String - строка, на которую будет заменена строка, подходящая под шаблон
+     * @returns None
+     */
+    file.contents = new Buffer(file.contents.toString().replace(match, str));
+}
+
 gulp.task('hb:build', () => {
     gulp.src([path.src.hb, '!' + path.src.layouts]) //Выберем файлы по нужному пути
         .pipe(tap((file, t) => {
-            let className = getUniqueBlockName(Path.dirname(file.relative));
+            let dir = Path.dirname(file.relative);
+            let className = getUniqueBlockName(dir);
             file.contents = Buffer.concat([
                 new Buffer(util.format('<div class="%s">\n', className)),
                 file.contents,
                 new Buffer('<\div>')
             ]);
+            //меняем адреса с картинками на /static/img...
+            bufferReplace(file, /img\/([A-Za-z0-9\.]+)/, '/static/img/'+dir+'/img/$1');
         }))
         .pipe(rename((path) => {
             //для того чтобы не было колизий в partials имена в build
@@ -94,7 +111,6 @@ gulp.task('hb:build', () => {
             path.dirname = '';
             path.basename = getUniqueBlockName(dir);
         }))
-
         .pipe(gulp.dest(path.build.hb)) //Выплюнем их в папку build
         .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
 
@@ -126,10 +142,12 @@ gulp.task('style:build', () => {
                 return;
             }
             file.contents = Buffer.concat([
-                new Buffer('.' + className+"{\n"),
+                new Buffer('.' + className + "{\n"),
                 file.contents,
                 new Buffer("}"),
             ]);
+            //меняем адреса с картинками на /static/img...
+            bufferReplace(file, /img\/([A-Za-z0-9\.]+)/, '/static/img/'+file.relative+'/img/$1');
         }))
 
         .pipe(less()) //Скомпилируем
