@@ -4,9 +4,9 @@
 
 'use strict';
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var userSchema = mongoose.Schema({
+const userSchema = mongoose.Schema({
     id: Number,
     name: String,
     password: String,
@@ -30,6 +30,4 @@ var userSchema = mongoose.Schema({
     }]
 });
 
-var user = mongoose.model('quest', userSchema);
-
-module.exports = user;
+module.exports = mongoose.model('user', userSchema);
