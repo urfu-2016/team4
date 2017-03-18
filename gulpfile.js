@@ -98,7 +98,7 @@ gulp.task('hb:build', () => {
             file.contents = Buffer.concat([
                 new Buffer(util.format('<div class="%s">\n', className)),
                 file.contents,
-                new Buffer('<\div>')
+                new Buffer('</div>')
             ]);
             //меняем адреса с картинками на /static/img...
             bufferReplace(file, /img\/([A-Za-z0-9\.]+)/, '/static/img/'+dir+'/img/$1');
