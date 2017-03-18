@@ -13,7 +13,7 @@ app.engine('.hbs', exphbs({
 }));
 
 app.use('/static', express.static('build/public'));
-
+app.use(require('connect-livereload')());
 app.set('view engine', '.hbs');
 
 app.set('port', process.env.PORT || 8080);

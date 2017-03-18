@@ -7,19 +7,20 @@ const prefixer = require('gulp-autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
 const concat = require('gulp-concat');
-const cssmin = require('gulp-minify-css');
+const cleanCSS = require('gulp-minify-css');
 const less = require('gulp-less');
 const imagemin = require('gulp-imagemin');
-const browserSync = require('browser-sync');
+const promise = require('promise');
 const jpegtran = require('imagemin-jpegtran');
 const nodemon = require('gulp-nodemon');
-const reload = browserSync.reload;
 const babel = require('gulp-babel');
 const Path = require('path');
 const tap = require('gulp-tap');
 const util = require('util');
+const merge = require('merge-stream');
+const server = require('gulp-express');
 
-const path = {
+let path = {
 
     build: { //Тут мы укажем куда складывать готовые после сборки файлы
         html: 'build/html',
@@ -39,6 +40,7 @@ const path = {
         layouts: 'src/blocks/layouts/*.hbs', //layouts берем отсюда
         js: 'src/blocks/**/*.js',//В стилях и скриптах нам понадобятся только main файлы
         style: 'src/blocks/**/*.less',
+        style_raw: 'src/blocks/**/*.css',
         img: 'src/blocks/**/img/*.*', //Синтаксис /**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
         fonts: 'src/fonts/**/*.*',
         models: 'src/models/**/*.*',
@@ -46,20 +48,10 @@ const path = {
         controllers: 'src/controllers/**/*.*'
     },
 
-    watch: { //Ослеживаем изменения тих файлов
-        html: 'src/blocks/**/*.html',
-        hb: 'src/blocks/**/*.hbs',
-        layouts: 'src/blocks/*.hbs',
-        js: 'src/blocks/**/*.js',
-        style: 'src/blocks/**/*.less',
-        img: 'src/blocks/**/img/*.*',
-        fonts: 'src/fonts/**/*.*',
-        models: 'src/models/**/*.*',
-        view_models: 'src/view_models/**/*.*',
-        controllers: 'src/controllers/**/*.*'
-    },
     clean: './build'
 };
+
+path.watch = path.src;
 
 function getUniqueBlockName(directory) {
     /**
@@ -77,7 +69,7 @@ function getUniqueBlockName(directory) {
 gulp.task('html:build', () => {
     gulp.src(path.src.html) //Выберем файлы по нужному пути
         .pipe(gulp.dest(path.build.html)) //Выплюнем их в папку build
-        .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
+        .pipe(server.notify()); //И перезагрузим наш сервер для обновлений
 });
 
 function bufferReplace(file, match, str) {
@@ -112,11 +104,11 @@ gulp.task('hb:build', () => {
             path.basename = getUniqueBlockName(dir);
         }))
         .pipe(gulp.dest(path.build.hb)) //Выплюнем их в папку build
-        .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
+        .pipe(server.notify()); //И перезагрузим наш сервер для обновлений
 
     gulp.src(path.src.layouts) //Выберем файлы по нужному пути
         .pipe(gulp.dest(path.build.layouts)) //Выплюнем их в папку build
-        .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
+        .pipe(server.notify()); //И перезагрузим наш сервер для обновлений
 
 });
 
@@ -128,14 +120,12 @@ gulp.task('js:build', () => {
         .pipe(concat('all.js')) //Конкатинируем js
         .pipe(sourcemaps.write()) //Пропишем карты
         .pipe(gulp.dest(path.build.js)) //Выплюнем готовый файл в build
-        .pipe(reload({stream: true})); //И перезагрузим сервер
+        .pipe(server.notify()); //И перезагрузим сервер
 });
 
 gulp.task('style:build', () => {
-    gulp.src(path.src.style) //Выберем наши less файлы
-        .pipe(sourcemaps.init()) //То же самое что и с js
+    let lessStream = gulp.src(path.src.style)
         .pipe(tap((file, t) => {
-
             let className = getUniqueBlockName(Path.dirname(file.relative));
             if (!className) {
 
@@ -149,14 +139,23 @@ gulp.task('style:build', () => {
             //меняем адреса с картинками на /static/img...
             bufferReplace(file, /img\/([A-Za-z0-9\.]+)/, '/static/img/'+file.relative+'/img/$1');
         }))
+        .pipe(less())
+        .pipe(concat('less-files.css'));
 
-        .pipe(less()) //Скомпилируем
-        .pipe(prefixer()) //Добавим вендорные префиксы
-        .pipe(cssmin()) //Сожмем
+    let cssStream = gulp.src(path.src.style_raw)
+        .pipe(concat('css-files.css'));
+
+    let mergedStream = merge(lessStream, cssStream)
+        .pipe(sourcemaps.init()) //Инициализируем sourcemap
         .pipe(concat('all.css')) //Конкатинируем css
+        .pipe(prefixer()) //Добавим вендорные префиксы
+        .pipe(cleanCSS()) //Сожмем
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(path.build.css)) //И в build
-        .pipe(reload({stream: true}));
+        .pipe(server.notify());
+
+    return mergedStream;
+
 });
 
 gulp.task('image:build', () => {
@@ -168,21 +167,29 @@ gulp.task('image:build', () => {
             interlaced: true
         }))
         .pipe(gulp.dest(path.build.img)) //И бросим в build
-        .pipe(reload({stream: true}));
+        .pipe(server.notify());
 });
 
 gulp.task('fonts:build', () => {
     gulp.src(path.src.fonts)
         .pipe(gulp.dest(path.build.fonts))
+        .pipe(server.notify());
 });
 
 gulp.task('sjs:build', () => {
-    gulp.src(path.src.view_models)
-        .pipe(gulp.dest(path.build.view_models));
-    gulp.src(path.src.models)
-        .pipe(gulp.dest(path.build.models));
-    gulp.src(path.src.controllers)
-        .pipe(gulp.dest(path.build.controllers));
+
+    return Promise.all([
+        server.stop(),
+        gulp.src(path.src.view_models)
+            .pipe(gulp.dest(path.build.view_models)),
+        gulp.src(path.src.models)
+            .pipe(gulp.dest(path.build.models)),
+        gulp.src(path.src.controllers)
+            .pipe(gulp.dest(path.build.controllers)),
+    ])
+        .then(() => {
+            server.run(['app.js']);
+        })
 });
 
 gulp.task('build', [
@@ -202,6 +209,9 @@ gulp.task('watch', () => {
     watch([path.watch.style], (event, cb) => {
         gulp.start('style:build');
     });
+    watch([path.watch.style_raw], (event, cb) => {
+        gulp.start('style:build');
+    });
     watch([path.watch.layouts], (event, cb) => {
         gulp.start('hb:build');
     });
@@ -213,7 +223,9 @@ gulp.task('watch', () => {
     });
     watch([path.watch.controllers], (event, cb) => {
         gulp.start('sjs:build');
+
     });
+
     watch([path.watch.models], (event, cb) => {
         gulp.start('sjs:build');
     });
@@ -226,42 +238,14 @@ gulp.task('watch', () => {
     watch([path.watch.fonts], (event, cb) => {
         gulp.start('fonts:build');
     });
-    watch(['gulpfile.js'], (event, cb) => {
-        gulp.start('build');
-    });
 });
 
 gulp.task('clean', (cb) => {
     rimraf(path.clean, cb);
 });
 
-gulp.task('nodemon', (cb) => {
-    let called = false;
-    return nodemon({
-        script: 'app.js',
-        ignore: [
-            'gulpfile.js',
-            'node_modules/'
-        ]
-    })
-        .on('start', () => {
-            if (!called) {
-                called = true;
-                cb();
-            }
-        })
-        .on('restart', () => {
-            setTimeout(() => {
-                reload({stream: false});
-            }, 1000);
-        });
-});
-
-gulp.task('webserver', ['nodemon'], () => {
-    browserSync({
-        proxy: "localhost:8080",  // порт приложения
-        notify: true
-    });
+gulp.task('webserver', () => {
+    server.run(['app.js']);
 });
 
 gulp.task('default', ['build', 'webserver', 'watch']);
