@@ -20,7 +20,6 @@
     "gulp-concat": "^2.6.1",
     "gulp-imagemin": "^3.1.1",
     "gulp-less": "^3.3.0",
-    "gulp-minify-css": "^1.2.4",
     "gulp-nodemon": "^2.2.1",
     "gulp-rename": "^1.2.2",
     "gulp-rigger": "^0.5.8",
@@ -33,10 +32,17 @@
     "less": "^2.7.2",
     "mongoose": "^4.7.7",
     "morgan": "~1.7.0",
+    "promise": "^7.1.1",
     "serve-favicon": "~2.3.2"
   },
   "engines": {
     "node": "6.10.x",
     "npm": "3.10.x"
+  },
+  "devDependencies": {
+    "connect-livereload": "^0.6.0",
+    "gulp-clean-css": "^3.0.3",
+    "gulp-merge": "^0.1.1",
+    "gulp-sequence": "^0.4.6"
   }
 }
