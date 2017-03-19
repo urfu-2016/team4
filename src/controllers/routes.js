@@ -1,55 +1,51 @@
-/**
- * Created by trefi on 12.03.2017.
- */
-
 'use strict';
 
-exports.initRouters = function (app) {
-    app.get('/', function (req, res) {
+exports.initRouters = app => {
+    app.get('/', (req, res) => {
         res.render('main-page');
     });
 
-    app.get('/profile', function (req, res) {
+    app.get('/profile', () => {
         //
     });
 
-    app.get('/quest/:id', function (req, res) {
+    app.get('/quest/:id', () => {
         //
     });
 
-    app.get('/quest/:id/details', function (req, res) {
+    app.get('/quest/:id/details', () => {
         //
     });
 
-    app.get('/myquests', function (req, res) {
+    app.get('/myquests', () => {
         //
     });
 
-    app.get('/newquest', function (req, res) {
+    app.get('/newquest', () => {
         //
     });
 
-    app.get('/editquest/:id', function (req, res) {
+    app.get('/editquest/:id', () => {
         //
     });
 
-    app.post('/signin', function (req, res) {
+    app.post('/signin', () => {
         //
     });
 
-    app.post('/signup', function (req, res) {
+    app.post('/signup', () => {
         //
     });
 
-    app.post('/rating', function (req, res) {
+    app.post('/rating', () => {
         //
     });
 
-    app.use(function (req, res) {
+    app.use((req, res) => {
         res.status(404);
     });
 
-    app.use(function (err, req, res) {
+    app.use((err, req, res) => {
         console.error(err.stack);
         res.status(500);
     });

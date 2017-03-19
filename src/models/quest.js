@@ -1,12 +1,9 @@
-/**
- * Created by trefi on 12.03.2017.
- */
-
 'use strict';
 
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const questSchema = mongoose.Schema({
+const questSchema = new Schema({
     id: Number,
     title: String,
     description: String,
@@ -23,4 +20,4 @@ const questSchema = mongoose.Schema({
     isPublished: Number
 });
 
-module.exports  = mongoose.model('quest', questSchema);
+module.exports = mongoose.model('quest', questSchema);

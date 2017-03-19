@@ -2,6 +2,12 @@
     "extends": "xo",
     "rules": {
         "max-len": [2, 120],
-        "max-params": [2, 4]
+        "max-params": [2, 4],
+        "indent": ["error", 4],
+        "capitalized-comments": ["error", "never"],
+        "newline-before-return": "error",
+        "new-cap": ["error",
+          { "newIsCap": true }
+        ]
     }
 }

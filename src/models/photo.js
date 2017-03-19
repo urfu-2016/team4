@@ -1,12 +1,9 @@
-/**
- * Created by trefi on 12.03.2017.
- */
-
 'use strict';
 
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const photoSchema = mongoose.Schema({
+const photoSchema = new Schema({
     url: String,
     geoPosition: {
         lat: Number,
