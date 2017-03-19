@@ -1,12 +1,9 @@
-/**
- * Created by trefi on 12.03.2017.
- */
-
 'use strict';
 
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const userSchema = mongoose.Schema({
+const userSchema = new Schema({
     id: Number,
     name: String,
     password: String,
@@ -25,8 +22,8 @@ const userSchema = mongoose.Schema({
         whoAmI: Number
     }],
     likeQuests: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'quest'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'quest'
     }]
 });
 
