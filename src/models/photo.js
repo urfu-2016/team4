@@ -4,9 +4,9 @@
 
 'use strict';
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var photoSchema = mongoose.Schema({
+const photoSchema = mongoose.Schema({
     url: String,
     geoPosition: {
         lat: Number,
@@ -19,6 +19,4 @@ var photoSchema = mongoose.Schema({
     ]
 });
 
-var photo = mongoose.model('photo', photoSchema);
-
-module.exports = photo;
+module.exports = mongoose.model('photo', photoSchema);

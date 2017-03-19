@@ -4,9 +4,9 @@
 
 'use strict';
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var questSchema = mongoose.Schema({
+const questSchema = mongoose.Schema({
     id: Number,
     title: String,
     description: String,
@@ -23,6 +23,4 @@ var questSchema = mongoose.Schema({
     isPublished: Number
 });
 
-var quest = mongoose.model('quest', questSchema);
-
-module.exports = quest;
+module.exports  = mongoose.model('quest', questSchema);
