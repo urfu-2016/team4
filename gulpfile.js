@@ -326,7 +326,6 @@ gulp.task('clean', cb => {
 gulp.task('webserver', () => {
     livereload.listen();
     firstPass = false;
-    console.log('ws');
     // configure nodemon
     const demon = nodemon({
         // the script to run the app
