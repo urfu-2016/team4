@@ -54,6 +54,7 @@
     "gulp-sequence": "^0.4.6",
     "gulp-stylelint": "^3.9.0",
     "rimraf": "^2.6.1",
+    "run-sequence": "^1.2.2",
     "stylelint-config-standard": "^16.0.0"
   }
 }

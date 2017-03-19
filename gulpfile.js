@@ -3,6 +3,7 @@
 const rename = require('gulp-rename');
 const gulp = require('gulp');
 const gulpSequence = require('gulp-sequence');
+const runSequence = require('run-sequence');
 const watch = require('gulp-watch');
 const prefixer = require('gulp-autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
@@ -63,16 +64,24 @@ path.watch = path.src;
 
 let firstPass = true;
 
-function getUniqueBlockName(directory) {
+function getUniqueBlockName(directory, camelCase) {
     /**
      * @param directory: String - директория относительно src/blocks/
      * @returns String - уникальное имя компоненты
      */
+
     if (directory === '.') {
         return '';
     }
 
-    return directory.split(Path.sep).join('-');
+    let blockName = directory.split(Path.sep).join('-');
+    if (!camelCase) {
+        return blockName;
+    }
+
+    return directory.split('-').map(x => {
+        return x.charAt(0).toUpperCase() + x.slice(1);
+    }).join('');
 }
 
 gulp.task('html:build', () => {
@@ -105,12 +114,17 @@ gulp.task('hb:build', () => {
                 new Buffer('</div>')
             ]);
             // меняем адреса с картинками на /static/img...
-            bufferReplace(file, /img\/([A-Za-z0-9.]+)/, '/static/img/' + dir + '/img/$1');
+            bufferReplace(file, /img\/([A-Za-z0-9.]+)/g, '/static/img/' + dir + '/img/$1');
+            bufferReplace(file, /\{\{\s*bind-attr\s+(\w*)\s*=\s*"(\w*):(\w*)"\s*\}\s*\}/g,
+                '{{#if $2}}$1={{$3}}{{/if}}');
+            bufferReplace(file, /<!--.*-->/g, '');
+            let nameSpace = getUniqueBlockName(dir, true);
+            bufferReplace(file, /\{\{\s*local-script\s+([A-Za-z0-9_()]+)s*\}\s*\}/g, nameSpace + '_$1');
         }))
         .pipe(rename(path => {
             /* для того чтобы не было колизий в partials имена в build
-               будут выглядеть так: путь-до-файла-из-blocks-файл.hbs
-               в шаблонах partials нужно будет указывать именно так */
+             будут выглядеть так: путь-до-файла-из-blocks-файл.hbs
+             в шаблонах partials нужно будет указывать именно так */
             let dir = path.dirname;
             path.dirname = '';
             path.basename = getUniqueBlockName(dir);
@@ -128,6 +142,11 @@ gulp.task('hb:build', () => {
 gulp.task('js:build', () => {
     gulp.src(path.src.js) // найдем наш main файл
         .pipe(plumber())
+        .pipe(tap(file => {
+            let dir = Path.dirname(file.relative);
+            let nameSpace = getUniqueBlockName(dir, true);
+            bufferReplace(file, /function\s+(\w+)/g, 'function ' + nameSpace + '_$1');
+        }))
         .pipe(sourcemaps.init()) // инициализируем sourcemap
         .pipe(babel()) // переводим ES6 => ES5
         .pipe(uglify()) // сожмем наш js
@@ -193,22 +212,13 @@ gulp.task('fonts:build', () => {
 
 gulp.task('sjs:build', () => {
     gulp.src(path.src.viewModels)
-        .pipe(plumber())
-        .pipe(changed({firstPass: firstPass}))
-        .pipe(gulp.dest(path.build.viewModels))
-        .pipe(livereload());
+        .pipe(gulp.dest(path.build.viewModels));
 
     gulp.src(path.src.models)
-        .pipe(plumber())
-        .pipe(changed({firstPass: firstPass}))
-        .pipe(gulp.dest(path.build.models))
-        .pipe(livereload());
+        .pipe(gulp.dest(path.build.models));
 
     gulp.src(path.src.controllers)
-        .pipe(plumber())
-        .pipe(changed({firstPass: firstPass}))
-        .pipe(gulp.dest(path.build.controllers))
-        .pipe(livereload());
+        .pipe(gulp.dest(path.build.controllers));
 });
 
 gulp.task('build', [
@@ -316,14 +326,15 @@ gulp.task('clean', cb => {
 gulp.task('webserver', () => {
     livereload.listen();
     firstPass = false;
+    console.log('ws');
     // configure nodemon
     const demon = nodemon({
         // the script to run the app
         script: 'app.js',
         watch: 'app.js'
     });
-    gulp.watch([path.watch.controllers, path.watch.models, path.watch.viewModels], () => {
-        gulp.start('sjs:build', () => {
+    watch([path.watch.controllers, path.watch.models, path.watch.viewModels], () => {
+        runSequence('sjs:build', () => {
             demon.emit('restart');
         });
     });
