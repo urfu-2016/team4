@@ -22,6 +22,11 @@ const Path = require('path');
 const tap = require('gulp-tap');
 const util = require('util');
 const merge = require('merge-stream');
+const plumber = require('gulp-plumber');
+const lesshint = require('gulp-lesshint');
+const stylelint = require('gulp-stylelint');
+const htmllint = require('gulp-html-lint');
+const eslint = require('gulp-eslint');
 
 let path = {
 
@@ -73,6 +78,7 @@ function getUniqueBlockName(directory) {
 
 gulp.task('html:build', () => {
     gulp.src(path.src.html) //Выберем файлы по нужному пути
+        .pipe(plumber())
         .pipe(gulp.dest(path.build.html)) //Выплюнем их в папку build
         .pipe(livereload()); //И перезагрузим наш сервер для обновлений
 });
@@ -89,6 +95,7 @@ function bufferReplace(file, match, str) {
 
 gulp.task('hb:build', () => {
     gulp.src([path.src.hb, '!' + path.src.layouts]) //Выберем файлы по нужному пути
+        .pipe(plumber())
         .pipe(changed({firstPass: firstPass}))
         .pipe(tap((file, t) => {
             let dir = Path.dirname(file.relative);
@@ -113,6 +120,7 @@ gulp.task('hb:build', () => {
         .pipe(livereload()); //И перезагрузим наш сервер для обновлений
 
     gulp.src(path.src.layouts) //Выберем файлы по нужному пути
+        .pipe(plumber())
         .pipe(gulp.dest(path.build.layouts)) //Выплюнем их в папку build
         .pipe(changed({firstPass: firstPass}))
         .pipe(livereload()); //И перезагрузим наш сервер для обновлений
@@ -121,6 +129,7 @@ gulp.task('hb:build', () => {
 
 gulp.task('js:build', () => {
     gulp.src(path.src.js) //Найдем наш main файл
+        .pipe(plumber())
         .pipe(sourcemaps.init()) //Инициализируем sourcemap
         .pipe(babel()) //переводим ES6 => ES5
         .pipe(uglify()) //Сожмем наш js
@@ -133,6 +142,7 @@ gulp.task('js:build', () => {
 
 gulp.task('style:build', () => {
     let lessStream = gulp.src(path.src.style)
+        .pipe(plumber())
         .pipe(tap((file, t) => {
             let className = getUniqueBlockName(Path.dirname(file.relative));
             if (!className) {
@@ -154,6 +164,7 @@ gulp.task('style:build', () => {
         .pipe(concat('css-files.css'));
 
     return merge(lessStream, cssStream)
+        .pipe(plumber())
         .pipe(sourcemaps.init()) //Инициализируем sourcemap
         .pipe(concat('all.css')) //Конкатинируем css
         .pipe(prefixer()) //Добавим вендорные префиксы
@@ -186,16 +197,19 @@ gulp.task('fonts:build', () => {
 gulp.task('sjs:build', () => {
 
     gulp.src(path.src.view_models)
+        .pipe(plumber())
         .pipe(changed({firstPass: firstPass}))
         .pipe(gulp.dest(path.build.view_models))
         .pipe(livereload());
 
     gulp.src(path.src.models)
+        .pipe(plumber())
         .pipe(changed({firstPass: firstPass}))
         .pipe(gulp.dest(path.build.models))
         .pipe(livereload());
 
     gulp.src(path.src.controllers)
+        .pipe(plumber())
         .pipe(changed({firstPass: firstPass}))
         .pipe(gulp.dest(path.build.controllers))
         .pipe(livereload());
@@ -211,12 +225,64 @@ gulp.task('build', [
     'sjs:build',
 ]);
 
+gulp.task('style:lint', () => {
+    gulp.src(path.src.style)
+        .pipe(plumber())
+        .pipe(lesshint())
+        .pipe(lesshint.reporter())
+        .pipe(lesshint.failOnError());
+
+    gulp.src(path.src.style_raw)
+        .pipe(plumber())
+        .pipe(stylelint({
+            debug: true,
+            failAfterError: true,
+            reporters: [
+                {formatter: 'string', console: true}
+            ]
+        }));
+});
+
+gulp.task('html:lint', () => {
+    gulp.src(path.src.html)
+        .pipe(plumber())
+        .pipe(htmllint())
+        .pipe(htmllint.format())
+        .pipe(htmllint.failOnError());
+});
+
+gulp.task('hb:lint', () => {
+    gulp.src(path.src.hb)
+        .pipe(plumber())
+        .pipe(htmllint())
+        .pipe(htmllint.format())
+        .pipe(htmllint.failOnError());
+});
+
+gulp.task('js:lint', () => {
+    gulp.src(path.src.js)
+        .pipe(plumber())
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failOnError());
+});
+
+gulp.task('lint', [
+    'style:lint',
+    'html:lint',
+    'hb:lint',
+    'js:lint',
+]);
+
 gulp.task('watch', () => {
     watch([path.watch.html], (event, cb) => {
         gulp.start('html:build');
+        gulp.start('html:lint');
     });
     watch([path.watch.style, path.watch.style_raw], (event, cb) => {
+        gulp.start('style:lint');
         gulp.start('style:build');
+
     });
 
     watch([path.watch.js], (event, cb) => {
@@ -224,6 +290,7 @@ gulp.task('watch', () => {
     });
     watch([path.watch.hb, path.watch.layouts], (event, cb) => {
         gulp.start('hb:build');
+        gulp.start('hb:lint');
     });
 
     watch([path.watch.img], (event, cb) => {
@@ -254,4 +321,4 @@ gulp.task('webserver', () => {
     });
 });
 
-gulp.task('default', gulpSequence('build', 'webserver', 'watch'));
+gulp.task('default', gulpSequence('lint', 'build', 'webserver', 'watch'));
