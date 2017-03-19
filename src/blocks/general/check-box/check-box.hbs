@@ -1,0 +1,15 @@
+<!-- htmllint attr-name-style="false" -->
+<!-- htmllint attr-no-dup="false" -->
+{{#if label}}
+    <label>{{label}}
+{{/if}}
+<input type="checkbox"
+    {{bind-attr class="class:class"}}
+    {{bind-attr id="id:id"}}
+    {{bind-attr checked="checked:checked"}}
+    {{bind-attr disabled="disabled:disabled"}}
+    {{bind-attr onchange="onchange:onchange"}}
+/>
+{{#if label}}
+    </label>
+{{/if}}
