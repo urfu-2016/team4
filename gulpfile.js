@@ -11,9 +11,11 @@ const concat = require('gulp-concat');
 const cleanCSS = require('gulp-clean-css');
 const less = require('gulp-less');
 const imagemin = require('gulp-imagemin');
+const promise = require('promise');
 const jpegtran = require('imagemin-jpegtran');
 const nodemon = require('gulp-nodemon');
 const livereload = require('gulp-livereload');
+const notify = require('gulp-notify');
 const changed = require('gulp-changed-in-place');
 const babel = require('gulp-babel');
 const Path = require('path');
@@ -29,7 +31,7 @@ const rimraf = require('rimraf');
 
 let path = {
 
-    build: { // тут мы укажем куда складывать готовые после сборки файлы
+    build: { //Тут мы укажем куда складывать готовые после сборки файлы
         html: 'build/html',
         hb: 'build/hbs',
         layouts: 'build/layouts/',
@@ -38,22 +40,20 @@ let path = {
         img: 'build/public/img/',
         fonts: 'build/fonts/',
         models: 'build/models/',
-        viewModels: 'build/viewModels/',
+        view_models: 'build/view_models/',
         controllers: 'build/controllers/'
     },
-    src: { // пути откуда брать исходники
-        html: 'src/blocks/**/*.html', // мы хотим взять все файлы с расширением .html
-        hb: 'src/blocks/**/*.hbs', // мы хотим взять все файлы с расширением .html
-        layouts: 'src/blocks/layouts/*.hbs', // layouts берем отсюда
-        js: 'src/blocks/**/*.js', // в стилях и скриптах нам понадобятся только main файлы
+    src: { //Пути откуда брать исходники
+        html: 'src/blocks/**/*.html', //мы хотим взять все файлы с расширением .html
+        hb: 'src/blocks/**/*.hbs', //мы хотим взять все файлы с расширением .html
+        layouts: 'src/blocks/layouts/*.hbs', //layouts берем отсюда
+        js: 'src/blocks/**/*.js',//В стилях и скриптах нам понадобятся только main файлы
         style: 'src/blocks/**/*.less',
-        styleRaw: 'src/blocks/**/*.css',
-        img: 'src/blocks/**/img/*.*',
-        // синтаксис /**/*.* означает - взять все файлы всех расширений из папки
-        // и из вложенных каталогов
+        style_raw: 'src/blocks/**/*.css',
+        img: 'src/blocks/**/img/*.*', //Синтаксис /**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
         fonts: 'src/fonts/**/*.*',
         models: 'src/models/**/*.*',
-        viewModels: 'src/viewModels/**/*.*',
+        view_models: 'src/view_models/**/*.*',
         controllers: 'src/controllers/**/*.*'
     },
 
@@ -70,6 +70,7 @@ function getUniqueBlockName(directory) {
      * @returns String - уникальное имя компоненты
      */
     if (directory === '.') {
+
         return '';
     }
 
@@ -145,6 +146,7 @@ gulp.task('style:build', () => {
         .pipe(tap(file => {
             let className = getUniqueBlockName(Path.dirname(file.relative));
             if (!className) {
+
                 return;
             }
             file.contents = Buffer.concat([
