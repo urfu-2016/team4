@@ -1,6 +1,6 @@
 let express = require('express');
 let app = express();
-
+let middlewares = require('./build/controllers/middlewares');
 app.set('views', 'build/hbs');
 
 let exphbs = require('express-handlebars');
@@ -12,10 +12,10 @@ app.engine('.hbs', exphbs({
     partialsDir: 'build/hbs'
 }));
 
+middlewares.init(app);
 app.use('/static', express.static('build/public'));
 app.use(require('connect-livereload')());
 app.set('view engine', '.hbs');
-
 app.set('port', process.env.PORT || 8080);
 
 let mongoose = require('mongoose');

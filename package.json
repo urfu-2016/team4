@@ -47,6 +47,7 @@
     "gulp-clean-css": "^3.0.3",
     "gulp-eslint": "^3.0.1",
     "gulp-html-lint": "0.0.1",
+    "gulp-htmlmin": "^3.0.0",
     "gulp-lesshint": "^3.0.0",
     "gulp-livereload": "^3.8.1",
     "gulp-merge": "^0.1.1",
