@@ -126,7 +126,7 @@ gulp.task('hb:build', () => {
             bufferReplace(file, /img\/([A-Za-z0-9.]+)/g, '/static/img/' + dir + '/img/$1');
             bufferReplace(file, /\{\{\s*bind-attr\s+(\w*)\s*=\s*"(\w*):(\w*)"\s*\}\s*\}/g,
                 '{{#if $2}}$1={{$3}}{{/if}}');
-            bufferReplace(file, /<!--.*-->/g, '');
+            bufferReplace(file, /<!--.*-->\n/g, '');
             let nameSpace = getUniqueBlockName(dir, true);
             bufferReplace(file, /\{\{\s*local-script\s+([A-Za-z0-9_()]+)s*\}\s*\}/g, nameSpace + '_$1');
         }))
