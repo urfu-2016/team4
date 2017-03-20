@@ -1,0 +1,16 @@
+<!-- htmllint attr-name-style="false" -->
+<!-- htmllint attr-no-dup="false" -->
+{{#if label}}
+    <label>{{label}}
+{{/if}}
+<input type="text" class="form-control"
+    {{bind-attr id="class:class"}}
+    {{bind-attr id="id:id"}}
+    {{bind-attr value="value:value"}}
+    {{bind-attr value="placeholder:placeholder"}}
+    {{bind-attr disabled="disabled:disabled"}}
+    {{bind-attr onkeyup="onkeyup:onkeyup"}}
+/>
+{{#if label}}
+    </label>
+{{/if}}

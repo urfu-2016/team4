@@ -9,5 +9,10 @@
         "new-cap": ["error",
           { "newIsCap": true }
         ]
-    }
+    },
+  "globals": {
+    "fetch": false,
+    "Promise": false,
+    "document": false
+  }
 }

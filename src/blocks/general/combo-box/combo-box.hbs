@@ -1,0 +1,19 @@
+<!-- htmllint attr-name-style="false" -->
+<!-- htmllint attr-no-dup="false" -->
+<!-- htmllint id-no-dup="false" -->
+
+{{#if label}}
+<label>{{label}}
+{{/if}}
+<select class="form-control"
+    {{bind-attr id="id:id"}}
+    {{bind-attr disabled="disabled:disabled"}}
+    {{bind-attr onchange="onchange:onchange"}}
+>
+    {{#each options as |option|}}
+        <option value="{{option.value}}">{{option.text}}</option>
+    {{/each}}
+</select>
+{{#if label}}
+    </label>
+{{/if}}

@@ -1,8 +1,20 @@
 <section>
-    <h4>I'm main'page</h4>
+    <h2>О сервисе ФотоКвест</h2>
     <article>
-        {{> main-page-description}}
-
+        {{>main-page-description}}
     </article>
-    <a>123sdasd</a>
 </section>
+<div class="quests-block">
+    <section class="quest-query">
+        {{>general-button text='Создать квест' style='primary'}}
+        {{>general-combo-box options=filter label="Сортировать"
+            onchange="filterQuests()"}}
+        {{>general-search-bar label="Поиск"
+            onkeyup="filterQuests()"}}
+        {{>general-check-box label="В обратном порядке"
+            onchange="filterQuests()"}}
+    </section>
+    <section class="quests">
+
+    </section>
+</div>
