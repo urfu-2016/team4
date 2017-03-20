@@ -4,6 +4,7 @@ const rename = require('gulp-rename');
 const gulp = require('gulp');
 const gulpSequence = require('gulp-sequence');
 const runSequence = require('run-sequence');
+const polyfiller = require('gulp-polyfiller');
 const watch = require('gulp-watch');
 const prefixer = require('gulp-autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
@@ -162,6 +163,10 @@ gulp.task('js:build', () => {
         .pipe(gulp.dest(path.build.js)) // выплюнем готовый файл в build
         .pipe(changed({firstPass: firstPass}))
         .pipe(livereload()); // и перезагрузим сервер
+
+    polyfiller.bundle(['Promise', 'Fetch'])
+        .pipe(uglify()) // сожмем наш js
+        .pipe(gulp.dest(path.build.js));
 });
 
 gulp.task('style:build', () => {

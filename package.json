@@ -13,8 +13,10 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.0",
     "eslint-config-xo": "^0.18.1",
+    "event-stream": "^3.3.4",
     "express": "^4.15.2",
     "express-handlebars": "^3.0.0",
+    "fetch-polyfill": "^0.8.2",
     "gulp": "^3.8.11",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-babel": "^6.1.2",
@@ -35,13 +37,18 @@
     "mongoose": "^4.7.7",
     "morgan": "~1.7.0",
     "promise": "^7.1.1",
-    "serve-favicon": "~2.3.2"
+    "promise-polyfill": "^6.0.2",
+    "serve-favicon": "~2.3.2",
+    "whatwg-fetch": "^2.0.3"
   },
   "engines": {
     "node": "6.10.x",
     "npm": "3.10.x"
   },
   "devDependencies": {
+    "babel-plugin-transform-es2015-arrow-functions": "^6.22.0",
+    "babel-plugin-transform-es2015-block-scoping": "^6.23.0",
+    "babel-plugin-transform-es2015-parameters": "^6.23.0",
     "connect-livereload": "^0.6.0",
     "gulp-changed-in-place": "^2.0.3",
     "gulp-clean-css": "^3.0.3",
@@ -52,6 +59,7 @@
     "gulp-livereload": "^3.8.1",
     "gulp-merge": "^0.1.1",
     "gulp-plumber": "^1.1.0",
+    "gulp-polyfiller": "0.0.1",
     "gulp-sequence": "^0.4.6",
     "gulp-stylelint": "^3.9.0",
     "rimraf": "^2.6.1",
