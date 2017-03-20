@@ -171,7 +171,7 @@ gulp.task('style:build', () => {
                 new Buffer('}')
             ]);
             // меняем адреса с картинками на /static/img...
-            bufferReplace(file, /img\/([A-Za-z0-9.]+)/, '/static/img/' + file.relative + '/img/$1');
+            bufferReplace(file, /img\/([A-Za-z0-9.]+)/g, '/static/img/' + file.relative + '/img/$1');
         }))
         .pipe(less())
         .pipe(concat('less-files.css'));
