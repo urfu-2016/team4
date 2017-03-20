@@ -3,6 +3,8 @@
 const rename = require('gulp-rename');
 const gulp = require('gulp');
 const gulpSequence = require('gulp-sequence');
+const runSequence = require('run-sequence');
+const polyfiller = require('gulp-polyfiller');
 const watch = require('gulp-watch');
 const prefixer = require('gulp-autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
@@ -126,10 +128,13 @@ gulp.task('hb:build', () => {
 });
 
 gulp.task('js:build', () => {
-    gulp.src(path.src.js) // найдем наш main файл
+    let all = gulp.src(path.src.js) // найдем наш main файл
         .pipe(plumber())
         .pipe(sourcemaps.init()) // инициализируем sourcemap
         .pipe(babel()) // переводим ES6 => ES5
+    let polyfills = polyfiller.bundle(['Promise', 'Fetch']);
+
+    return merge(polyfills, all)
         .pipe(uglify()) // сожмем наш js
         .pipe(concat('all.js')) // конкатинируем js
         .pipe(sourcemaps.write()) // пропишем карты
