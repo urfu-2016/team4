@@ -128,19 +128,19 @@ gulp.task('hb:build', () => {
 });
 
 gulp.task('js:build', () => {
-    let all = gulp.src(path.src.js) // найдем наш main файл
+    gulp.src(path.src.js) // найдем наш main файл
         .pipe(plumber())
-        .pipe(sourcemaps.init()) // инициализируем sourcemap
+        .pipe(sourcemaps.init()) // инициализируем sgulpourcemap
         .pipe(babel()) // переводим ES6 => ES5
-    let polyfills = polyfiller.bundle(['Promise', 'Fetch']);
-
-    return merge(polyfills, all)
         .pipe(uglify()) // сожмем наш js
-        .pipe(concat('all.js')) // конкатинируем js
         .pipe(sourcemaps.write()) // пропишем карты
         .pipe(gulp.dest(path.build.js)) // выплюнем готовый файл в build
         .pipe(changed({firstPass: firstPass}))
         .pipe(livereload()); // и перезагрузим сервер
+
+    polyfiller.bundle(['Promise', 'Fetch'])
+        .pipe(uglify()) // сожмем наш js
+        .pipe(gulp.dest(path.build.js));
 });
 
 gulp.task('style:build', () => {
@@ -157,7 +157,7 @@ gulp.task('style:build', () => {
                 new Buffer('}')
             ]);
             // меняем адреса с картинками на /static/img...
-            bufferReplace(file, /img\/([A-Za-z0-9.]+)/, '/static/img/' + file.relative + '/img/$1');
+            bufferReplace(file, /img\/([A-Za-z0-9.]+)/g, '/static/img/' + file.relative + '/img/$1');
         }))
         .pipe(less())
         .pipe(concat('less-files.css'));
@@ -198,22 +198,13 @@ gulp.task('fonts:build', () => {
 
 gulp.task('sjs:build', () => {
     gulp.src(path.src.viewModels)
-        .pipe(plumber())
-        .pipe(changed({firstPass: firstPass}))
-        .pipe(gulp.dest(path.build.viewModels))
-        .pipe(livereload());
+        .pipe(gulp.dest(path.build.viewModels));
 
     gulp.src(path.src.models)
-        .pipe(plumber())
-        .pipe(changed({firstPass: firstPass}))
-        .pipe(gulp.dest(path.build.models))
-        .pipe(livereload());
+        .pipe(gulp.dest(path.build.models));
 
     gulp.src(path.src.controllers)
-        .pipe(plumber())
-        .pipe(changed({firstPass: firstPass}))
-        .pipe(gulp.dest(path.build.controllers))
-        .pipe(livereload());
+        .pipe(gulp.dest(path.build.controllers));
 });
 
 gulp.task('build', [
