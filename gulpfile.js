@@ -149,7 +149,7 @@ gulp.task('hb:build', () => {
 });
 
 gulp.task('js:build', () => {
-    let all = gulp.src(path.src.js) // найдем наш main файл
+    gulp.src(path.src.js) // найдем наш main файл
         .pipe(plumber())
         .pipe(sourcemaps.init()) // инициализируем sgulpourcemap
         .pipe(tap(file => {
@@ -165,7 +165,7 @@ gulp.task('js:build', () => {
                 });
             }
         }))
-        .pipe(babel()); // переводим ES6 => ES5
+        .pipe(babel()) // переводим ES6 => ES5
         .pipe(uglify()) // сожмем наш js
         .pipe(concat('all.js')) // конкатинируем js
         .pipe(sourcemaps.write()) // пропишем карты
