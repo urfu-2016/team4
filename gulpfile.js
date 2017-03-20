@@ -101,6 +101,15 @@ function bufferReplace(file, match, str) {
     file.contents = new Buffer(file.contents.toString().replace(match, str));
 }
 
+function bufferMatch(file, match) {
+    /**
+     * @param file: File - Файл в котором заменяем даные
+     * @param match: String/RegEx - шаблон, по которому будем сравнивать строки
+     * @returns Array<String> - список подходщих данных
+     */
+    return file.contents.toString().match(match);
+}
+
 gulp.task('hb:build', () => {
     gulp.src([path.src.hb, '!' + path.src.layouts]) // выберем файлы по нужному пути
         .pipe(plumber())
@@ -140,15 +149,23 @@ gulp.task('hb:build', () => {
 });
 
 gulp.task('js:build', () => {
-    gulp.src(path.src.js) // найдем наш main файл
+    let all = gulp.src(path.src.js) // найдем наш main файл
         .pipe(plumber())
+        .pipe(sourcemaps.init()) // инициализируем sgulpourcemap
         .pipe(tap(file => {
-            let dir = Path.dirname(file.relative);
-            let nameSpace = getUniqueBlockName(dir, true);
-            bufferReplace(file, /function\s+(\w+)/g, 'function ' + nameSpace + '_$1');
+            const dir = Path.dirname(file.relative);
+            const nameSpace = getUniqueBlockName(dir, true);
+            const localFuncsRegEx = /^function\s+(\w+)/gm;
+            const matches = bufferMatch(file, localFuncsRegEx);
+            if (matches) {
+                matches.forEach(match => {
+                    const funcName = match.replace(/function\s*/g, '');
+                    const replaceRegEx = new RegExp('(' + funcName + 's*())', 'g');
+                    bufferReplace(file, replaceRegEx, nameSpace + '_$1');
+                });
+            }
         }))
-        .pipe(sourcemaps.init()) // инициализируем sourcemap
-        .pipe(babel()) // переводим ES6 => ES5
+        .pipe(babel()); // переводим ES6 => ES5
         .pipe(uglify()) // сожмем наш js
         .pipe(concat('all.js')) // конкатинируем js
         .pipe(sourcemaps.write()) // пропишем карты
