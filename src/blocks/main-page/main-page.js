@@ -1,8 +1,8 @@
 /* eslint no-unused-vars: 'off' */
 function filterQuests() {
     let url = '/questlist';
-    let questQueryElements = document.querySelectorAll('.quests-block');
-    questQueryElements.forEach(el => {
+    let questBlockElements = document.querySelectorAll('.quests-block');
+    questBlockElements.forEach(el => {
         let queryElement = el.querySelector('.quest-query');
         let listElement = el.querySelector('.quests');
         let value = queryElement.querySelector('select').value;

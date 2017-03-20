@@ -1,4 +1,4 @@
-module.exports = class Filter {
+class Filter {
     constructor() {
         this._opts = [];
         this._handlers = {};
@@ -25,4 +25,6 @@ module.exports = class Filter {
 
         return data;
     }
-};
+}
+
+module.exports = Filter;

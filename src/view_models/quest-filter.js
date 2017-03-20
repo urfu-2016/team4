@@ -54,7 +54,7 @@ function filterByAuthor(opts, quest) {
     return includeOptsPattern(quest.author.name, opts);
 }
 
-module.exports = class QuestFilter extends Filter {
+class QuestFilter extends Filter {
     constructor() {
         super();
         super.addOption('name', 'По названию', [
@@ -74,4 +74,6 @@ module.exports = class QuestFilter extends Filter {
             questFilterFunction.bind(null, filterByAuthor)
         ]);
     }
-};
+}
+
+module.exports = QuestFilter;
