@@ -3,6 +3,7 @@
 const rename = require('gulp-rename');
 const gulp = require('gulp');
 const gulpSequence = require('gulp-sequence');
+const runSequence = require('run-sequence');
 const watch = require('gulp-watch');
 const prefixer = require('gulp-autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
@@ -26,6 +27,8 @@ const stylelint = require('gulp-stylelint');
 const htmllint = require('gulp-html-lint');
 const eslint = require('gulp-eslint');
 const rimraf = require('rimraf');
+const fs = require('fs');
+const htmlmin = require('gulp-htmlmin');
 
 let path = {
 
@@ -63,16 +66,24 @@ path.watch = path.src;
 
 let firstPass = true;
 
-function getUniqueBlockName(directory) {
+function getUniqueBlockName(directory, camelCase) {
     /**
      * @param directory: String - директория относительно src/blocks/
      * @returns String - уникальное имя компоненты
      */
+
     if (directory === '.') {
         return '';
     }
 
-    return directory.split(Path.sep).join('-');
+    let blockName = directory.split(Path.sep).join('-');
+    if (!camelCase) {
+        return blockName;
+    }
+
+    return directory.split('-').map(x => {
+        return x.charAt(0).toUpperCase() + x.slice(1);
+    }).join('');
 }
 
 gulp.task('html:build', () => {
@@ -99,22 +110,38 @@ gulp.task('hb:build', () => {
         .pipe(tap(file => {
             let dir = Path.dirname(file.relative);
             let className = getUniqueBlockName(dir);
+            let files = fs.readdirSync(Path.join('src/blocks', dir)).filter(file => {
+                return file.includes('.js');
+            });
+            let headerBlock = '';
+            if (files.length) {
+                headerBlock = '{{#section \'scripts\'}}\n';
+                files.forEach(file => {
+                    headerBlock += '\t<script src="/static/js/' + Path.join(dir, file) + '"></script>\n';
+                });
+                headerBlock += '{{/section}}\n';
+            }
             file.contents = Buffer.concat([
+                new Buffer(headerBlock),
                 new Buffer(util.format('<div class="%s">\n', className)),
                 file.contents,
                 new Buffer('</div>')
             ]);
             // меняем адреса с картинками на /static/img...
-            bufferReplace(file, /img\/([A-Za-z0-9.]+)/, '/static/img/' + dir + '/img/$1');
+            bufferReplace(file, /img\/([A-Za-z0-9.]+)/g, '/static/img/' + dir + '/img/$1');
+            bufferReplace(file, /\{\{\s*bind-attr\s+(\w*)\s*=\s*"(\w*):(\w*)"\s*\}\s*\}/g,
+                '{{#if $2}}$1={{$3}}{{/if}}');
+            bufferReplace(file, /<!--.*-->\n/g, '');
         }))
         .pipe(rename(path => {
             /* для того чтобы не было колизий в partials имена в build
-               будут выглядеть так: путь-до-файла-из-blocks-файл.hbs
-               в шаблонах partials нужно будет указывать именно так */
+             будут выглядеть так: путь-до-файла-из-blocks-файл.hbs
+             в шаблонах partials нужно будет указывать именно так */
             let dir = path.dirname;
             path.dirname = '';
             path.basename = getUniqueBlockName(dir);
         }))
+        .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest(path.build.hb)) // выплюнем их в папку build
         .pipe(livereload()); // и перезагрузим наш сервер для обновлений
 
@@ -128,10 +155,9 @@ gulp.task('hb:build', () => {
 gulp.task('js:build', () => {
     gulp.src(path.src.js) // найдем наш main файл
         .pipe(plumber())
-        .pipe(sourcemaps.init()) // инициализируем sourcemap
+        .pipe(sourcemaps.init()) // инициализируем sgulpourcemap
         .pipe(babel()) // переводим ES6 => ES5
         .pipe(uglify()) // сожмем наш js
-        .pipe(concat('all.js')) // конкатинируем js
         .pipe(sourcemaps.write()) // пропишем карты
         .pipe(gulp.dest(path.build.js)) // выплюнем готовый файл в build
         .pipe(changed({firstPass: firstPass}))
@@ -152,7 +178,7 @@ gulp.task('style:build', () => {
                 new Buffer('}')
             ]);
             // меняем адреса с картинками на /static/img...
-            bufferReplace(file, /img\/([A-Za-z0-9.]+)/, '/static/img/' + file.relative + '/img/$1');
+            bufferReplace(file, /img\/([A-Za-z0-9.]+)/g, '/static/img/' + file.relative + '/img/$1');
         }))
         .pipe(less())
         .pipe(concat('less-files.css'));
@@ -193,22 +219,13 @@ gulp.task('fonts:build', () => {
 
 gulp.task('sjs:build', () => {
     gulp.src(path.src.viewModels)
-        .pipe(plumber())
-        .pipe(changed({firstPass: firstPass}))
-        .pipe(gulp.dest(path.build.viewModels))
-        .pipe(livereload());
+        .pipe(gulp.dest(path.build.viewModels));
 
     gulp.src(path.src.models)
-        .pipe(plumber())
-        .pipe(changed({firstPass: firstPass}))
-        .pipe(gulp.dest(path.build.models))
-        .pipe(livereload());
+        .pipe(gulp.dest(path.build.models));
 
     gulp.src(path.src.controllers)
-        .pipe(plumber())
-        .pipe(changed({firstPass: firstPass}))
-        .pipe(gulp.dest(path.build.controllers))
-        .pipe(livereload());
+        .pipe(gulp.dest(path.build.controllers));
 });
 
 gulp.task('build', [
@@ -322,8 +339,8 @@ gulp.task('webserver', () => {
         script: 'app.js',
         watch: 'app.js'
     });
-    gulp.watch([path.watch.controllers, path.watch.models, path.watch.viewModels], () => {
-        gulp.start('sjs:build', () => {
+    watch([path.watch.controllers, path.watch.models, path.watch.viewModels], () => {
+        runSequence('sjs:build', () => {
             demon.emit('restart');
         });
     });
