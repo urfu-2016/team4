@@ -54,6 +54,7 @@
     "gulp-clean-css": "^3.0.3",
     "gulp-eslint": "^3.0.1",
     "gulp-html-lint": "0.0.1",
+    "gulp-htmlmin": "^3.0.0",
     "gulp-lesshint": "^3.0.0",
     "gulp-livereload": "^3.8.1",
     "gulp-merge": "^0.1.1",
@@ -62,6 +63,7 @@
     "gulp-sequence": "^0.4.6",
     "gulp-stylelint": "^3.9.0",
     "rimraf": "^2.6.1",
+    "run-sequence": "^1.2.2",
     "stylelint-config-standard": "^16.0.0"
   }
 }
