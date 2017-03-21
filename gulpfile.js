@@ -21,7 +21,6 @@ const babel = require('gulp-babel');
 const Path = require('path');
 const tap = require('gulp-tap');
 const util = require('util');
-<<<<<<< ec08867e7a8bb3b20ca5d58c5dfff6eee9346c4e
 const merge = require('merge-stream');
 const plumber = require('gulp-plumber');
 const lesshint = require('gulp-lesshint');
@@ -35,17 +34,8 @@ const htmlmin = require('gulp-htmlmin');
 let path = {
 
     build: { // тут мы укажем куда складывать готовые после сборки файлы
-=======
-const path = {
-
-<<<<<<< 95980db34d85aed4141607dd4b9ed02483bd02ac
-    build: { // Тут мы укажем куда складывать готовые после сборки файлы
->>>>>>> починила линт
         html: 'build/html',
         hb: 'build/hbs',
-        js: 'build/js/',
-        css: 'build/css/',
-        img: 'build/img/',
         layouts: 'build/layouts/',
         js: 'build/public/js/',
         css: 'build/public/css/',
@@ -55,7 +45,6 @@ const path = {
         viewModels: 'build/view_models/',
         controllers: 'build/controllers/'
     },
-<<<<<<< ec08867e7a8bb3b20ca5d58c5dfff6eee9346c4e
     src: { // пути откуда брать исходники
         html: 'src/blocks/**/*.html', // мы хотим взять все файлы с расширением .html
         hb: 'src/blocks/**/*.hbs', // мы хотим взять все файлы с расширением .html
@@ -65,28 +54,6 @@ const path = {
         styleRaw: 'src/blocks/**/*.css',
         img: 'src/blocks/**/img/*.*',
         // синтаксис /**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
-=======
-    src: { // Пути откуда брать исходники
-        html: 'src/blocks/**/*.html', // мы хотим взять все файлы с расширением .html
-        hb: 'src/blocks/**/*.hbs', // мы хотим взять все файлы с расширением .html
-        layouts: 'src/blocks/layouts/*.hbs', //layouts берем отсюда
-        js: 'src/blocks/**/*.js', // В стилях и скриптах нам понадобятся только main файлы
-        style: 'src/blocks/**/*.less',
-        img: 'src/blocks/**/img/*.*', //Синтаксис /**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
-        fonts: 'src/fonts/**/*.*',
-        models: 'src/models/**/*.*',
-        view_models: 'src/view_models/**/*.*',
-        controllers: 'src/controllers/**/*.*'
-    },
-
-    watch: { //Ослеживаем изменения тих файлов
-        html: 'src/**/*.html',
-        hb: 'src/**/*.hbs',
-        js: 'src/**/*.js',
-        style: 'src/**/*.css',
-        img: 'src/**/img/*.*',
-        fonts: 'src/*/fonts/**/*.*',
->>>>>>> починила линт
         fonts: 'src/fonts/**/*.*',
         models: 'src/models/**/*.*',
         viewModels: 'src/view_models/**/*.*',
@@ -125,63 +92,6 @@ gulp.task('html:build', () => {
         .pipe(plumber())
         .pipe(gulp.dest(path.build.html)) // выплюнем их в папку build
         .pipe(livereload()); // и перезагрузим наш сервер для обновлений
-=======
-	build: { // Тут мы укажем куда складывать готовые после сборки файлы
-		html: 'build/html',
-		hb: 'build/hbs',
-		js: 'build/js/',
-		css: 'build/css/',
-		img: 'build/img/',
-		layouts: 'build/layouts/',
-		js: 'build/public/js/',
-		css: 'build/public/css/',
-		img: 'build/public/img/',
-		fonts: 'build/fonts/',
-		models: 'build/models/',
-		view_models: 'build/view_models/',
-		controllers: 'build/controllers/'
-	},
-	src: { // Пути откуда брать исходники
-		html: 'src/blocks/**/*.html', // мы хотим взять все файлы с расширением .html
-		hb: 'src/blocks/**/*.hbs', // мы хотим взять все файлы с расширением .html
-		layouts: 'src/blocks/layouts/*.hbs', // layouts берем отсюда
-		js: 'src/blocks/**/*.js', // В стилях и скриптах нам понадобятся только main файлы
-		style: 'src/blocks/**/*.less',
-		img: 'src/blocks/**/img/*.*', // Синтаксис /**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
-		fonts: 'src/fonts/**/*.*',
-		models: 'src/models/**/*.*',
-		view_models: 'src/view_models/**/*.*',
-		controllers: 'src/controllers/**/*.*'
-	},
-
-	watch: { // Ослеживаем изменения тих файлов
-		html: 'src/**/*.html',
-		hb: 'src/**/*.hbs',
-		js: 'src/**/*.js',
-		style: 'src/**/*.css',
-		img: 'src/**/img/*.*',
-		fonts: 'src/*/fonts/**/*.*',
-		fonts: 'src/fonts/**/*.*',
-		models: 'src/models/**/*.*',
-		view_models: 'src/view_models/**/*.*',
-		controllers: 'src/controllers/**/*.*'
-	},
-	clean: './build'
-};
-
-function getUniqueBlockName(directory) {
-	if (directory === '.') {
-		return '';
-	}
-
-	return directory.split(Path.sep).join('-');
-}
-
-gulp.task('html:build', () => {
-	gulp.src(path.src.html) // Выберем файлы по нужному пути
-        .pipe(gulp.dest(path.build.html)) // Выплюнем их в папку build
-        .pipe(reload({stream: true})); // И перезагрузим наш сервер для обновлений
->>>>>>> настроила тесты
 });
 
 function bufferReplace(file, match, str) {
@@ -195,7 +105,6 @@ function bufferReplace(file, match, str) {
 }
 
 gulp.task('hb:build', () => {
-<<<<<<< 95980db34d85aed4141607dd4b9ed02483bd02ac
     gulp.src([path.src.hb, '!' + path.src.layouts]) // выберем файлы по нужному пути
         .pipe(plumber())
         .pipe(changed({firstPass: firstPass}))
@@ -236,42 +145,12 @@ gulp.task('hb:build', () => {
         .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest(path.build.hb)) // выплюнем их в папку build
         .pipe(livereload()); // и перезагрузим наш сервер для обновлений
-=======
-	gulp.src([path.src.hb, '!' + path.src.layouts]) // Выберем файлы по нужному пути
-        .pipe(tap((file, t) => {
-	let className = getUniqueBlockName(Path.dirname(file.relative));
-	file.contents = Buffer.concat([
-		new Buffer(util.format('<div class="%s">\n', className)),
-		file.contents,
-		new Buffer('<\div>')
-	]);
-}))
-        .pipe(rename(path => {
-            // для того чтобы не было колизий в partials имена в build
-            // будут выглядеть так: путь-до-файла-из-blocks-файл.hbs
-            // в шаблонах partials нужно будет указывать именно так
-	let dir = path.dirname;
-	path.dirname = '';
-	path.basename = getUniqueBlockName(dir);
-}))
->>>>>>> настроила тесты
 
-<<<<<<< ec08867e7a8bb3b20ca5d58c5dfff6eee9346c4e
     gulp.src(path.src.layouts) // выберем файлы по нужному пути
         .pipe(plumber())
         .pipe(gulp.dest(path.build.layouts)) // выплюнем их в папку build
         .pipe(changed({firstPass: firstPass}))
         .pipe(livereload()); // и перезагрузим наш сервер для обновлений
-=======
-        .pipe(gulp.dest(path.build.hb)) // Выплюнем их в папку build
-        .pipe(reload({stream: true})); // И перезагрузим наш сервер для обновлений
-
-<<<<<<< 95980db34d85aed4141607dd4b9ed02483bd02ac
-    gulp.src(path.src.layouts) //Выберем файлы по нужному пути
-        .pipe(gulp.dest(path.build.layouts)) //Выплюнем их в папку build
-        .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
-
->>>>>>> починила линт
 });
 
 gulp.task('js:build', () => {
@@ -291,16 +170,9 @@ gulp.task('js:build', () => {
 });
 
 gulp.task('style:build', () => {
-<<<<<<< ec08867e7a8bb3b20ca5d58c5dfff6eee9346c4e
     let lessStream = gulp.src(path.src.style)
         .pipe(plumber())
         .pipe(tap(file => {
-=======
-    gulp.src(path.src.style) //Выберем наши less файлы
-        .pipe(sourcemaps.init()) // То же самое что и с js
-        .pipe(tap((file, t) => {
-
->>>>>>> починила линт
             let className = getUniqueBlockName(Path.dirname(file.relative));
             if (!className) {
                 return;
@@ -316,41 +188,8 @@ gulp.task('style:build', () => {
         .pipe(less())
         .pipe(concat('less-files.css'));
 
-<<<<<<< ec08867e7a8bb3b20ca5d58c5dfff6eee9346c4e
     let cssStream = gulp.src(path.src.styleRaw)
         .pipe(concat('css-files.css'));
-=======
-	gulp.src(path.src.layouts) // Выберем файлы по нужному пути
-        .pipe(gulp.dest(path.build.layouts)) // Выплюнем их в папку build
-        .pipe(reload({stream: true})); // И перезагрузим наш сервер для обновлений
-});
-
-gulp.task('js:build', () => {
-	gulp.src(path.src.js) // Найдем наш main файл
-        .pipe(sourcemaps.init()) // Инициализируем sourcemap
-        .pipe(babel()) // переводим ES6 => ES5
-        .pipe(uglify()) // Сожмем наш js
-        .pipe(concat('all.js')) // Конкатинируем js
-        .pipe(sourcemaps.write()) // Пропишем карты
-        .pipe(gulp.dest(path.build.js)) // Выплюнем готовый файл в build
-        .pipe(reload({stream: true})); // И перезагрузим сервер
-});
-
-gulp.task('style:build', () => {
-	gulp.src(path.src.style) // Выберем наши less файлы
-        .pipe(sourcemaps.init()) // То же самое что и с js
-        .pipe(tap((file, t) => {
-	let className = getUniqueBlockName(Path.dirname(file.relative));
-	if (!className) {
-		return;
-	}
-	file.contents = Buffer.concat([
-		new Buffer('.' + className + '{\n'),
-		file.contents,
-		new Buffer('}')
-	]);
-}))
->>>>>>> настроила тесты
 
     return merge(lessStream, cssStream)
         .pipe(plumber())
@@ -362,19 +201,9 @@ gulp.task('style:build', () => {
         .pipe(gulp.dest(path.build.css)) // и в build
         .pipe(changed({firstPass: firstPass}))
         .pipe(livereload());
-=======
-        .pipe(less()) // Скомпилируем
-        .pipe(prefixer()) // Добавим вендорные префиксы
-        .pipe(cssmin()) // Сожмем
-        .pipe(concat('all.css')) // Конкатинируем css
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest(path.build.css)) // И в build
-        .pipe(reload({stream: true}));
->>>>>>> починила линт
 });
 
 gulp.task('image:build', () => {
-<<<<<<< 95980db34d85aed4141607dd4b9ed02483bd02ac
     gulp.src(path.src.img) // выберем наши картинки
         .pipe(imagemin({ // сожмем их
             progressive: true,
@@ -401,35 +230,10 @@ gulp.task('sjs:build', () => {
         .pipe(gulp.dest(path.build.models));
 
     gulp.src(path.src.controllers)
-=======
-	gulp.src(path.src.img) // Выберем наши картинки
-        .pipe(imagemin({ // Сожмем их
-	progressive: true,
-	svgoPlugins: [{removeViewBox: false}],
-	use: [jpegtran()],
-	interlaced: true
-}))
-        .pipe(gulp.dest(path.build.img)) // И бросим в build
-        .pipe(reload({stream: true}));
-});
-
-gulp.task('fonts:build', () => {
-	gulp.src(path.src.fonts)
-        .pipe(gulp.dest(path.build.fonts));
-});
-
-gulp.task('sjs:build', () => {
-	gulp.src(path.src.view_models)
-        .pipe(gulp.dest(path.build.view_models));
-	gulp.src(path.src.models)
-        .pipe(gulp.dest(path.build.models));
-	gulp.src(path.src.controllers)
->>>>>>> настроила тесты
         .pipe(gulp.dest(path.build.controllers));
 });
 
 gulp.task('build', [
-<<<<<<< 95980db34d85aed4141607dd4b9ed02483bd02ac
     'html:build',
     'hb:build',
     'js:build',
@@ -545,84 +349,6 @@ gulp.task('webserver', () => {
             demon.emit('restart');
         });
     });
-=======
-	'html:build',
-	'hb:build',
-	'js:build',
-	'style:build',
-	'fonts:build',
-	'image:build',
-	'sjs:build'
-]);
-
-gulp.task('watch', () => {
-	watch([path.watch.html], (event, cb) => {
-		gulp.start('html:build');
-	});
-	watch([path.watch.style], (event, cb) => {
-		gulp.start('style:build');
-	});
-	watch([path.watch.layouts], (event, cb) => {
-		gulp.start('hb:build');
-	});
-	watch([path.watch.js], (event, cb) => {
-		gulp.start('js:build');
-	});
-	watch([path.watch.hb], (event, cb) => {
-		gulp.start('hb:build');
-	});
-	watch([path.watch.controllers], (event, cb) => {
-		gulp.start('sjs:build');
-	});
-	watch([path.watch.models], (event, cb) => {
-		gulp.start('sjs:build');
-	});
-	watch([path.watch.view_models], (event, cb) => {
-		gulp.start('sjs:build');
-	});
-	watch([path.watch.img], (event, cb) => {
-		gulp.start('image:build');
-	});
-	watch([path.watch.fonts], (event, cb) => {
-		gulp.start('fonts:build');
-	});
-	watch(['gulpfile.js'], (event, cb) => {
-		gulp.start('build');
-	});
-});
-
-gulp.task('clean', cb => {
-	rimraf(path.clean, cb);
-});
-
-gulp.task('nodemon', cb => {
-	let called = false;
-	return nodemon({
-		script: 'app.js',
-		ignore: [
-			'gulpfile.js',
-			'node_modules/'
-		]
-	})
-        .on('start', () => {
-	if (!called) {
-		called = true;
-		cb();
-	}
-})
-        .on('restart', () => {
-	setTimeout(() => {
-		reload({stream: false});
-	}, 1000);
-});
-});
-
-gulp.task('webserver', ['nodemon'], () => {
-	browserSync({
-		proxy: 'localhost:8080',  // порт приложения
-		notify: true
-	});
->>>>>>> настроила тесты
 });
 
 gulp.task('default', gulpSequence('lint', 'build', 'webserver', 'watch'));
