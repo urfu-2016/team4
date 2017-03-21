@@ -124,7 +124,7 @@ gulp.task('hb:build', () => {
             }
             file.contents = Buffer.concat([
                 new Buffer(headerBlock),
-                new Buffer(util.format('<div class="%s">\n', className)),
+                new Buffer(util.format('<div class="%s{{#if blockClass}} {{blockClass}}{{/if}}">\n', className)),
                 file.contents,
                 new Buffer('</div>')
             ]);
