@@ -8,7 +8,8 @@
         "newline-before-return": "error",
         "new-cap": ["error",
           { "newIsCap": true }
-        ]
+        ],
+        "no-tabs": 2
     },
   "globals": {
     "fetch": false,
