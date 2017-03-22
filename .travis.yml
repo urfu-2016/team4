@@ -1,18 +1,17 @@
 language: node_js
 node_js:
-  - "6"
+- '6'
 install:
-  - npm install
+- npm install
 branches:
   only:
   - master
 before_script:
-  - npm run lint
-
+- npm run lint
 deploy:
   provider: heroku
-  app: super-photo-quest  
   api_key:
-    secure: "Qvmw5T5fcScokVCywryxzaQW5dcW0gIuY1+yO2tFbMBpaoOKsfkxxzETkkvOb/Ka8WrwnPfgLRMED8lRsusPQZLfCwimdvAYEAgqhOYND8hjUXBOVrg+a80eiu/XTL92KIvrVvyPYuozVeJ3KKU6pCzuAE7s/dH5+WzruAV4lZAmNJTL9ml+I8ugBPoVJrY5WpM/U8ZFjihJOopkWa/aGkWDMZ9bz1LZgXtiQggR1qPqwNUJE07yJbTVakjqE1cLyncoNNXTlPOXCnke6EeCmLtq9A7Mj/rBglRWlDc2w7T45Z7PrAN6s8ihEX2za2kRm/naTyADT4/98gF0SVBlsROe6ZBOa9rxMD4IyzD67xh3q4dB02KILjMZJfFkt9Qhjl3sbjeinjhfmvKayo7IJ+qw7UCIDiGBfRJgCmWzjqUFiSZVEqz9JvFOdGFj3tbEgcqTjk6NG417j6vklvPtqOBrXBs6w/2D5xDqmskewPkUJK7zI1AS+dAzcyWFqZE9s+7gvFtALhZz82DHBSir546TETKr2wXiYvLT3FRveDyPZCkN3EsmhE+d8XKNbN/dMTy606mHQ4hfg1AgN10iqzFcONTMNZGPTqIscCDVY1cm4jJojA1Qp4+PQQzuD69M/dj7B6do6dMHEP2a9REb1wO5exvrY3LzTF7v1+95S5s="
+    secure: pGnrJ92lrvHyIvhJN0Lnw/UVnenrLkied7krwq40tr66+NZG0CFbzsYhrT1/4iqrbcYeSkB221A8C2j6XuIAKpY1ItNkbPOOd74jbVpf6NW40RMq/yylQd3iyxIYFA+khYkF53sGv7Z2hYeZbDCOsXCrvDIT+PbYc4TpEJ7SZgJai7E0S6pDUj+abnxUHugULOF+T8hV/X4kTdgA/EkkqvDXZiuO4GUeClXpjeCHObv+4jJl53MZJqnkze6oxFLAl55Rgpxozcyq8WBrxqp9tNGWPzevNFK1qu4o6LxlAPZ1BZP1Y42HCZe7jrTSj0rBPH3sXuwJ7/V7NyUUK7UnwMSivjNB8cYPRiR/RphP4oljWuHk8iwCzmxhEUFQFrJFMi4ZeYb0BxUKXekDZckY2Rsl6zX+l2A0P2gfErOhykvMWIlrDRBxoAlp20DviK3k0rGrJ7VcwU7vpJwY8TZzY8Dqpdn31NOctyBnQ95MF8bLzWmJ+3H3uEquYoxdYToc20lVBjdS6he4qzTgh3pT03Jg4lUEkJc7kSX8zm+UsbJJmqEDC2JrSRX9b11syOQkyjLGBaV3aP953YN4DsMG6EDdealFs9zCrWkLnbMhncecdpsBVESO39dMIPNW6cv+u5UHM1/l9wYY6e3WC7s1ar4RerQ4rmCEVq3m5Wa2x+I=
+  app: super-photo-quest
   on:
     repo: urfu-2016/team4
