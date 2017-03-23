@@ -15,7 +15,7 @@
     "cloudinary": "^1.8.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.0",
-    "eslint-config-xo": "^0.18.1",
+    "eslint-config-xo": "^0.17.0",
     "event-stream": "^3.3.4",
     "express": "^4.15.2",
     "express-handlebars": "^3.0.0",
@@ -64,12 +64,14 @@
     "stylelint-config-standard": "^16.0.0",
     "assert": "^1.4.1",
     "eslint": "^3.17.1",
-    "eslint-config-xo": "^0.17.0",
     "mocha": "^3.2.0",
     "stylelint": "^7.9.0"
   },
   "engines": {
     "node": "6.10.x",
     "npm": "3.10.x"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0"
   }
 }

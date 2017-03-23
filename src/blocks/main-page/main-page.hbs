@@ -8,11 +8,13 @@
     <section class="quest-query">
         {{>general-button text='Создать квест' style='primary'}}
         {{>general-combo-box options=filter label="Сортировать"
-            onchange="filterQuests()"}}
-        {{>general-search-bar label="Поиск"
-            onkeyup="filterQuests()"}}
+            onchange="filtersChanged()"}}
+        {{>general-search-bar label="Входящая строка"
+            onkeyup="filtersChanged()"}}
+        {{>general-numeric-input label="Не менее"
+            onkeyup="filtersChanged()" onchange="filtersChanged()"}}
         {{>general-check-box label="В обратном порядке"
-            onchange="filterQuests()"}}
+            onchange="filtersChanged()"}}
     </section>
     <section class="quests">
 
