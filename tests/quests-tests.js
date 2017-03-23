@@ -19,7 +19,7 @@ describe('quests', () => {
                     'field2': /.*includeValue.*/,
                 },
                 options: {
-                    'sort': {'field2': -1},
+                    'sort': {'field2': 1},
                     'limit': 10
                 }
             },
