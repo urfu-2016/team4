@@ -1,4 +1,13 @@
 /* eslint no-unused-vars: 'off' */
+let typeTimer;
+function filtersChanged() {
+    if (typeTimer) {
+        clearTimeout(typeTimer);
+    }
+
+    typeTimer = setTimeout(filterQuests, 500);
+}
+
 function filterQuests() {
     let url = '/questlist';
     let questBlockElements = document.querySelectorAll('.quests-block');
