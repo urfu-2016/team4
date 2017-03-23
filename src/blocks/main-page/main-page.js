@@ -4,23 +4,30 @@ function filtersChanged() {
     if (typeTimer) {
         clearTimeout(typeTimer);
     }
-
+    handleBlocks();
     typeTimer = setTimeout(filterQuests, 500);
 }
 
 function filterQuests() {
-    let url = '/questlist';
+    let url = '/quests';
     let questBlockElements = document.querySelectorAll('.quests-block');
     questBlockElements.forEach(el => {
         let queryElement = el.querySelector('.quest-query');
         let listElement = el.querySelector('.quests');
-        let value = queryElement.querySelector('select').value;
-        let reverse = queryElement.querySelector('input[type=checkbox]').checked;
-        let include = queryElement.querySelector('input[type=text]').value;
+        let value = queryElement.querySelector('.general-combo-box select').value;
+        let reverse = queryElement.querySelector('.general-check-box input').checked;
+        let include = queryElement.querySelector('.general-search-bar input').value;
+        let greaterThan = queryElement.querySelector('.general-numeric-input input').value;
         let params =
-            '?value=' + value +
-            '&reverse=' + reverse +
-            '&include=' + include + '&render=true';
+            '?render=true&Quest__opt__limit=50&' + value.replace('__', '__opt__sort__') + '=' + (reverse ? '-1' : '1');
+        if (include) {
+            params += '&' + value + '__include=' + include;
+        }
+
+        if (greaterThan) {
+            params += '&' + value + '__gte=' + greaterThan;
+        }
+
         fetch(url + params)
             .then(res => {
                 listElement.innerHTML = '';
@@ -34,4 +41,23 @@ function filterQuests() {
     });
 }
 
-filterQuests();
+function handleBlocks() {
+    let questBlockElements = document.querySelectorAll('.quests-block');
+    questBlockElements.forEach(el => {
+        let numericInput = el.querySelector('.general-numeric-input');
+        let searchBar = el.querySelector('.general-search-bar');
+        let comboBoxSelect = el.querySelector('.general-combo-box select');
+
+        if (['Quest__title', 'Author__name'].indexOf(comboBoxSelect.value) === -1) {
+            numericInput.style.display = 'block';
+            searchBar.querySelector('input').value = '';
+            searchBar.style.display = 'none';
+        } else {
+            numericInput.style.display = 'none';
+            numericInput.querySelector('input').value = '';
+            searchBar.style.display = 'block';
+        }
+    });
+}
+
+filtersChanged();

@@ -9,8 +9,10 @@
         {{>general-button text='Создать квест' style='primary'}}
         {{>general-combo-box options=filter label="Сортировать"
             onchange="filtersChanged()"}}
-        {{>general-search-bar label="Поиск"
+        {{>general-search-bar label="Входящая строка"
             onkeyup="filtersChanged()"}}
+        {{>general-numeric-input label="Не менее"
+            onkeyup="filtersChanged()" onchange="filtersChanged()"}}
         {{>general-check-box label="В обратном порядке"
             onchange="filtersChanged()"}}
     </section>
