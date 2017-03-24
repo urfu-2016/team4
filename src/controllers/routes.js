@@ -1,6 +1,9 @@
 'use strict';
 
 const QuestFilter = require('../view_models/quest-filter');
+const User = require('../models/user');
+require('../models/user');
+require('../models/photo');
 let questFilter = new QuestFilter();
 exports.initRouters = app => {
     app.get('/', (req, res) => {
@@ -11,7 +14,13 @@ exports.initRouters = app => {
 
     app.use('/quests', require('./quests'));
 
-    app.get('/profile', () => {
+    app.get('/profile', (req, res) => {
+        User.findById('58ce93feea5f3303332a4f7c', 'name photoURL rating')
+            .exec((err, user) => {
+                res.render('profile-page', {
+                    user
+                });
+            });
     });
 
     app.get('/profile/:id', () => {
