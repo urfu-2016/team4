@@ -1,6 +1,7 @@
 .idea/
 node_modules/
 build/
+.DS_Store
 
 # files:
 credentials.js
