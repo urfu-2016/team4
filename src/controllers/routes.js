@@ -20,9 +20,25 @@ exports.initRouters = app => {
                 if (err || !user) {
                     return res.send('Not found user');
                 }
-                res.render('profile-page', {
-                    user
-                });
+                Quest.find()
+                    .select('title author photos description -_id id likesCount rating')
+                    .populate('author', '-_id id name')
+                    .populate('photos', '-_id url')
+                    .exec()
+                    .then(quests => {
+                        quests = questFilter.handle('name', quests, req.query);
+                        if (req.query.render === 'true') {
+                            res.render('quest-list', {
+                                quests,
+                                layout: false
+                            });
+                        } else {
+                            res.render('profile-page', {
+                                user,
+                                quests
+                            });
+                        }
+                    });
             });
     });
 
