@@ -17,6 +17,9 @@ exports.initRouters = app => {
     app.get('/profile', (req, res) => {
         User.findById('58ce93feea5f3303332a4f7c', 'name photoURL rating')
             .exec((err, user) => {
+                if (err || !user) {
+                    return res.send('Not found user');
+                }
                 res.render('profile-page', {
                     user
                 });
