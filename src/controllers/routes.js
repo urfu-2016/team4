@@ -2,8 +2,6 @@
 
 const QuestFilter = require('../view_models/quest-filter');
 const User = require('../models/user');
-require('../models/user');
-require('../models/photo');
 let questFilter = new QuestFilter();
 exports.initRouters = app => {
     app.get('/', (req, res) => {
