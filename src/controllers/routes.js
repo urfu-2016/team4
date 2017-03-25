@@ -20,10 +20,16 @@ exports.initRouters = app => {
             .populate({
                 path: 'quests.questId',
                 select: 'title author photos description -_id id likesCount rating',
-                populate: {
-                    path: 'photos',
-                    select: '-_id url'
-                }
+                populate: [
+                    {
+                        path: 'photos',
+                        select: '-_id url'
+                    },
+                    {
+                        path: 'author',
+                        select: '-_id id name'
+                    }
+                ]
             })
             .exec((err, user) => {
                 if (err || !user) {
@@ -38,31 +44,40 @@ exports.initRouters = app => {
             });
     });
 
-    app.get('/profile/:id', () => {
+    app.post('/rating', () => {
+        /* eslint no-unused-vars: 0 */
     });
 
     app.get('/quest/:id', () => {
+        /* eslint no-unused-vars: 0 */
     });
 
     app.get('/quest/:id/details', () => {
+        /* eslint no-unused-vars: 0 */
     });
 
     app.get('/myquests', () => {
+        /* eslint no-unused-vars: 0 */
     });
 
     app.get('/newquest', () => {
+        /* eslint no-unused-vars: 0 */
     });
 
     app.get('/editquest/:id', () => {
+        /* eslint no-unused-vars: 0 */
     });
 
     app.post('/signin', () => {
+        /* eslint no-unused-vars: 0 */
     });
 
     app.post('/signup', () => {
+        /* eslint no-unused-vars: 0 */
     });
 
     app.post('/rating', () => {
+        /* eslint no-unused-vars: 0 */
     });
 
     app.use((req, res) => {
