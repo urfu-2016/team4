@@ -1,3 +1,4 @@
+{{>general-header}}
 <section>
     <h2>О сервисе ФотоКвест</h2>
     <article>
@@ -7,14 +8,19 @@
 <div class="quests-block">
     <section class="quest-query">
         {{>general-button text='Создать квест' style='primary'}}
-        {{>general-combo-box options=filter label="Сортировать"
-            onchange="filtersChanged()"}}
+
         {{>general-search-bar label="Входящая строка"
             onkeyup="filtersChanged()"}}
         {{>general-numeric-input label="Не менее"
             onkeyup="filtersChanged()" onchange="filtersChanged()"}}
-        {{>general-check-box label="В обратном порядке"
-            onchange="filtersChanged()"}}
+
+            <div class="filter">
+                {{>general-combo-box options=filter label="Сортировать"
+                    onchange="filtersChanged()"}}
+                {{>general-check-box label="В обратном порядке"
+                    onchange="filtersChanged()"}}
+            </div>
+
     </section>
     <section class="quests">
 
