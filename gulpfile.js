@@ -23,7 +23,6 @@ const tap = require('gulp-tap');
 const util = require('util');
 const merge = require('merge-stream');
 const plumber = require('gulp-plumber');
-const lesshint = require('gulp-lesshint');
 const stylelint = require('gulp-stylelint');
 const htmllint = require('gulp-html-lint');
 const eslint = require('gulp-eslint');
@@ -244,13 +243,7 @@ gulp.task('build', [
 ]);
 
 gulp.task('style:lint', () => {
-    gulp.src(path.src.style)
-        .pipe(plumber())
-        .pipe(lesshint())
-        .pipe(lesshint.reporter())
-        .pipe(lesshint.failOnError());
-
-    gulp.src(path.src.styleRaw)
+    gulp.src([path.src.styleRaw, path.src.style])
         .pipe(plumber())
         .pipe(stylelint({
             debug: true,
