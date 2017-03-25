@@ -15,30 +15,26 @@ exports.initRouters = app => {
     app.use('/quests', require('./quests'));
 
     app.get('/profile', (req, res) => {
-        User.findById('58ce93feea5f3303332a4f7c', 'name photoURL rating')
+        const testUserId = '58ce93feea5f3303332a4f7c';
+        User.findById(testUserId, 'name photoURL rating quests')
+            .populate({
+                path: 'quests.questId',
+                select: 'title author photos description -_id id likesCount rating',
+                populate: {
+                    path: 'photos',
+                    select: '-_id url'
+                }
+            })
             .exec((err, user) => {
                 if (err || !user) {
                     return res.send('Not found user');
                 }
-                Quest.find()
-                    .select('title author photos description -_id id likesCount rating')
-                    .populate('author', '-_id id name')
-                    .populate('photos', '-_id url')
-                    .exec()
-                    .then(quests => {
-                        quests = questFilter.handle('name', quests, req.query);
-                        if (req.query.render === 'true') {
-                            res.render('quest-list', {
-                                quests,
-                                layout: false
-                            });
-                        } else {
-                            res.render('profile-page', {
-                                user,
-                                quests
-                            });
-                        }
-                    });
+                res.render('profile-page', {
+                    user,
+                    quests: user.quests.map(quest => {
+                        return quest.questId;
+                    })
+                });
             });
     });
 
