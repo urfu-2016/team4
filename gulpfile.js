@@ -281,6 +281,7 @@ gulp.task('js:lint', () => {
     gulp.src([path.src.js,
         'gulpfile.js',
         'app.js',
+        'tests/**/*.js',
         path.src.models,
         path.src.controllers,
         path.src.viewModels])
@@ -311,6 +312,7 @@ gulp.task('watch', () => {
     watch([path.watch.js,
         'gulpfile.js',
         'app.js',
+        'tests/**/*.js',
         path.src.models,
         path.src.controllers,
         path.src.viewModels], () => {

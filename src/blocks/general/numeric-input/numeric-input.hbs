@@ -3,12 +3,13 @@
 {{#if label}}
     <label>{{label}}
 {{/if}}
-    <input type="text" class="form-control"
+    <input type="number" class="form-control"
         {{bind-attr id="id:id"}}
         {{bind-attr value="value:value"}}
         {{bind-attr value="placeholder:placeholder"}}
         {{bind-attr disabled="disabled:disabled"}}
         {{bind-attr onkeyup="onkeyup:onkeyup"}}
+        {{bind-attr onchange="onchange:onchange"}}
     />
 {{#if label}}
     </label>
