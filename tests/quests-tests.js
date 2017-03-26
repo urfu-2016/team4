@@ -15,7 +15,7 @@ describe('quests', () => {
                 'Model': {
                     find: {
                         'field.name': 'value',
-                        'field2': /.*includeValue.*/
+                        'field2': /.*includeValue.*/gi
                     },
                     options: {
                         'sort': {'field2': 1},
@@ -25,7 +25,7 @@ describe('quests', () => {
                 'AnotherModel': {
                     find: {
                         'field.sub.name': {'$gt': 1},
-                        'field.sub.name2': /.*includeValue.*/
+                        'field.sub.name2': /.*includeValue.*/gi
                     },
                     options: {}
                 }
