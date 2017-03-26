@@ -14,6 +14,15 @@ exports.initRouters = app => {
 
     app.get('/profile', (req, res) => {
         const testUserId = '58ce93feea5f3303332a4f7c';
+        function getFilteredQuests(quests, iAmAuthor) {
+            return quests
+                .filter(quest => {
+                    return (iAmAuthor ? quest.whoAmI : !quest.whoAmI);
+                })
+                .map(quest => {
+                    return quest.questId;
+                });
+        }
         User.findById(testUserId, 'name photoURL rating quests')
             .populate({
                 path: 'quests.questId',
@@ -35,9 +44,8 @@ exports.initRouters = app => {
                 }
                 res.render('profile-page', {
                     user,
-                    quests: user.quests.map(quest => {
-                        return quest.questId;
-                    })
+                    usersQuests: getFilteredQuests(user.quests, true),
+                    inProcessQuests: getFilteredQuests(user.quests, false)
                 });
             });
     });
