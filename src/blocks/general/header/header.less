@@ -1,4 +1,4 @@
-.header {
+& {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -7,26 +7,36 @@
     width: 100%;
 }
 
-.logo
-{
+a {
+    color: black;
+    text-decoration: none;
+}
+
+a:hover {
+    color: red;
+    text-decoration: none;
+}
+
+.logo {
     margin: 8px;
     font-size: 26pt;
     margin-bottom: 0;
     border-bottom: 3px solid red;
 }
 
-.logo:first-letter
-{
+.logo::first-letter {
     color: red;
 }
 
-.header div {
+& div,
+.form-control {
     margin: 10px;
     font-size: 14pt;
-    font-family: Arial,Helvetica, sans-serif;
+    font-family: @baseFontStyle;
 }
 
 .nav {
+    padding-top: 5px;
     display: flex;
     flex-direction: row;
 }
