@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node node_modules/gulp/bin/gulp build && node app.js",
+    "start:prod": "node node_modules/gulp/bin/gulp build && cross-env NODE_ENV=prod node app.js",
+    "start": "node node_modules/gulp/bin/gulp build && cross-env NODE_ENV=dev node app.js",
+    "surge:deploy": "surge -p ./build/public -d super-photo-quest.surge.sh",
     "test:watch": "npm run test -- -w",
     "test": "mocha tests/",
     "lint": "npm test & gulp lint"
@@ -61,11 +63,15 @@
     "morgan": "~1.7.0",
     "promise": "^7.1.1",
     "promise-polyfill": "^6.0.2",
+    "remote-static": "^1.1.0",
     "rimraf": "^2.6.1",
     "run-sequence": "^1.2.2",
     "serve-favicon": "~2.3.2",
     "stylelint": "^7.9.0",
     "stylelint-config-standard": "^16.0.0",
+    "assert": "^1.4.1",
+    "eslint": "^3.17.1",
+    "mocha": "^3.2.0",
     "whatwg-fetch": "^2.0.3"
   },
   "engines": {
@@ -73,6 +79,7 @@
     "npm": "3.10.x"
   },
   "devDependencies": {
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "cross-env": "^3.2.4"
   }
 }

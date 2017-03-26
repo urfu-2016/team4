@@ -1,6 +1,7 @@
 let express = require('express');
 let app = express();
 let middlewares = require('./build/controllers/middlewares');
+let remoteStatic = require('remote-static');
 app.set('views', 'build/hbs');
 
 let exphbs = require('express-handlebars');
@@ -13,7 +14,15 @@ app.engine('.hbs', exphbs({
 }));
 
 middlewares.init(app);
-app.use('/static', express.static('build/public'));
+
+if (process.env.NODE_ENV && process.env.NODE_ENV === 'prod') {
+    console.log('prod');
+    app.use('/static', remoteStatic('https://super-photo-quest.surge.sh'));
+} else {
+    console.log('dev');
+    app.use('/static', express.static('build/public'));
+}
+
 app.use(require('connect-livereload')());
 app.set('view engine', '.hbs');
 app.set('port', process.env.PORT || 8080);
