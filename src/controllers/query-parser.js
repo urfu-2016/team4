@@ -18,7 +18,7 @@ function parseField(key, queryQueue, data, value) {
 
     let subKey = queryQueue.shift();
     if (subKey === 'include') {
-        data.find[key] = new RegExp('.*' + value + '.*');
+        data.find[key] = new RegExp('.*' + value + '.*', 'gi');
     } else {
         data.find[key] = {};
         data.find[key]['$' + subKey] = value;
