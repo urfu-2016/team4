@@ -222,14 +222,19 @@ gulp.task('fonts:build', () => {
 });
 
 gulp.task('sjs:build', () => {
-    gulp.src(path.src.viewModels)
+    let viewModelsStream = gulp.src(path.src.viewModels)
+        .pipe(changed({firstPass: firstPass}))
         .pipe(gulp.dest(path.build.viewModels));
 
-    gulp.src(path.src.models)
+    let modelsStream = gulp.src(path.src.models)
+        .pipe(changed({firstPass: firstPass}))
         .pipe(gulp.dest(path.build.models));
 
-    gulp.src(path.src.controllers)
+    let ctrlStream = gulp.src(path.src.controllers)
+        .pipe(changed({firstPass: firstPass}))
         .pipe(gulp.dest(path.build.controllers));
+
+    return merge(viewModelsStream, modelsStream, ctrlStream);
 });
 
 gulp.task('build', [
