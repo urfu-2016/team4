@@ -59,10 +59,12 @@
   |  +-- layouts
   |  `-- ...
   +-- controllers
+  |	 +-- middlewares.js
+  |  `-- routes.js
+  +-- view_models
   `-- models
 ```
-
-###   
+  
 ## 2. build
 ### Каждый .hbs компонент в папке src/blocks/<название partial> оборачивается
 ```html
@@ -89,10 +91,16 @@ a {
 ```
 `-- build
   +-- controllers
+  |	 +-- middlewares.js
+  |  `-- routes.js
   +-- hbs
   +-- layouts
   +-- public
-  |  `-- css 
-  +-- controllers
+  |  +-- img
+  |  +-- js
+  |     `-- polyfills.js
+  |  `-- css
+  |		`-- all.css
+  +-- view_models
   `-- models
 ```
