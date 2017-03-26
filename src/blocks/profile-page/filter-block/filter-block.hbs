@@ -1,2 +1,4 @@
-{{> general-button text='Мои' onClick='getUsersQuests()'}}
-{{> general-button text='В процессе' onClick='getInProcessQuests()'}}
+{{> general-radio-button text='Мои' name='quest-type' value='users'
+    onChange='getUsersQuests()' checked='true'}}
+{{> general-radio-button text='В процессе' name='quest-type' value='inProccess'
+    onChange='getInProcessQuests()'}}

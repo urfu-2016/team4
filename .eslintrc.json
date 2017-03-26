@@ -16,6 +16,8 @@
     "Promise": false,
     "document": false,
     "describe": false,
-    "it": false
+    "it": false,
+    "Event": false,
+    "location": false
   }
 }

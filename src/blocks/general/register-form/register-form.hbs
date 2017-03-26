@@ -1,0 +1,17 @@
+<h1>Регистрация</h1>
+<form action="/signup" method="post">
+    <div class="error"></div>
+    <label>Email
+        <input type="email"   class="form-control" placeholder="your@email.com" name="email" required/>
+    </label>
+    <label>Ник
+        <input type="text" class="form-control" name="username" required/>
+    </label>
+    <label>Пароль
+        <input type="password" class="form-control" name="password" required/>
+    </label>
+    <label>Повторите пароль
+        <input type="password" class="form-control" name="password-repeat" required/>
+    </label>
+    {{>general-button type="submit" text="Зарегестрироваться" style="default pull-right"}}
+</form>

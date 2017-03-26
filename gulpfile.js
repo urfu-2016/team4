@@ -351,6 +351,7 @@ gulp.task('webserver', () => {
     });
     watch([path.watch.controllers, path.watch.models, path.watch.viewModels], () => {
         runSequence('sjs:build', () => {
+            console.log('done');
             demon.emit('restart');
         });
     });

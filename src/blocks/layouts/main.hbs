@@ -8,10 +8,18 @@
     <title>Title</title>
 </head>
 <body>
+{{#if_eq user undefined }}
+    {{>general-shade}}
+    {{>general-login-form}}
+    {{>general-register-form}}
+{{/if_eq}}
 {{>general-header}}
 {{{body}}}
 <!--all local scripts here-->
-{{{sections.scripts}}}
+{{#each sections.scripts as |script|}}
+{{{script}}}
+{{/each}}
+
 <!-------------------------->
 </body>
 </html>

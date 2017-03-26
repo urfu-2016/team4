@@ -2,12 +2,27 @@
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
-/* eslint new-cap: 0 */
+const autoIncrement = require('mongoose-auto-increment');
+autoIncrement.initialize(mongoose.connection);
 const userSchema = new Schema({
-    id: Number,
-    name: String,
-    password: String,
+    id: {
+        type: Number,
+        unique: true
+    },
+    email: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    name: {
+        type: String,
+        unique: true,
+        required: true
+    },
     rating: Number,
     photoURL: String,
     quests: [{
@@ -29,3 +44,6 @@ const userSchema = new Schema({
 });
 
 module.exports = mongoose.model('user', userSchema);
+
+userSchema.plugin(autoIncrement.plugin, {model: 'User', field: 'id'});
+module.exports = mongoose.connection.model('User', userSchema);

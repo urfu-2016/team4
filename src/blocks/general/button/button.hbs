@@ -1,7 +1,13 @@
 <!-- htmllint attr-name-style="false" -->
 <!-- htmllint attr-no-dup="false" -->
-<a class="btn {{#if style}}btn-{{style}}{{else}}btn-default{{/if}}"
-    {{bind-attr href="href:href"}} onclick="{{onClick}}">{{text}}</a>
+{{#if_eq type "submit" }}
+    <input type="submit" class="btn {{#if style}}btn-{{style}}{{else}}btn-default{{/if}}"
+        value="{{text}}"/>
+{{else}}
+    <a class="btn {{#if style}}btn-{{style}}{{else}}btn-default{{/if}}"
+        {{bind-attr href="href:href"}} {{bind-attr onclick="onClick:onClick"}}>{{text}}</a>
+{{/if_eq}}
+
 <!--styles:-->
 <!--default-->
 <!--primary-->

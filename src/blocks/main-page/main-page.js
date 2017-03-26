@@ -49,13 +49,13 @@ function handleBlocks() {
         let comboBoxSelect = el.querySelector('.general-combo-box select');
 
         if (['Quest__title', 'Author__name'].indexOf(comboBoxSelect.value) === -1) {
-            numericInput.style.display = 'block';
+            numericInput.classList.remove('hidden');
             searchBar.querySelector('input').value = '';
-            searchBar.style.display = 'none';
+            searchBar.classList.add('hidden');
         } else {
-            numericInput.style.display = 'none';
+            numericInput.classList.add('hidden');
             numericInput.querySelector('input').value = '';
-            searchBar.style.display = 'block';
+            searchBar.classList.remove('hidden');
         }
     });
 }
