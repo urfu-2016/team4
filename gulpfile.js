@@ -129,7 +129,7 @@ gulp.task('hb:build', () => {
             ]);
             // меняем адреса с картинками на /static/img...
             bufferReplace(file, /img\/([A-Za-z0-9.]+)/g, '/static/img/' + dir + '/img/$1');
-            bufferReplace(file, /\{\{\s*bind-attr\s+(\w*)\s*=\s*\"(\w*):(\w*)\"\s*\}\s*\}/g,
+            bufferReplace(file, /\{\{\s*bind-attr\s+(\w*)\s*=\s*"(\w*):(\w*)"\s*\}\s*\}/g,
                 '{{#if $2}}$1="{{$3}}"{{/if}}');
             bufferReplace(file, /<!--.*-->\n/g, '');
         }))
@@ -142,7 +142,7 @@ gulp.task('hb:build', () => {
             path.basename = getUniqueBlockName(dir);
         }))
         .pipe(htmlmin({collapseWhitespace: true, caseSensetive: true,
-            customAttrSurround: [[/\{\{\#if\s*\w*\}\}/, /\{\{\/if\}\}/]]}))
+            customAttrSurround: [[/\{\{#if\s*\w*\}\}/, /\{\{\/if\}\}/]]}))
         .pipe(gulp.dest(path.build.hb)) // выплюнем их в папку build
         .pipe(livereload()); // и перезагрузим наш сервер для обновлений
 
