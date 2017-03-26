@@ -4,10 +4,12 @@
 
 /* eslint no-unused-vars: 'off' */
 function getUsersQuests() {
-    document.querySelector('.profile-page-users-quests').innerHTML = '{{>quest-list quests=usersQuests}}';
+    document.querySelector('.in-process-quests').classList.add('hidden');
+    document.querySelector('.users-quests').classList.remove('hidden');
 }
 
 /* eslint no-unused-vars: 'off' */
 function getInProcessQuests() {
-    document.querySelector('.profile-page-users-quests').innerHTML = '{{>quest-list quests=inProcessQuests}}';
+    document.querySelector('.users-quests').classList.add('hidden');
+    document.querySelector('.in-process-quests').classList.remove('hidden');
 }
