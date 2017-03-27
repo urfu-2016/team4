@@ -21,6 +21,7 @@ const babel = require('gulp-babel');
 const Path = require('path');
 const tap = require('gulp-tap');
 const util = require('util');
+const noop = require('gulp-noop');
 const merge = require('merge-stream');
 const plumber = require('gulp-plumber');
 const stylelint = require('gulp-stylelint');
@@ -65,6 +66,7 @@ let path = {
 path.watch = path.src;
 
 let firstPass = true;
+let isWatching = false;
 
 function getUniqueBlockName(directory, camelCase) {
     /**
@@ -88,7 +90,7 @@ function getUniqueBlockName(directory, camelCase) {
 
 gulp.task('html:build', () => {
     gulp.src(path.src.html) // выберем файлы по нужному пути
-        .pipe(plumber())
+        .pipe(isWatching ? plumber() : noop())
         .pipe(gulp.dest(path.build.html)) // выплюнем их в папку build
         .pipe(livereload()); // и перезагрузим наш сервер для обновлений
 });
@@ -105,7 +107,7 @@ function bufferReplace(file, match, str) {
 
 gulp.task('hb:build', () => {
     gulp.src([path.src.hb, '!' + path.src.layouts]) // выберем файлы по нужному пути
-        .pipe(plumber())
+        .pipe(isWatching ? plumber() : noop())
         .pipe(changed({firstPass: firstPass}))
         .pipe(tap(file => {
             let dir = Path.dirname(file.relative);
@@ -146,7 +148,7 @@ gulp.task('hb:build', () => {
         .pipe(livereload()); // и перезагрузим наш сервер для обновлений
 
     gulp.src(path.src.layouts) // выберем файлы по нужному пути
-        .pipe(plumber())
+        .pipe(isWatching ? plumber() : noop())
         .pipe(gulp.dest(path.build.layouts)) // выплюнем их в папку build
         .pipe(changed({firstPass: firstPass}))
         .pipe(livereload()); // и перезагрузим наш сервер для обновлений
@@ -154,7 +156,7 @@ gulp.task('hb:build', () => {
 
 gulp.task('js:build', () => {
     gulp.src(path.src.js) // найдем наш main файл
-        .pipe(plumber())
+        .pipe(isWatching ? plumber() : noop())
         .pipe(sourcemaps.init()) // инициализируем sgulpourcemap
         .pipe(babel()) // переводим ES6 => ES5
         .pipe(uglify()) // сожмем наш js
@@ -170,7 +172,7 @@ gulp.task('js:build', () => {
 
 gulp.task('style:build', () => {
     let lessStream = gulp.src(path.src.style)
-        .pipe(plumber())
+        .pipe(isWatching ? plumber() : noop())
         .pipe(tap(file => {
             let className = getUniqueBlockName(Path.dirname(file.relative));
             if (!className) {
@@ -191,7 +193,7 @@ gulp.task('style:build', () => {
         .pipe(concat('css-files.css'));
 
     return merge(lessStream, cssStream)
-        .pipe(plumber())
+        .pipe(isWatching ? plumber() : noop())
         .pipe(sourcemaps.init()) // инициализируем sourcemap
         .pipe(concat('all.css')) // конкатинируем css
         .pipe(prefixer()) // добавим вендорные префиксы
@@ -249,7 +251,7 @@ gulp.task('build', [
 
 gulp.task('style:lint', () => {
     gulp.src([path.src.styleRaw, path.src.style])
-        .pipe(plumber())
+        .pipe(isWatching ? plumber() : noop())
         .pipe(stylelint({
             debug: true,
             failAfterError: true,
@@ -261,7 +263,7 @@ gulp.task('style:lint', () => {
 
 gulp.task('html:lint', () => {
     gulp.src(path.src.html)
-        .pipe(plumber())
+        .pipe(isWatching ? plumber() : noop())
         .pipe(htmllint())
         .pipe(htmllint.format())
         .pipe(htmllint.failOnError());
@@ -269,7 +271,7 @@ gulp.task('html:lint', () => {
 
 gulp.task('hb:lint', () => {
     gulp.src(path.src.hb)
-        .pipe(plumber())
+        .pipe(isWatching ? plumber() : noop())
         .pipe(htmllint())
         .pipe(htmllint.format())
         .pipe(htmllint.failOnError());
@@ -283,7 +285,7 @@ gulp.task('js:lint', () => {
         path.src.models,
         path.src.controllers,
         path.src.viewModels])
-        .pipe(plumber())
+        .pipe(isWatching ? plumber() : noop())
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failOnError());
@@ -297,6 +299,8 @@ gulp.task('lint', [
 ]);
 
 gulp.task('watch', () => {
+    isWatching = true;
+
     watch([path.watch.html], () => {
         gulp.start('html:build');
         gulp.start('html:lint');
@@ -351,4 +355,4 @@ gulp.task('webserver', () => {
     });
 });
 
-gulp.task('default', gulpSequence('lint', 'build', 'webserver', 'watch'));
+gulp.task('default', gulpSequence('watch', 'lint', 'build', 'webserver'));
