@@ -16,4 +16,4 @@ deploy:
   on:
     repo: urfu-2016/team4
 after_success:
-- '["${TRAVIS_PULL_REQUEST}" = "false"] && npm run surge'
+- '["${TRAVIS_PULL_REQUEST}" = "false"] && npm run surge:deploy'
