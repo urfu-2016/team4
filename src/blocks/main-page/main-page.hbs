@@ -1,5 +1,5 @@
 <section>
-    <h2>О сервисе ФотоКвест</h2>
+    <h1>О сервисе ФотоКвест</h1>
     <article>
         {{>main-page-description}}
     </article>
@@ -7,14 +7,21 @@
 <div class="quests-block">
     <section class="quest-query">
         {{>general-button text='Создать квест' style='primary'}}
-        {{>general-combo-box options=filter label="Сортировать"
-            onchange="filtersChanged()"}}
-        {{>general-search-bar label="Входящая строка"
-            onkeyup="filtersChanged()"}}
-        {{>general-numeric-input label="Не менее"
-            onkeyup="filtersChanged()" onchange="filtersChanged()"}}
-        {{>general-check-box label="В обратном порядке"
-            onchange="filtersChanged()"}}
+        <div class="search-group">
+            <div class="filter">
+                {{>general-combo-box options=filter label="Поиск"
+                    onchange="filtersChanged()"}}
+            </div>
+            <div>
+                {{>general-search-bar label="Входящая строка"
+                    onkeyup="filtersChanged()"}}
+                {{>general-numeric-input label="Не менее"
+                    onkeyup="filtersChanged()" onchange="filtersChanged()"}}
+                {{>general-check-box label="В обратном порядке"
+                    onchange="filtersChanged()"}}
+            </div>
+        </div>
+
     </section>
     <section class="quests">
 
