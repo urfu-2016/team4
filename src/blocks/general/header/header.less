@@ -9,6 +9,7 @@
 
 a {
     color: black;
+    vertical-align: middle;
     text-decoration: none;
 }
 
@@ -18,8 +19,8 @@ a:hover {
 }
 
 .logo {
-    margin: 8px;
     font-size: 26pt;
+    margin-top: auto;
     margin-bottom: 0;
     border-bottom: 3px solid red;
 }
@@ -28,15 +29,15 @@ a:hover {
     color: red;
 }
 
-& div,
-.form-control {
-    margin: 10px;
-    font-size: 14pt;
-    font-family: @baseFontStyle;
+&-nav,
+.general-search-bar {
+    margin-top: auto;
+    margin-bottom: 5px;
 }
 
-.nav {
-    padding-top: 5px;
+
+&-nav {
+    //padding-top: 5px;
     display: flex;
     flex-direction: row;
 }
