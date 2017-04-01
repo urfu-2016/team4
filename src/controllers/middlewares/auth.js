@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
 const User = require('../../models/user');
-
+const passwordHash = require('password-hash');
 exports.init = app => {
     passport.use(new Strategy({
         usernameField: 'email',
@@ -21,7 +21,7 @@ exports.init = app => {
                     if (!user) {
                         return cb(null, false, {message: 'Юзера с данным email не существует'});
                     }
-                    if (user.password !== password) {
+                    if (!passwordHash.verify(password, user.password)) {
                         return cb(null, false, {message: 'Неверный пароль'});
                     }
 
