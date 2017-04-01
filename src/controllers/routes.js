@@ -3,7 +3,7 @@ const passport = require('passport');
 const QuestFilter = require('../view_models/quest-filter');
 const User = require('../models/user');
 let questFilter = new QuestFilter();
-
+const passwordHash = require('password-hash');
 function isAuthenticated(req, res, next) {
     if (req.user) {
         return next();
@@ -112,7 +112,7 @@ exports.initRouters = app => {
         let user = new User({
             name: req.body.name,
             email: req.body.email,
-            password: req.body.password
+            password: passwordHash.generate(req.body.password)
         });
 
         user.save(function (err) {
