@@ -1,5 +1,6 @@
 /* eslint no-unused-vars: 'off' */
 let typeTimer;
+let loader = document.querySelector('.general-loader');
 function filtersChanged() {
     if (typeTimer) {
         clearTimeout(typeTimer);
@@ -27,11 +28,9 @@ function filterQuests() {
         if (greaterThan) {
             params += '&' + value + '__gte=' + greaterThan;
         }
-
+        listElement.innerHTML = loader.outerHTML;
         fetch(url + params)
             .then(res => {
-                listElement.innerHTML = '';
-
                 return res.text();
             })
             .then(body => {
