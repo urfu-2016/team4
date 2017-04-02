@@ -78,8 +78,10 @@ exports.initRouters = app => {
         /* eslint no-unused-vars: 0 */
     });
 
-    app.get('/newquest', () => {
-        /* eslint no-unused-vars: 0 */
+    app.get('/newquest', (req, res) => {
+        res.render('create-quest-page', {
+            photos: [1, 2, 3]
+        });
     });
 
     app.get('/editquest/:id', () => {
