@@ -80,7 +80,11 @@ exports.initRouters = app => {
 
     app.get('/newquest', (req, res) => {
         res.render('create-quest-page', {
-            photos: [1, 2, 3]
+            photos: [
+                'http://www.neighborhood-love.com/wp-content/uploads/2013/03/3D-Graphic-Graffiti-Design.jpg',
+                'https://img.gazeta.ru/files3/271/7927271/pam06.jpg',
+                'http://ic.pics.livejournal.com/tochkaglife/64898668/43055/43055_900.jpg'
+            ]
         });
     });
 
