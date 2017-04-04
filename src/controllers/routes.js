@@ -107,8 +107,8 @@ exports.initRouters = app => {
         /* eslint no-unused-vars: 0 */
     });
 
-    app.get('/myquests', () => {
-        /* eslint no-unused-vars: 0 */
+    app.get('/myquests', isAuthenticated, (req, res) => {
+        res.render('my-quests-page');
     });
 
     app.get('/newquest', (req, res) => {
