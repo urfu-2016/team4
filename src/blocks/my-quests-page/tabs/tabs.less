@@ -1,0 +1,43 @@
+.tabs {
+    max-width: 90%;
+    margin: 15px auto;
+}
+
+.tabs input[type=radio] {
+    display:none;
+}
+.tabs label p {
+    padding: 5px;
+    margin-right: 0;
+}
+.tabs label {
+    display: block;
+    float: left;
+    width: 33%;
+    font-size: 13pt;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: @tab-border-bottom-yellow;
+    transition: all 0.5s;
+}
+
+.tabs label:hover {
+    border-bottom: @tab-border-bottom-red;
+}
+.tab-content {
+    display: none;
+    width: 100%;
+    padding: 25px;
+}
+
+
+.tabs [id^="tab"]:checked + label {
+    border-bottom: @tab-border-bottom-red;
+    color: @redColor;
+}
+#tab-first:checked ~ #tab-content-1,
+#tab-second:checked ~ #tab-content-2,
+#tab-third:checked ~ #tab-content-3
+{
+    display: block;
+}
