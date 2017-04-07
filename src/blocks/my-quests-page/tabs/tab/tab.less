@@ -1,0 +1,34 @@
+& input[type=radio] {
+    display:none;
+}
+
+& label p {
+    padding: 5px;
+    margin-right: 0;
+}
+
+& {
+    margin-top: 10px;
+    display: block;
+    float: left;
+    width: 33%;
+
+    text-align: center;
+}
+
+& label {
+    padding: 0 15px;
+    font-size: 13pt;
+    cursor: pointer;
+    border-bottom: @tab-border-bottom-yellow;
+    transition: all 0.5s;
+}
+
+& label:hover {
+    border-bottom: @tab-border-bottom-red;
+}
+
+& [id^="tab"]:checked + label {
+    border-bottom: @tab-border-bottom-red;
+    color: @redColor;
+}
