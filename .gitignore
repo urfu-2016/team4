@@ -6,3 +6,5 @@ build/
 # files:
 credentials.js
 npm-debug.log
+nbproject/
+.vs

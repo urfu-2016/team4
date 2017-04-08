@@ -1,9 +1,10 @@
-<div class="quest-content">
+<a href="/quest/{{quest.id}}">
 {{#if quest.photos.length }}
     <img class="img-thumbnail" src="{{ quest.photos.0.url }}" alt="quest-cover"/>
 {{else}}
     <img class="img-thumbnail" src="img/nocover.jpg" alt="quest-cover"/>
 {{/if}}
+</a>
 <h4 class="text-center">{{quest.title}}</h4>
 <div>
     likes: {{quest.likesCount}}
@@ -11,7 +12,7 @@
 <div>
     rating: {{quest.rating}}
 </div>
+
 <div>
     author: <a href="/profile/{{quest.author.id}}">{{quest.author.name}}</a>
-</div>
 </div>

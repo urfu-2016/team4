@@ -2,6 +2,7 @@
 const passport = require('passport');
 const QuestFilter = require('../view_models/quest-filter');
 const User = require('../models/user');
+const Quests = require('../models/quest');
 let questFilter = new QuestFilter();
 const passwordHash = require('password-hash');
 function isAuthenticated(req, res, next) {
@@ -66,8 +67,40 @@ exports.initRouters = app => {
         /* eslint no-unused-vars: 0 */
     });
 
-    app.get('/quest/:id', () => {
-        /* eslint no-unused-vars: 0 */
+    app.get('/quest/:id([0-9]+)', (req, res) => {
+        let questId = req.params.id;
+        let buttonText = 'Начать квест';
+        let text = '';
+        if (!req.user) {
+            text = 'Вы должны авторизоваться, чтобы участвовать в квестах.';
+        }
+        Quests.findOne({id: questId})
+        .populate('photos', '-_id url')
+        .exec((err, quest) => {
+            if (req.user) {
+                User.findOne({id: req.user.id})
+                .exec((err, user) => {
+                    if (err || !user) {
+                        return res.send('полльзователь с таким id не найден');
+                    }
+                    user.quests.forEach(userQuest => {
+                        if (userQuest.id === quest.id) {
+                            buttonText = 'Продолжить квест';
+                        }
+                    });
+                });
+            }
+            if (err || !quest) {
+                return res.send('quest number was not found');
+            }
+            res.render('quest-description-page', {
+                title: quest.title,
+                description: quest.description,
+                photos: quest.photos,
+                text: text,
+                buttonText: buttonText
+            });
+        });
     });
 
     app.get('/quest/:id/details', () => {

@@ -1,0 +1,19 @@
+<h2>{{title}}</h2>
+<section class="description-and-photos">
+    <div class="description">
+        {{description}}
+    </div>
+    <div class="draggable">
+        {{>quest-description-page-photo-block}}
+    </div>
+    <div class="scroll">
+    </div>
+
+</section>
+<section class="buttons">
+    {{#if text}}
+        {{text}}
+    {{else}}
+    {{>general-button text=buttonText style='primary'}}
+    {{/if}}
+</section>

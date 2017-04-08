@@ -1,0 +1,36 @@
+.buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.description {
+    margin-bottom: 2%;
+    min-height: 10ch;
+}
+
+.description,
+.draggable {
+    padding: 1%;
+    border: @border;
+    border-radius: 5px;
+}
+
+.buttons {
+    margin-top: 1%;
+}
+
+.draggable {
+    overflow: hidden;
+}
+
+.scroll {
+    position: relative;
+    border-radius: 5px;
+    height: 7px;
+    background: @yellowColor;
+}
+
+.draggable:hover,
+.scroll:hover {
+    cursor: pointer;
+}

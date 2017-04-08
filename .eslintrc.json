@@ -1,16 +1,19 @@
-{
+﻿{
     "extends": "xo",
-    "rules": {
-        "max-len": [2, 120],
-        "max-params": [2, 4],
-        "indent": ["error", 4],
-        "capitalized-comments": ["error", "never"],
-        "newline-before-return": "error",
-        "new-cap": ["error",
-          { "newIsCap": true }
-        ],
-        "no-tabs": 2
-    },
+  "rules": {
+  	"no-mixed-operators": 0,
+    "radix": 0,
+    "max-len": [ 2, 120 ],
+    "max-params": [ 2, 4 ],
+    "indent": [ "error", 4 ],
+    "capitalized-comments": [ "error", "never" ],
+    "newline-before-return": "error",
+    "new-cap": [
+      "error",
+      { "newIsCap": true }
+    ],
+    "no-tabs": 2
+  },
   "globals": {
     "fetch": false,
     "Promise": false,
