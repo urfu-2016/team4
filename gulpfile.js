@@ -251,7 +251,7 @@ gulp.task('build', [
 ]);
 
 gulp.task('style:lint', () => {
-    gulp.src([path.src.styleRaw, path.src.style])
+    return gulp.src([path.src.styleRaw, path.src.style])
         .pipe(isWatching ? plumber() : noop())
         .pipe(stylelint({
             debug: true,
@@ -263,7 +263,7 @@ gulp.task('style:lint', () => {
 });
 
 gulp.task('html:lint', () => {
-    gulp.src(path.src.html)
+    return gulp.src(path.src.html)
         .pipe(isWatching ? plumber() : noop())
         .pipe(htmllint())
         .pipe(htmllint.format())
@@ -271,7 +271,7 @@ gulp.task('html:lint', () => {
 });
 
 gulp.task('hb:lint', () => {
-    gulp.src(path.src.hb)
+    return gulp.src(path.src.hb)
         .pipe(isWatching ? plumber() : noop())
         .pipe(htmllint())
         .pipe(htmllint.format())
@@ -279,7 +279,7 @@ gulp.task('hb:lint', () => {
 });
 
 gulp.task('js:lint', () => {
-    gulp.src([path.src.js,
+    return gulp.src([path.src.js,
         'gulpfile.js',
         'app.js',
         'tests/**/*.js',
