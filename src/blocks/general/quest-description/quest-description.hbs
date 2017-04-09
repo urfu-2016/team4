@@ -1,0 +1,13 @@
+{{#if quest.photos.length }}
+    <img class="img-thumbnail-horizontal" src="{{ quest.photos.0.url }}" alt="quest-cover"/>
+{{else}}
+    <img class="img-thumbnail-horizontal" src="img/nocover.jpg" alt="quest-cover"/>
+{{/if}}
+<div class="description">
+    <h2>{{questname}}</h2>
+    <p>{{description}}</p>
+</div>
+<div class="quest-horizontal-button">
+{{> general-button text="Просмотр"}}
+</div>
+</div>
