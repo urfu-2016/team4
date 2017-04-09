@@ -267,7 +267,7 @@ gulp.task('html:lint', () => {
         .pipe(isWatching ? plumber() : noop())
         .pipe(htmllint())
         .pipe(htmllint.format())
-        .pipe(htmllint.failOnError());
+        .pipe(isWatching ? noop() : htmllint.failOnError());
 });
 
 gulp.task('hb:lint', () => {
@@ -275,7 +275,7 @@ gulp.task('hb:lint', () => {
         .pipe(isWatching ? plumber() : noop())
         .pipe(htmllint())
         .pipe(htmllint.format())
-        .pipe(htmllint.failOnError());
+        .pipe(isWatching ? noop() : htmllint.failOnError());
 });
 
 gulp.task('js:lint', () => {
@@ -289,7 +289,7 @@ gulp.task('js:lint', () => {
         .pipe(isWatching ? plumber() : noop())
         .pipe(eslint())
         .pipe(eslint.format())
-        .pipe(eslint.failOnError());
+        .pipe(isWatching ? noop() : eslint.failOnError());
 });
 
 gulp.task('lint', [
