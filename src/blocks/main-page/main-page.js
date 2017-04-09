@@ -20,7 +20,7 @@ function filterQuests() {
         let include = queryElement.querySelector('.general-search-bar input').value;
         let greaterThan = queryElement.querySelector('.general-numeric-input input').value;
         let params =
-            '?render=true&Quest__opt__limit=50&' + value.replace('__', '__opt__sort__') + '=' + (reverse ? '-1' : '1');
+            '?render&Quest__opt__limit=50&' + value.replace('__', '__opt__sort__') + '=' + (reverse ? '-1' : '1');
         if (include) {
             params += '&' + value + '__include=' + include;
         }
@@ -29,7 +29,9 @@ function filterQuests() {
             params += '&' + value + '__gte=' + greaterThan;
         }
         listElement.innerHTML = loader.outerHTML;
-        fetch(url + params)
+        fetch(url + params, {
+            credentials: 'include'
+        })
             .then(res => {
                 return res.text();
             })

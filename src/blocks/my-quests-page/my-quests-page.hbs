@@ -1,1 +1,26 @@
-{{> my-quests-page-tabs}}
+<div class="tabs">
+    {{> my-quests-page-tab
+        name="tabs"
+        id="tab-active"
+        value="active"
+        checked="checked"
+        text="Активные квесты"
+        onchange="tabChanged(this)"
+    }}
+    {{> my-quests-page-tab
+        name="tabs"
+        id="tab-finished"
+        value="finished"
+        text="Завершенные квесты"
+        onchange="tabChanged(this)"
+    }}
+    {{> my-quests-page-tab
+        name="tabs"
+        id="tab-created"
+        value="created"
+        text="Cозданные квесты"
+        onchange="tabChanged(this)"}}
+</div>
+<div class="quests">
+{{>general-loader}}
+</div>
