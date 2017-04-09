@@ -1,4 +1,4 @@
-﻿/* eslint no-unused-vars: 'off' */
+/* eslint no-unused-vars: 'off' */
 const photoBlock = document.querySelector('.quest-description-page-photo-block');
 const draggables = document.querySelectorAll('.draggable');
 const mainBlock = document.querySelector('.description-and-photos');
