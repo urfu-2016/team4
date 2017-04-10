@@ -19,19 +19,11 @@ exports.init = app => {
     });
 
     Handlebars.registerHelper('if_eq', function (a, b, options) {
-        if (a === b) {
-            return options.fn(this);
-        }
-
-        return options.inverse(this);
+        return a === b ? options.fn(this) : options.inverse(this);
     });
 
     Handlebars.registerHelper('if_neq', function (a, b, options) {
-        if (a !== b) {
-            return options.fn(this);
-        }
-
-        return options.inverse(this);
+        return a === b ? options.inverse(this) : options.fn(this);
     });
 
     app.use((req, res, next) => {
