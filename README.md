@@ -1,34 +1,37 @@
 # team4. "Фотоквест"
 
-## 1. Подготовка к разработке
+## Сайт: http://super-photo-quest.herokuapp.com
+## Workflow
+
+### 1. Подготовка к разработке
 1. Делаем fork.
 2. Клонируем с удаленного репозитория к себе ( `git clone https://github.com/<nick-name>/team4` )
 3. Подтягиваем изменения из мастера ( `git remote add upstream https://github.com/urfu-2016/team4` )
 
-## 2. Начало работы над задачей
+### 2. Начало работы над задачей
 1. Проверяем что мы находимся в мастере ( `git checkout master` )
 2. Подтягиваем изменения ( `git pull upstream master` )
 3. Создаем ветку, указываем название задачи, которую делаем ( `git checkout -b <name-task>` )
 
-## 3. Работа над задачей
+### 3. Работа над задачей
 1. Добавляем измененные файлы к себе в ветку ( `git add <changed-file>` )
 2. Добавляем комментарий ( `git commit -m "Осмысленный коммент"` )
 
-## 4. Создание пулла с решением
+### 4. Создание пулла с решением
 1. Проверяем что мы в созданной ветке а не в мастере ( `git checkout <name-task>` )
 2. Подтягиваем изменения ( `git pull upstream --rebase master` )
 3. Решаем конфликты и добавляем измененные файлы ( `git add <conflict-file>` )
 4. git rebase --continue
 5. Пушим! ( `git push origin <name-task>` )
 
-## 5. Ревью и обновление пулла
+### 5. Ревью и обновление пулла
 1. ( `git checkout <name-task>` )
 2. ( `git add <changed-file` )
 3. ( `git commit -m "Осмысленный коммент"` )
 4. ( `git pull upstream --rebase master` )
 5. ( `git push -f origin <name-task>` )
 
-## 6. Слияние пулла с основной веткой
+### 6. Слияние пулла с основной веткой
 1. ( `git checkout <name-task>` )
 2. ( `git pull upstream --rebase master` )
 3. ( `git push -f origin <name-task>` )
