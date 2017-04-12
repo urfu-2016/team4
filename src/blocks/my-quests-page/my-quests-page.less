@@ -1,5 +1,24 @@
+& {
+    margin-top: 10px;
+}
+
 .tabs {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.quests {
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+@media @mobile {
+    .tabs {
+        flex-direction: column;
+    }
 }

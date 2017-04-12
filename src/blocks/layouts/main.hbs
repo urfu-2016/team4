@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,
+    maximum-scale=1.0, user-scalable=no"/>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" type="text/css" href="/static/css/all.css"/>
     <script src="/static/js/polyfills.js"></script>
@@ -10,14 +12,14 @@
 <body>
 {{#if_eq user undefined }}
     {{>general-shade}}
-    {{>general-login-form}}
-    {{>general-register-form}}
+    {{>general-popup-form type='login'}}
+    {{>general-popup-form type='register'}}
 {{/if_eq}}
 {{>general-header}}
 {{{body}}}
 <!--all local scripts here-->
 {{#each sections.scripts as |script|}}
-{{{script}}}
+    {{{script}}}
 {{/each}}
 
 <!-------------------------->

@@ -8,24 +8,22 @@
     <section class="quest-query">
         {{#if user}}
             {{>general-button text='Создать квест' href='/newquest' style='primary'}}
+        {{else}}
+            <div></div>
         {{/if}}
         <div class="search-group">
-            <div class="filter">
                 {{>general-combo-box options=filter label="Поиск"
                     onchange="filtersChanged()"}}
-            </div>
-            <div>
                 {{>general-search-bar label='Входящая строка' blockClass='hidden'
                     onkeyup='filtersChanged()'}}
                 {{>general-numeric-input label='Не менее'
                     onkeyup='filtersChanged()' onchange='filtersChanged()'}}
                 {{>general-check-box label='В обратном порядке'
                     onchange='filtersChanged()'}}
-            </div>
         </div>
 
     </section>
-    <section class="quests">
+    <div class="quests">
         {{> general-loader}}
-    </section>
+    </div>
 </div>

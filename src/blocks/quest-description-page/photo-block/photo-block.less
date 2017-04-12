@@ -9,6 +9,12 @@ img {
     border: @border;
     border-width: 2px;
     height: 200px;
-    width: 200px;
     border-radius: 10%;
+}
+
+@media @mobile {
+    img {
+        height: 100px;
+        width: auto;
+    }
 }
