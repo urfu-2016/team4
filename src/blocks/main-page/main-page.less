@@ -7,12 +7,15 @@
     display: flex;
     justify-content: space-between;
     flex-direction: row;
+    margin-bottom: 20px;
 }
 
 .search-group {
+    margin-top: 20px;
+    height: 120px;
     display: flex;
-    justify-content: flex-end;
-    margin-left: auto;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .quest-query .btn {
@@ -23,3 +26,23 @@
     margin-right: 10px;
 }
 
+.quests {
+    margin-top: 40px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+@media @mobile {
+    .quest-query {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+    }
+
+    .search-group {
+        margin-top: auto;
+        align-items: center;
+    }
+}

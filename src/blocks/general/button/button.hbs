@@ -5,14 +5,12 @@
         value="{{text}}"/>
 {{else}}
     <a class="btn {{#if style}}btn-{{style}}{{else}}btn-default{{/if}}"
-        {{bind-attr href="href:href"}} {{bind-attr onclick="onClick:onClick"}}>{{text}}</a>
+        {{bind-attr href="href:href"}} {{bind-attr onclick="onClick:onClick"}}>
+        {{#if text}}
+            {{text}}
+        {{/if}}
+        {{#if img}}
+            <img src="{{img}}" {{bind-attr alt="alt:alt"}} />
+        {{/if}}
+    </a>
 {{/if_eq}}
-
-<!--styles:-->
-<!--default-->
-<!--primary-->
-<!--success-->
-<!--info-->
-<!--warning-->
-<!--danger-->
-<!--link-->

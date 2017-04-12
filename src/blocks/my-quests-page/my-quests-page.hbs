@@ -1,5 +1,6 @@
+{{>general-button text='Создать квест' href='/newquest' style='primary'}}
 <div class="tabs">
-    {{> my-quests-page-tab
+    {{> general-tab
         name="tabs"
         id="tab-active"
         value="active"
@@ -7,14 +8,14 @@
         text="Активные квесты"
         onchange="tabChanged(this)"
     }}
-    {{> my-quests-page-tab
+    {{> general-tab
         name="tabs"
         id="tab-finished"
         value="finished"
         text="Завершенные квесты"
         onchange="tabChanged(this)"
     }}
-    {{> my-quests-page-tab
+    {{> general-tab
         name="tabs"
         id="tab-created"
         value="created"

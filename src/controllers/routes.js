@@ -144,6 +144,9 @@ exports.initRouters = app => {
     });
 
     app.post('/signup', (req, res) => {
+        if (!req.body.password || !req.body.name || !req.body.email) {
+            return res.status(409).json({message: 'Пожалуйста заполните все поля'});
+        }
         if (req.body.password !== req.body.passwordRepeat) {
             return res.status(409).json({message: 'Пароли не совпадают'});
         }

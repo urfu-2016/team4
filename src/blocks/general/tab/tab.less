@@ -8,7 +8,6 @@ label p {
 }
 
 & {
-    margin-top: 10px;
     display: block;
     float: left;
     width: 33%;
@@ -16,7 +15,7 @@ label p {
 }
 
 label {
-    padding: 0 15px;
+    display: block;
     font-size: 13pt;
     cursor: pointer;
     border-bottom: @tab-border-bottom-yellow;
@@ -30,4 +29,10 @@ label:hover {
 [id^="tab"]:checked + label {
     border-bottom: @tab-border-bottom-red;
     color: @redColor;
+}
+
+@media @mobile {
+    & {
+        width: 100%;
+    }
 }

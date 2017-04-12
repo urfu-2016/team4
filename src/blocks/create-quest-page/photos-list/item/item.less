@@ -1,4 +1,13 @@
 & {
     display: flex;
     margin: 16px;
+    position: relative;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+@media @mobile {
+    & {
+        flex-direction: column;
+    }
 }

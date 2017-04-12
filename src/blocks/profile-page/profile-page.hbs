@@ -1,11 +1,31 @@
-<section class="user-information">
+<div class="user-information">
     <div class="left-block">
         {{> profile-page-photo-block}}
-        {{> profile-page-filter-block}}
     </div>
     <div class="right-block">
         {{> profile-page-information}}
         {{> profile-page-rating}}
     </div>
-</section>
-{{> profile-page-users-quests}}
+</div>
+<div class="tabs">
+    {{> general-tab
+        name="tabs"
+        id="tab-active"
+        value="active"
+        checked="checked"
+        text="Опубликованные"
+        onchange="tabChanged(this)"
+    }}
+    {{> general-tab
+        name="tabs"
+        id="tab-finished"
+        value="finished"
+        text="Пройденные"
+        onchange="tabChanged(this)"
+    }}
+</div>
+<div class="quests">
+    {{>general-loader}}
+    Функционал пока не готов
+</div>
+

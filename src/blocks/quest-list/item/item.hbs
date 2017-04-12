@@ -1,19 +1,23 @@
 <!-- htmllint attr-bans="false" -->
 <a class="quest-link" href="/quest/{{quest.id}}"></a>
-{{#if_neq quest.progress undefined}}
-    <div class="progressbar-wrapper">
-        <div class="progressbar" style="height:{{quest.progress}}%"></div>
-    </div>
-    {{#if_eq quest.progress 100}}
-        <div class="progressbar-label">Завершено</div>
-    {{/if_eq}}
-{{/if_neq}}
+<div class="img-container">
+    {{#if_neq quest.progress undefined}}
+        <div class="progressbar-wrapper">
+            <div class="progressbar" style="height:{{quest.progress}}%"></div>
+            {{#if_eq quest.progress 100}}
+                <div class="progressbar-label">
+                    Завершено
+                </div>
+            {{/if_eq}}
+        </div>
+    {{/if_neq}}
     {{#if quest.photos.length }}
         <img class="img-thumbnail" src="{{ quest.photos.0.url }}" alt="quest-cover"/>
     {{else}}
         <img class="img-thumbnail" src="img/nocover.jpg" alt="quest-cover"/>
     {{/if}}
-<h4 class="text-center">{{quest.title}}</h4>
+</div>
+<h2 class="text-center">{{quest.title}}</h2>
 <div>
     likes: {{quest.likesCount}}
 </div>

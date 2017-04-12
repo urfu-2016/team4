@@ -185,7 +185,7 @@ gulp.task('style:build', () => {
                 new Buffer('}')
             ]);
             // меняем адреса с картинками на /static/img...
-            bufferReplace(file, /img\/([A-Za-z0-9.]+)/g, '/static/img/' + file.relative + '/img/$1');
+            bufferReplace(file, /img\/([A-Za-z0-9.]+)/g, '/static/img/' + Path.dirname(file.relative) + '/img/$1');
         }))
         .pipe(concat('less-files.css'))
         .pipe(less());
@@ -255,7 +255,7 @@ gulp.task('style:lint', () => {
         .pipe(isWatching ? plumber() : noop())
         .pipe(stylelint({
             debug: true,
-            failAfterError: true,
+            failAfterError: !isWatching,
             reporters: [
                 {formatter: 'string', console: true}
             ]

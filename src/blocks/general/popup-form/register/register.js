@@ -3,12 +3,12 @@ function showRegister() {
     document.querySelectorAll('.general-shade').forEach(shade => {
         shade.style.display = 'block';
     });
-    let loginForm = document.querySelector('.general-register-form');
+    let loginForm = document.querySelector('.general-popup-form-register').parentNode;
     loginForm.style.display = 'block';
 }
 
 function hideRegister() {
-    let loginForm = document.querySelector('.general-register-form');
+    let loginForm = document.querySelector('.general-popup-form-register').parentNode;
     loginForm.style.display = 'none';
 }
 
@@ -36,6 +36,7 @@ function loginSubmitHandle(form) {
                 passwordRepeat: form.querySelector('input[name="password-repeat"]').value,
                 name: form.querySelector('input[name="username"]').value
             })
+
         })
             .then(data => {
                 return data;
@@ -56,8 +57,8 @@ function loginSubmitHandle(form) {
     });
 }
 function addListeners() {
-    document.querySelectorAll('.general-register-form').forEach(block => {
-        shadeClickHandle(block);
+    document.querySelectorAll('.general-popup-form-register').forEach(block => {
+        shadeClickHandle(block.parentNode);
         loginSubmitHandle(block.querySelector('form'));
     });
 }

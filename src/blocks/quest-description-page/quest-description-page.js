@@ -1,27 +1,47 @@
 /* eslint no-unused-vars: 'off' */
-const photoBlock = document.querySelector('.quest-description-page-photo-block');
-const draggables = document.querySelectorAll('.draggable');
-const mainBlock = document.querySelector('.description-and-photos');
-const scroll = mainBlock.querySelector('.scroll');
-const constSpeed = 0.5;
-let imgMargin;
-let draggablePaddingRight;
-let direction = 1;
-let scrollLeft = 0;
-let scrollWidth = 0;
-let divRight = 0;
-let speed = constSpeed;
-let prevX = 0;
-let lastX = 0;
-let lastDate = 0;
-let prevScrollX = 0;
+/* eslint no-undef: 0 */
+/* добавлякем несколько listeners на элемент
+ ** @param {DOMElement} element - DOM element
+ ** @param {string} eventNames - имена событий через пробел
+ ** @param {Function} listener - функция обработки события
+ */
+function addListenerMulti(element, eventNames, listener) {
+    let events = eventNames.split(' ');
+    for (let i = 0, iLen = events.length; i < iLen; i++) {
+        element.addEventListener(events[i], listener, false);
+    }
+}
 
-draggables.forEach(draggable => {
-    /* eslint no-undef: 0 */
+function getCursorInfo(e) {
+    if ('touches' in e) {
+        return e.touches[0];
+    }
+
+    return e;
+}
+
+function initDraggable() {
+    const draggable = document.querySelector('.draggable');
+    const mainBlock = document.querySelector('.description-and-photos');
+    const scroll = mainBlock.querySelector('.scroll');
+    const constSpeed = 0.5;
+    let imgMargin;
+    let draggablePaddingRight;
+    let direction = 1;
+    let scrollLeft = 0;
+    let scrollWidth = 0;
+    let divRight = 0;
+    let speed = constSpeed;
+    let speedDecreaseFactor = 0.9;
+    let prevX;
+    let lastX;
+    let prevScrollX = 0;
+    let scrollClicked = false;
+    let draggableClicked = false;
     draggablePaddingRight = parseInt(window.getComputedStyle(draggable).paddingRight);
     let draggableWidth = draggable.clientWidth;
     imgMargin = parseInt(window.getComputedStyle(draggable
-                .querySelector('.quest-description-page-photo-block img')).margin);
+        .querySelector('.quest-description-page-photo-block img')).margin);
     let div = draggable.querySelector('.quest-description-page-photo-block');
     let divWidth = div.scrollWidth;
     scrollWidth = draggableWidth / (divWidth + (2 * draggablePaddingRight)) * draggableWidth;
@@ -32,18 +52,16 @@ draggables.forEach(draggable => {
         return;
     }
     scroll.style.width = scrollWidth + 'px';
-    draggable.addEventListener('mousedown', e => {
+    addListenerMulti(draggable, 'mousedown touchstart', e => {
         speed = 0;
-        draggable.clicked = true;
-        prevX = lastX = e.pageX;
-        lastDate = new Date();
+        draggableClicked = true;
+        prevX = lastX = getCursorInfo(e).pageX;
         e.preventDefault();
     });
-    scroll.addEventListener('mousedown', e => {
+    addListenerMulti(scroll, 'mousedown touchstart', e => {
         speed = 0;
-        scroll.clicked = true;
-        prevScrollX = lastX = e.pageX;
-        lastDate = new Date();
+        scrollClicked = true;
+        prevScrollX = lastX = getCursorInfo(e).pageX;
         e.preventDefault();
     });
     const ratio = draggableWidth / divWidth;
@@ -56,47 +74,31 @@ draggables.forEach(draggable => {
             div.style.right = divRight + 'px';
         } else {
             direction *= -1;
-            speed = constSpeed;
+        }
+        if (!draggableClicked && !scrollClicked) {
+            speed *= speedDecreaseFactor;
+            if (speed < constSpeed) {
+                speed = constSpeed;
+            }
         }
     }, 15);
-});
 
-setInterval(() => {
-    if (speed < constSpeed) {
-        speed = Number((speed + 0.1).toFixed(1));
-    } else if (speed > constSpeed) {
-        speed = Number((speed - 0.1).toFixed(1));
-    }
-
-    //  console.info(speed);
-}, 15);
-
-document.addEventListener('mouseup', e => {
-    draggables.forEach(draggable => {
-        draggable.clicked = false;
+    addListenerMulti(document, 'mouseup touchend', e => {
+        draggableClicked = false;
+        scrollClicked = false;
     });
-    scroll.clicked = false;
-    speed = constSpeed;
-    if (lastDate) {
-        let time = new Date() - lastDate;
-        if (time) {
-            speed += Math.abs((e.pageX - lastX) / time);
-            time = 0;
-        }
-    }
-});
 
-document.addEventListener('mousemove', e => {
-    draggables.forEach(draggable => {
+    addListenerMulti(document, 'mousemove touchmove', e => {
         let draggableWidth = draggable.clientWidth;
-        if (draggable.clicked || scroll.clicked) {
+        if (draggableClicked || scrollClicked) {
             draggable.querySelectorAll('.quest-description-page-photo-block').forEach(div => {
                 let divWidth = div.scrollWidth;
-                let shift = draggable.clicked ? divRight + prevX - e.pageX : scrollLeft - prevScrollX + e.pageX;
+                let shift = draggableClicked ? divRight + prevX - getCursorInfo(e).pageX :
+                    scrollLeft - prevScrollX + getCursorInfo(e).pageX;
                 if (shift < 0) {
                     shift = 0;
                 }
-                if (draggable.clicked) {
+                if (draggableClicked) {
                     if (shift > divWidth - draggableWidth + imgMargin) {
                         shift = divWidth - draggableWidth + imgMargin;
                     }
@@ -104,9 +106,9 @@ document.addEventListener('mousemove', e => {
                     scroll.style.left = scrollLeft + 'px';
                     divRight = shift;
                     div.style.right = divRight + 'px';
-                    direction = e.pageX - prevX < 0 ? 1 : -1;
+                    direction = getCursorInfo(e).pageX - prevX < 0 ? 1 : -1;
                     lastX = prevX;
-                    prevX = e.pageX;
+                    prevX = getCursorInfo(e).pageX;
                 } else {
                     if (shift > draggableWidth - scrollWidth) {
                         shift = draggableWidth - scrollWidth;
@@ -115,12 +117,14 @@ document.addEventListener('mousemove', e => {
                     scroll.style.left = scrollLeft + 'px';
                     divRight = shift * divWidth / draggableWidth;
                     div.style.right = divRight + 'px';
-                    direction = e.pageX - prevScrollX < 0 ? -1 : 1;
+                    direction = getCursorInfo(e).pageX - prevScrollX < 0 ? -1 : 1;
                     lastX = prevScrollX;
-                    prevScrollX = e.pageX;
+                    prevScrollX = getCursorInfo(e).pageX;
                 }
-                lastDate = new Date();
             });
+            speed = Math.abs((getCursorInfo(e).pageX - lastX));
         }
     });
-});
+}
+
+initDraggable();
