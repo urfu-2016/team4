@@ -1,0 +1,45 @@
+<div class="tabs">
+    {{> general-tab
+        name="tabs"
+        id="tab-rating"
+        value="rating"
+        checked="checked"
+        text="По рейтингу"
+        onchange="tabChanged(this)"
+    }}
+    {{> general-tab
+        name="tabs"
+        id="tab-finished"
+        value="finished"
+        text="По пройденным"
+        onchange="tabChanged(this)"
+    }}
+    {{> general-tab
+        name="tabs"
+        id="tab-ratio"
+        value="ratio"
+        text="По соотношению"
+        onchange="tabChanged(this)"}}
+</div>
+
+{{> ratings-page-user-block number="1"
+    link="/Zeace"
+    name="Zeace"
+    rating="568"
+    complited="12"
+    ratio="0.8"
+}}
+{{> ratings-page-user-block number="1"
+    link="/Zeace"
+    name="Zeace"
+    rating="568"
+    complited="12"
+    ratio="0.8"
+}}
+{{> ratings-page-user-block number="1"
+    link="/Zeace"
+    name="Zeace"
+    rating="568"
+    complited="12"
+    ratio="0.8"
+}}
