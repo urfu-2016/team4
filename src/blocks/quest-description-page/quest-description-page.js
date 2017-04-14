@@ -13,8 +13,8 @@ function addListenerMulti(element, eventNames, listener) {
 }
 
 function getCursorInfo(e) {
-    if (e.targetTouches.length > 0) {
-        return e.targetTouches[0];
+    if ('touches' in e) {
+        return e.touches[0];
     }
 
     return e;
