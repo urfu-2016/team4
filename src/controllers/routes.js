@@ -185,7 +185,7 @@ exports.initRouters = app => {
 
     app.use((req, res) => {
         res.status(404);
-        res.render('404-page');
+        res.render('page-404');
     });
 
     app.use((err, req, res) => {
