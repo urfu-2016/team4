@@ -8,6 +8,8 @@ branches:
   - master
 before_script:
 - npm run lint
+after_success:
+- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && npm run surge:deploy'
 deploy:
   provider: heroku
   api_key:
@@ -15,5 +17,3 @@ deploy:
   app: super-photo-quest
   on:
     repo: urfu-2016/team4
-after_success:
-- '["${TRAVIS_PULL_REQUEST}" = "false"] && npm run surge:deploy'
