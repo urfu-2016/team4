@@ -26,7 +26,7 @@ const userSchema = new Schema({
     rating: Number,
     photoURL: String,
     quests: [{
-        questId: {
+        quest: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'quest'
         },
@@ -35,7 +35,7 @@ const userSchema = new Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'photo'
         }],
-        whoAmI: Number
+        isAuthor: Number
     }],
     likeQuests: [{
         type: mongoose.Schema.Types.ObjectId,

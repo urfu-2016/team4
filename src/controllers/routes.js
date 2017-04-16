@@ -26,10 +26,10 @@ exports.initRouters = app => {
         function getFilteredQuests(quests, iAmAuthor) {
             return quests
                 .filter(quest => {
-                    return (iAmAuthor ? quest.whoAmI : !quest.whoAmI);
+                    return (iAmAuthor ? !quest.isAuthor : quest.isAuthor);
                 })
                 .map(quest => {
-                    return quest.questId;
+                    return quest.quest;
                 });
         }
 
@@ -39,7 +39,7 @@ exports.initRouters = app => {
 
         User.findById(req.user._id, 'name photoURL rating quests')
             .populate({
-                path: 'quests.questId',
+                path: 'quests.quest',
                 select: 'title author photos description -_id id likesCount rating',
                 populate: [
                     {
