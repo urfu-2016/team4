@@ -32,10 +32,10 @@ questSchema.method('wrapForUser', function (user) {
     let wrapper = JSON.parse(JSON.stringify(this));
     let userQuests = [];
     if (user) {
-        userQuests = user.quests.map(wrapper => String(wrapper.questId));
+        userQuests = user.quests.map(wrapper => String(wrapper.quest));
     }
     let indexOfQuest = userQuests.indexOf(String(this._id));
-    if (user && indexOfQuest > -1 && user.quests[indexOfQuest].whoAmI) {
+    if (user && indexOfQuest > -1 && !user.quests[indexOfQuest].isAuthor) {
         wrapper.progress = user.quests[indexOfQuest].progress;
     } else {
         wrapper.progress = undefined;

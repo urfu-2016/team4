@@ -95,18 +95,18 @@ app.get('/my', (req, res) => {
     }
     let quests = req.user.quests.filter(quest => {
         if (query.active === '') {
-            return quest.progress < 100 && quest.whoAmI === 1;
+            return quest.progress < 100 && !quest.isAuthor;
         }
         if (query.finished === '') {
-            return quest.progress === 100 && quest.whoAmI === 1;
+            return quest.progress === 100 && !quest.isAuthor;
         }
         if (query.created === '') {
-            return quest.whoAmI === 0;
+            return quest.isAuthor;
         }
 
         return true;
     });
-    let questIds = quests.map(quest => toObjectId(quest.questId));
+    let questIds = quests.map(quest => toObjectId(quest.quest));
     Quest.find({_id: {$in: questIds}},
         ['title', 'photos', 'description,', '_id', 'id', 'likesCount', 'rating', 'author'])
         .populate({
