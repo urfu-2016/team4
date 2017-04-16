@@ -2,7 +2,7 @@
 'use strict';
 
 let cloudinary = require('cloudinary');
-let credentials = require('../../credentials');
+let credentials = process.env || require('../../credentials');
 
 exports.savePhoto = (file, callback) => {
     cloudinary.config({
