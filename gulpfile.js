@@ -123,7 +123,7 @@ function isPartialExist(partialName, path, root) {
             continue;
         }
         if (getUniqueBlockName(dir.replace(root, '')) === partialName ||
-            isPartialExist(partialName, dir + '/', root)) {
+            isPartialExist(partialName, dir + Path.sep, root)) {
             return true;
         }
     }
@@ -138,7 +138,8 @@ function relativeToAbsolutePartial(partialName, match) {
      */
     let partialAbsoluteName = partialName + '-' + match.replace(PARTIAL_REGEXP, '$1');
 
-    return isPartialExist(partialAbsoluteName, 'src/blocks/') ? '{{>' + partialAbsoluteName : match;
+    return isPartialExist(partialAbsoluteName, Path.join('src', 'blocks') + Path.sep) ?
+        '{{>' + partialAbsoluteName : match;
 }
 
 function buildPartials(file) {
