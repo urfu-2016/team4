@@ -1,6 +1,6 @@
 /* eslint no-unused-vars: 'off' */
 let typeTimer;
-let loader = document.querySelector('.general-loader');
+let loader = block.querySelector('.general-loader');
 function filtersChanged() {
     if (typeTimer) {
         clearTimeout(typeTimer);
@@ -11,7 +11,7 @@ function filtersChanged() {
 
 function filterQuests() {
     let url = '/quests';
-    let questBlockElements = document.querySelectorAll('.quests-block');
+    let questBlockElements = block.querySelectorAll('.quests-block');
     questBlockElements.forEach(el => {
         let queryElement = el.querySelector('.quest-query');
         let listElement = el.querySelector('.quests');
@@ -20,7 +20,8 @@ function filterQuests() {
         let include = queryElement.querySelector('.general-search-bar input').value;
         let greaterThan = queryElement.querySelector('.general-numeric-input input').value;
         let params =
-            '?render&Quest__opt__limit=50&' + value.replace('__', '__opt__sort__') + '=' + (reverse ? '-1' : '1');
+            '?render&Quest__opt__limit=50&' + value.replace('__', '__opt__sort__') + '=' +
+            (reverse ? '-1' : '1');
         if (include) {
             params += '&' + value + '__include=' + include;
         }
@@ -43,7 +44,7 @@ function filterQuests() {
 }
 
 function handleBlocks() {
-    let questBlockElements = document.querySelectorAll('.quests-block');
+    let questBlockElements = block.querySelectorAll('.quests-block');
     questBlockElements.forEach(el => {
         let numericInput = el.querySelector('.general-numeric-input');
         let searchBar = el.querySelector('.general-search-bar');
@@ -60,5 +61,15 @@ function handleBlocks() {
         }
     });
 }
+
+block.querySelectorAll('input:not([type="number"]), input:not([type="text"]), select')
+    .forEach(input => {
+        input.addEventListener('change', filtersChanged);
+    });
+
+block.querySelectorAll('input[type="number"], input[type="text"]')
+    .forEach(input => {
+        input.addEventListener('keyup', filtersChanged);
+    });
 
 filtersChanged();

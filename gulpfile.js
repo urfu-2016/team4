@@ -204,10 +204,26 @@ gulp.task('hb:build', () => {
         .pipe(livereload()); // и перезагрузим наш сервер для обновлений
 });
 
+function makeJsNamespace() {
+    return tap(file => {
+        let dir = Path.dirname(file.relative);
+        if (dir === '.') {
+            return;
+        }
+        let className = getUniqueBlockName(dir);
+        file.contents = Buffer.concat([
+            new Buffer('(function () {document.querySelectorAll(\'.' + className + '\').forEach(block => {'),
+            file.contents,
+            new Buffer('})}());')
+        ]);
+    });
+}
+
 gulp.task('js:build', () => {
     gulp.src(path.src.js) // найдем наш main файл
         .pipe(isWatching ? plumber() : noop())
         .pipe(sourcemaps.init()) // инициализируем sgulpourcemap
+        .pipe(makeJsNamespace())
         .pipe(babel()) // переводим ES6 => ES5
         .pipe(uglify()) // сожмем наш js
         .pipe(sourcemaps.write()) // пропишем карты

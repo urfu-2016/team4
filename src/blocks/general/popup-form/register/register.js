@@ -1,12 +1,4 @@
 /* eslint no-unused-vars: 'off' */
-function showRegister() {
-    document.querySelectorAll('.general-shade').forEach(shade => {
-        shade.style.display = 'block';
-    });
-    let loginForm = document.querySelector('.general-popup-form-register').parentNode;
-    loginForm.style.display = 'block';
-}
-
 function hideRegister() {
     let loginForm = document.querySelector('.general-popup-form-register').parentNode;
     loginForm.style.display = 'none';
@@ -53,7 +45,8 @@ function loginSubmitHandle(form) {
                     return;
                 }
                 form.querySelector('.error').innerHTML = data.message;
-            });
+            })
+            .catch(console.error);
     });
 }
 function addListeners() {

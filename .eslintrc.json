@@ -18,6 +18,7 @@
     "fetch": false,
     "Promise": false,
     "document": false,
+    "block": false,
     "describe": false,
     "it": false,
     "Event": false,

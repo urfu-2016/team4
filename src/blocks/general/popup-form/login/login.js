@@ -1,14 +1,6 @@
 /* eslint no-unused-vars: 'off' */
-function showLogin() {
-    document.querySelectorAll('.general-shade').forEach(shade => {
-        shade.style.display = 'block';
-    });
-    let loginForm = document.querySelector('.general-popup-form-login').parentNode;
-    loginForm.style.display = 'block';
-}
-
 function hideLogin() {
-    let loginForm = document.querySelector('.general-popup-form-login').parentNode;
+    let loginForm = block.parentNode;
     loginForm.style.display = 'none';
 }
 
@@ -50,13 +42,9 @@ function loginSubmitHandle(form) {
                     return;
                 }
                 form.querySelector('.error').innerHTML = data.message;
-            });
+            })
+            .catch(console.error);
     });
 }
-function addListeners() {
-    document.querySelectorAll('.general-popup-form-login').forEach(block => {
-        shadeClickHandle(block.parentNode);
-        loginSubmitHandle(block.querySelector('form'));
-    });
-}
-addListeners();
+shadeClickHandle(block.parentNode);
+loginSubmitHandle(block.querySelector('form'));

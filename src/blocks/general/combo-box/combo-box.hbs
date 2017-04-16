@@ -8,7 +8,6 @@
 <select class="form-control"
     {{bind-attr id="id:id"}}
     {{bind-attr disabled="disabled:disabled"}}
-    {{bind-attr onchange="onchange:onchange"}}
 >
     {{#each options as |option|}}
         <option value="{{option.value}}">{{option.text}}</option>

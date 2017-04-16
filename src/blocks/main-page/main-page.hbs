@@ -12,8 +12,7 @@
             <div></div>
         {{/if}}
         <div class="search-group">
-                {{>general-combo-box options=filter label="Поиск"
-                    onchange="filtersChanged()"}}
+                {{>general-combo-box options=filter label="Поиск"}}
                 {{>general-search-bar label='Входящая строка' blockClass='hidden'
                     onkeyup='filtersChanged()'}}
                 {{>general-numeric-input label='Не менее'
@@ -23,6 +22,6 @@
         </div>
     </section>
     <div class="quests">
-        {{> general-loader}}
+        {{>general-loader}}
     </div>
 </div>
