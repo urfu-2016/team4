@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 const passport = require('passport');
 const QuestFilter = require('../view_models/quest-filter');
 const User = require('../models/user');
@@ -70,9 +70,9 @@ exports.initRouters = app => {
     app.get('/quest/:id([0-9]+)', (req, res) => {
         let questId = req.params.id;
         let buttonText = 'Начать квест';
-        let text = '';
+        let requirementAuthorization = '';
         if (!req.user) {
-            text = 'Вы должны авторизоваться, чтобы участвовать в квестах.';
+            requirementAuthorization = 'Вы должны авторизоваться, чтобы участвовать в квестах.';
         }
         Quests.findOne({id: questId})
         .populate('photos', '-_id url')
@@ -97,14 +97,33 @@ exports.initRouters = app => {
                 title: quest.title,
                 description: quest.description,
                 photos: quest.photos,
-                text: text,
+                requirementAuthorization: requirementAuthorization,
                 buttonText: buttonText
             });
         });
     });
 
-    app.get('/quest/:id/details', () => {
-        /* eslint no-unused-vars: 0 */
+    app.get('/quest/:id([0-9]+)/details', (req, res) => {
+        let requirementAuthorization = '';
+        let description = 'Здесь вы можете сверить своё местоположение с тем, что изображено на картинке';
+        if (!req.user) {
+            requirementAuthorization = 'Вы должны авторизоваться, чтобы участвовать в квестах.';
+            description = '';
+        }
+        let questId = req.params.id;
+        Quests.findOne({id: questId})
+        .populate('photos', '-_id url')
+        .exec((err, quest) => {
+            if (err || !quest) {
+                return res.send('quest number was not found');
+            }
+            res.render('photos-page', {
+                title: quest.title,
+                photos: quest.photos,
+                requirementAuthorization: requirementAuthorization,
+                description: description
+            });
+        });
     });
 
     app.get('/myquests', isAuthenticated, (req, res) => {

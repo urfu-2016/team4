@@ -8,12 +8,11 @@
     </div>
     <div class="scroll">
     </div>
-
 </section>
 <section class="buttons">
-    {{#if text}}
-        {{text}}
+    {{#if requirementAuthorization}}
+        {{requirementAuthorization}}
     {{else}}
-    {{>general-button text=buttonText style='primary'}}
+        {{>general-button text=buttonText style='primary'}}
     {{/if}}
 </section>

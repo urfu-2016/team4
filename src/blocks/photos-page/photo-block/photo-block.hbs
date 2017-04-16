@@ -1,0 +1,13 @@
+{{#if requirementAuthorization}}
+    <h4>{{requirementAuthorization}}</h4>
+    {{#each photos}}
+    <a name="{{@index}}"><img src="{{this.url}}" alt="photo" class="photo"/></a>
+    <hr />
+    {{/each}}
+{{else}}
+    {{#each photos}}
+    <a name="{{@index}}"><img src="{{this.url}}" alt="photo" class="photo"/></a>
+    {{>general-button text='Сверить местоположение' style='primary'}}
+    <hr />
+    {{/each}}
+{{/if}}
