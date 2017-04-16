@@ -63,8 +63,8 @@ exports.initRouters = app => {
             });
     });
 
-    app.post('/rating', () => {
-        /* eslint no-unused-vars: 0 */
+    app.get('/rating', (req, res) => {
+        res.render('ratings-page');
     });
 
     app.get('/quest/:id([0-9]+)', (req, res) => {
@@ -196,10 +196,6 @@ exports.initRouters = app => {
     app.get('/signout', (req, res) => {
         req.logout();
         res.redirect('/');
-    });
-
-    app.post('/rating', () => {
-        /* eslint no-unused-vars: 0 */
     });
 
     app.use((req, res) => {
