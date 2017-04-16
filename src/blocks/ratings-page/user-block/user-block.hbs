@@ -1,11 +1,5 @@
-<div class="position">
-    <p>№ позиции: <strong>{{number}}</strong></p>
-</div>
-<div class="user-name">
+<div class="{{#if style}}block-{{style}}{{else}}block-default{{/if}}">
+    <span>№ позиции: <strong>{{number}}</strong></span>
     <a href="{{link}}"><strong>{{name}}</strong></a>
-</div>
-<div class="rating-info">
-    <p>Рейтинг: <strong>{{rating}}</strong></p>
-    <p>Количество пройденных: <strong>{{complite}}</strong></p>
-    <p>Соотношение пройденные/непройденные: <strong>{{ratio}}</strong></p>
+    <span>Рейтинг: <strong>{{rating}}</strong></span>
 </div>
