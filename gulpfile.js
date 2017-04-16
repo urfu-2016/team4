@@ -31,6 +31,8 @@ const rimraf = require('rimraf');
 const fs = require('fs');
 const htmlmin = require('gulp-htmlmin');
 
+const PARTIAL_REGEXP = /\{\{\s*>\s*([\w-]+)/g;
+
 let path = {
 
     build: { // тут мы укажем куда складывать готовые после сборки файлы
@@ -95,14 +97,59 @@ gulp.task('html:build', () => {
         .pipe(livereload()); // и перезагрузим наш сервер для обновлений
 });
 
-function bufferReplace(file, match, str) {
+function bufferReplace(file, match, replacer) {
     /**
      * @param file: File - Файл в котором заменяем даные
      * @param match: String/RegEx - шаблон, по которому будем сравнивать строки
-     * @param str: String - строка, на которую будет заменена строка, подходящая под шаблон
+     * @param replacer: String/Function - строка или функция возвращающая строку,
+     * на которую будет заменена строка, подходящая под шаблон
      * @returns None
      */
-    file.contents = new Buffer(file.contents.toString().replace(match, str));
+    file.contents = new Buffer(file.contents.toString().replace(match, replacer));
+}
+
+function isPartialExist(partialName, path, root) {
+    /**
+     * проверяет есть существует ли такой partial
+     * @partialName: String - имя partial внутри которого идет поиск
+     * @param match: String - Строка {{>partial
+     * @return Bool - если существует путь : true
+     */
+    root = root || path;
+    let dirs = fs.readdirSync(path);
+    for (let i = 0; i < dirs.length; i++) {
+        let dir = path + dirs[i];
+        if (!fs.statSync(dir).isDirectory()) {
+            continue;
+        }
+        if (getUniqueBlockName(dir.replace(root, '')) === partialName ||
+            isPartialExist(partialName, dir + '/', root)) {
+            return true;
+        }
+    }
+}
+
+function relativeToAbsolutePartial(partialName, match) {
+    /**
+     * функция поиска абсолютного пути partials
+     * @partialName: String - имя partial внутри которого идет поиск
+     * @param match: String - Строка {{>partial
+     * @return String - абсолютный путь
+     */
+    let partialAbsoluteName = partialName + '-' + match.replace(PARTIAL_REGEXP, '$1');
+
+    return isPartialExist(partialAbsoluteName, 'src/blocks/') ? '{{>' + partialAbsoluteName : match;
+}
+
+function buildPartials(file) {
+    /*
+     * определяет путь до блока и заменяет на абсолюьный блок
+     * @param file: File - Файл в котором заменяем partials
+     * @returns None
+     */
+    let dir = Path.dirname(file.relative);
+    let partialName = getUniqueBlockName(dir);
+    bufferReplace(file, PARTIAL_REGEXP, relativeToAbsolutePartial.bind(this, partialName));
 }
 
 gulp.task('hb:build', () => {
@@ -134,6 +181,7 @@ gulp.task('hb:build', () => {
             bufferReplace(file, /\{\{\s*bind-attr\s+(\w*)\s*=\s*"(\w*):(\w*)"\s*\}\s*\}/g,
                 '{{#if $2}}$1="{{$3}}"{{/if}}');
             bufferReplace(file, /<!--.*-->\n/g, '');
+            buildPartials(file);
         }))
         .pipe(rename(path => {
             /* для того чтобы не было колизий в partials имена в build
