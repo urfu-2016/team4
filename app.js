@@ -47,7 +47,7 @@ mongoose.connect(
 let routers = require('./build/controllers/routes');
 
 routers.initRouters(app);
-
+require('./src/controllers/cloudinary').renamePhoto('manTestPhoto', 'man');
 app.listen(app.get('port'), function () {
     console.log('Server start on ' +
         app.get('port') +
