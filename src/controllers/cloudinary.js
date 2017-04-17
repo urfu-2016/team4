@@ -33,7 +33,7 @@ exports.savePhoto = (file, callback) => {
  * {
  *  width - ширина
  *  height - высота
- *  crop: [scale, fit, fill, south_east, limit, pad, crop, thumb] - образка фотографии
+ *  crop: [scale, fit, fill, south_east, limit, pad, crop, thumb] - обрезка фотографии
  *  format: formats: [jpg, png, gif, bmp, tiff, ico, pdf, eps, psd, webp, svg, wdp] - формат фотографии
  *  gravity: [true, false] - если true, то распознается лицо и централизуется
  * }
