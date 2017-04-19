@@ -244,11 +244,9 @@ gulp.task('style:build', () => {
 
     return merge(lessStream, cssStream)
         .pipe(isWatching ? plumber() : noop())
-        .pipe(sourcemaps.init()) // инициализируем sourcemap
         .pipe(concat('all.css')) // конкатинируем css
         .pipe(prefixer()) // добавим вендорные префиксы
         .pipe(cleanCSS()) // сожмем
-        .pipe(sourcemaps.write())
         .pipe(gulp.dest(path.build.css)) // и в build
         .pipe(changed({firstPass: firstPass}))
         .pipe(livereload());
