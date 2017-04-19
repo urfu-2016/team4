@@ -3,7 +3,6 @@
 const rename = require('gulp-rename');
 const gulp = require('gulp');
 const gulpSequence = require('gulp-sequence');
-const runSequence = require('run-sequence');
 const polyfiller = require('gulp-polyfiller');
 const watch = require('gulp-watch');
 const prefixer = require('gulp-autoprefixer');
@@ -39,32 +38,27 @@ let path = {
         html: 'build/html',
         hb: 'build/hbs',
         layouts: 'build/layouts/',
-        js: 'build/public/js/',
+        blocksJs: 'build/public/js/',
         css: 'build/public/css/',
         img: 'build/public/img/',
-        fonts: 'build/fonts/',
-        models: 'build/models/',
-        viewModels: 'build/view_models/',
-        controllers: 'build/controllers/'
+        fonts: 'build/fonts/'
     },
     src: { // пути откуда брать исходники
         html: 'src/blocks/**/*.html', // мы хотим взять все файлы с расширением .html
         hb: 'src/blocks/**/*.hbs', // мы хотим взять все файлы с расширением .html
         layouts: 'src/blocks/layouts/*.hbs', // layouts берем отсюда
-        js: 'src/blocks/**/*.js', // в стилях и скриптах нам понадобятся только main файлы
+        blocksJs: 'src/blocks/**/*.js', // в стилях и скриптах нам понадобятся только main файлы
         style: 'src/blocks/**/*.less',
         styleRaw: 'src/blocks/**/*.css',
         img: 'src/blocks/**/img/*.*',
         // синтаксис /**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
-        fonts: 'src/fonts/**/*.*',
-        models: 'src/models/**/*.*',
-        viewModels: 'src/view_models/**/*.*',
-        controllers: 'src/controllers/**/*.*'
+        fonts: 'src/fonts/**/*.*'
     },
 
     clean: './build'
 };
 
+path.src.js = ['!' + path.src.blocksJs, 'src/**/*.js'];
 path.watch = path.src;
 
 let firstPass = true;
@@ -192,8 +186,10 @@ gulp.task('hb:build', () => {
             path.dirname = '';
             path.basename = getUniqueBlockName(dir);
         }))
-        .pipe(htmlmin({collapseWhitespace: true, caseSensetive: true,
-            customAttrSurround: [[/\{\{#if\s*\w*\}\}/, /\{\{\/if\}\}/]]}))
+        .pipe(htmlmin({
+            collapseWhitespace: true, caseSensetive: true,
+            customAttrSurround: [[/\{\{#if\s*\w*\}\}/, /\{\{\/if\}\}/]]
+        }))
         .pipe(gulp.dest(path.build.hb)) // выплюнем их в папку build
         .pipe(livereload()); // и перезагрузим наш сервер для обновлений
 
@@ -220,20 +216,20 @@ function makeJsNamespace() {
 }
 
 gulp.task('js:build', () => {
-    gulp.src(path.src.js) // найдем наш main файл
+    gulp.src(path.src.blocksJs) // найдем наш main файл
         .pipe(isWatching ? plumber() : noop())
         .pipe(sourcemaps.init()) // инициализируем sgulpourcemap
         .pipe(makeJsNamespace())
         .pipe(babel()) // переводим ES6 => ES5
         .pipe(uglify()) // сожмем наш js
         .pipe(sourcemaps.write()) // пропишем карты
-        .pipe(gulp.dest(path.build.js)) // выплюнем готовый файл в build
+        .pipe(gulp.dest(path.build.blocksJs)) // выплюнем готовый файл в build
         .pipe(changed({firstPass: firstPass}))
         .pipe(livereload()); // и перезагрузим сервер
 
     polyfiller.bundle(['Promise', 'Fetch'])
         .pipe(uglify()) // сожмем наш js
-        .pipe(gulp.dest(path.build.js));
+        .pipe(gulp.dest(path.build.blocksJs));
 });
 
 gulp.task('style:build', () => {
@@ -287,30 +283,13 @@ gulp.task('fonts:build', () => {
         .pipe(livereload());
 });
 
-gulp.task('sjs:build', () => {
-    let viewModelsStream = gulp.src(path.src.viewModels)
-        .pipe(changed({firstPass: firstPass}))
-        .pipe(gulp.dest(path.build.viewModels));
-
-    let modelsStream = gulp.src(path.src.models)
-        .pipe(changed({firstPass: firstPass}))
-        .pipe(gulp.dest(path.build.models));
-
-    let ctrlStream = gulp.src(path.src.controllers)
-        .pipe(changed({firstPass: firstPass}))
-        .pipe(gulp.dest(path.build.controllers));
-
-    return merge(viewModelsStream, modelsStream, ctrlStream);
-});
-
 gulp.task('build', [
     'html:build',
     'hb:build',
     'js:build',
     'style:build',
     'fonts:build',
-    'image:build',
-    'sjs:build'
+    'image:build'
 ]);
 
 gulp.task('style:lint', () => {
@@ -342,13 +321,11 @@ gulp.task('hb:lint', () => {
 });
 
 gulp.task('js:lint', () => {
-    return gulp.src([path.src.js,
+    return gulp.src([
+        'src/**/*.js',
         'gulpfile.js',
-        'app.js',
-        'tests/**/*.js',
-        path.src.models,
-        path.src.controllers,
-        path.src.viewModels])
+        'app.js'
+    ])
         .pipe(isWatching ? plumber() : noop())
         .pipe(eslint())
         .pipe(eslint.format())
@@ -375,13 +352,10 @@ gulp.task('watch', () => {
         gulp.start('style:build');
     });
 
-    watch([path.watch.js,
+    watch([
         'gulpfile.js',
         'app.js',
-        'tests/**/*.js',
-        path.src.models,
-        path.src.controllers,
-        path.src.viewModels], () => {
+        'src/**/*.js'], () => {
         gulp.start('js:build');
         gulp.start('js:lint');
     });
@@ -412,11 +386,8 @@ gulp.task('webserver', () => {
         script: 'app.js',
         watch: 'app.js'
     });
-    watch([path.watch.controllers, path.watch.models, path.watch.viewModels], () => {
-        runSequence('sjs:build', () => {
-            console.log('done');
-            demon.emit('restart');
-        });
+    watch(path.src.js, () => {
+        demon.emit('restart');
     });
 });
 

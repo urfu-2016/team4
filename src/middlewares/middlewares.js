@@ -1,5 +1,5 @@
 const Handlebars = require('handlebars');
-const authMiddleware = require('./middlewares/auth');
+const authMiddleware = require('./auth');
 
 exports.init = app => {
     Handlebars.registerHelper('section', (name, options) => {

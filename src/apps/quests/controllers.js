@@ -1,10 +1,9 @@
-require('../models/photo');
-require('../models/user');
-const Quest = require('../models/quest');
+require('../../models/photo');
+require('../../models/user');
+const Quest = require('../../models/quest');
+const User = require('../../models/user');
 const toObjectId = require('mongoose').Types.ObjectId;
-const router = require('express').Router;
-const parseQuery = require('./query-parser');
-const app = router();
+const parseQuery = require('../../tools/query-parser');
 
 /**
  * callback функция сортировки моделей по populate field
@@ -31,7 +30,7 @@ function sortPopulated(data, populateName, a, b) {
     return 0;
 }
 
-app.get('/', (req, res) => {
+exports.questsCtrl = (req, res) => {
     let query = req.query;
     let render = query.render;
     delete query.render;
@@ -79,10 +78,13 @@ app.get('/', (req, res) => {
         .catch(err => {
             res.send('wrong parameters.' + err);
         });
-});
+};
 
-app.get('/my', (req, res) => {
+exports.myQuestsCtrl = (req, res) => {
     let query = req.query;
+    if (!Object.keys(query).length) {
+        res.render('my-quests-page');
+    }
     let render = query.render;
     if (!req.user) {
         if (render === '') {
@@ -128,6 +130,77 @@ app.get('/my', (req, res) => {
                 res.send(data);
             }
         });
-});
+};
 
-module.exports = app;
+exports.questCtrl = (req, res) => {
+    let questId = req.params.id;
+    let buttonText = 'Начать квест';
+    let requirementAuthorization = '';
+    if (!req.user) {
+        requirementAuthorization = 'Вы должны авторизоваться, чтобы участвовать в квестах.';
+    }
+    Quest.findOne({id: questId})
+        .populate('photos', '-_id url')
+        .exec((err, quest) => {
+            if (req.user) {
+                User.findOne({id: req.user.id})
+                    .exec((err, user) => {
+                        if (err || !user) {
+                            return res.send('полльзователь с таким id не найден');
+                        }
+                        user.quests.forEach(userQuest => {
+                            if (userQuest.id === quest.id) {
+                                buttonText = 'Продолжить квест';
+                            }
+                        });
+                    });
+            }
+            if (err || !quest) {
+                return res.send('quest number was not found');
+            }
+            res.render('quest-description-page', {
+                title: quest.title,
+                description: quest.description,
+                photos: quest.photos,
+                requirementAuthorization: requirementAuthorization,
+                buttonText: buttonText
+            });
+        });
+};
+
+exports.questDetailsCtrl = (req, res) => {
+    let requirementAuthorization = '';
+    let description = 'Здесь вы можете сверить своё местоположение с тем, что изображено на картинке';
+    if (!req.user) {
+        requirementAuthorization = 'Вы должны авторизоваться, чтобы участвовать в квестах.';
+        description = '';
+    }
+    let questId = req.params.id;
+    Quest.findOne({id: questId})
+        .populate('photos', '-_id url')
+        .exec((err, quest) => {
+            if (err || !quest) {
+                return res.send('quest number was not found');
+            }
+            res.render('photos-page', {
+                title: quest.title,
+                photos: quest.photos,
+                requirementAuthorization: requirementAuthorization,
+                description: description
+            });
+        });
+};
+
+exports.newQuestCtrl = (req, res) => {
+    res.render('create-quest-page', {
+        photos: [
+            'http://www.neighborhood-love.com/wp-content/uploads/2013/03/3D-Graphic-Graffiti-Design.jpg',
+            'https://img.gazeta.ru/files3/271/7927271/pam06.jpg',
+            'http://ic.pics.livejournal.com/tochkaglife/64898668/43055/43055_900.jpg'
+        ]
+    });
+};
+
+exports.questEdit = (req, res) => {
+    res.sendStatus(404);
+};

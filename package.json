@@ -7,7 +7,7 @@
     "start": "node node_modules/gulp/bin/gulp build && cross-env NODE_ENV=dev node app.js",
     "surge:deploy": "surge -p ./build/public -d super-photo-quest.surge.sh",
     "test:watch": "npm run test -- -w",
-    "test": "mocha tests/",
+    "test": "mocha src/tests/",
     "lint": "npm test & gulp lint"
   },
   "dependencies": {
@@ -71,7 +71,6 @@
     "promise-polyfill": "^6.0.2",
     "remote-static": "^1.1.0",
     "rimraf": "^2.6.1",
-    "run-sequence": "^1.2.2",
     "serve-favicon": "~2.3.2",
     "stylelint": "^7.9.0",
     "stylelint-config-standard": "^16.0.0"
