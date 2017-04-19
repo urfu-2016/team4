@@ -21,8 +21,8 @@ function getCursorInfo(e) {
 }
 
 function initDraggable() {
-    const draggable = document.querySelector('.draggable');
-    const mainBlock = document.querySelector('.description-and-photos');
+    const draggable = block.querySelector('.draggable');
+    const mainBlock = block.querySelector('.description-and-photos');
     const scroll = mainBlock.querySelector('.scroll');
     const constSpeed = 0.5;
     let imgMargin;
@@ -111,13 +111,13 @@ function initDraggable() {
         }
     }, 15);
 
-    addListenerMulti(document, 'mouseup touchend', e => {
+    addListenerMulti(block, 'mouseup touchend', e => {
         wasMouseDown = false;
         draggableClicked = false;
         scrollClicked = false;
     });
 
-    addListenerMulti(document, 'mousemove touchmove', e => {
+    addListenerMulti(block, 'mousemove touchmove', e => {
         let draggableWidth = draggable.clientWidth;
         if (draggableClicked || scrollClicked) {
             draggable.querySelectorAll('.quest-description-page-photo-block').forEach(div => {

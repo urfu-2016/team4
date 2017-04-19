@@ -6,21 +6,19 @@
         value="active"
         checked="checked"
         text="Активные квесты"
-        onchange="tabChanged(this)"
     }}
     {{> general-tab
         name="tabs"
         id="tab-finished"
         value="finished"
         text="Завершенные квесты"
-        onchange="tabChanged(this)"
     }}
     {{> general-tab
         name="tabs"
         id="tab-created"
         value="created"
         text="Cозданные квесты"
-        onchange="tabChanged(this)"}}
+    }}
 </div>
 <div class="quests">
 {{>general-loader}}

@@ -1,5 +1,3 @@
-let shade = document.querySelector('.general-shade');
-
-shade.addEventListener('click', () => {
-    shade.style.display = 'none';
+block.addEventListener('click', () => {
+    block.style.display = 'none';
 });

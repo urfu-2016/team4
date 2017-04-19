@@ -1,8 +1,8 @@
 function handleLabels() {
-    document.querySelectorAll('input[type="radio"]').forEach(btn => {
+    block.querySelectorAll('input[type="radio"]').forEach(btn => {
         btn.addEventListener('change', () => {
             btn.parentNode.classList.add('checked');
-            document.querySelectorAll('input[name="' + btn.name + '"').forEach(otherBtn => {
+            block.querySelectorAll('input[name="' + btn.name + '"').forEach(otherBtn => {
                 if (otherBtn === btn) {
                     return;
                 }

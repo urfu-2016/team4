@@ -1,6 +1,6 @@
 /* eslint no-unused-vars: 'off' */
-let listElement = document.querySelector('.quests');
-let loader = document.querySelector('.general-loader');
+let listElement = block.querySelector('.quests');
+let loader = block.querySelector('.general-loader');
 function getQuestsForTab(value) {
     let url = '/quests/my';
     let params = '?' + value + '&render';
@@ -21,4 +21,9 @@ function tabChanged(tab) {
     getQuestsForTab(tab.value);
 }
 
+block.querySelectorAll('input').forEach(input => {
+    input.addEventListener('change', tabChanged.bind(this, input));
+});
+
 getQuestsForTab('active');
+

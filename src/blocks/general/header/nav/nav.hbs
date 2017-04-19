@@ -1,10 +1,15 @@
+{{#if_eq user undefined }}
+    {{>general-shade}}
+    {{>general-popup-form type='login'}}
+    {{>general-popup-form type='register'}}
+{{/if_eq}}
 {{>general-button text='Рейтинги' href='/rating' style='link'}}
 {{#if user}}
         {{>general-button text='Мои Квесты' href='/myquests' style='link'}}
         {{>general-button text='Профиль' href='/profile' style='link'}}
 
 {{else}}
-    {{>general-button text='Войти' style='link' onClick='showLogin()'}}
-    {{>general-button text='Регистрация' style='link' onClick='showRegister()'}}
+    {{>general-button text='Войти' style='link' class='login'}}
+    {{>general-button text='Регистрация' style='link' class='register'}}
 {{/if}}
 
