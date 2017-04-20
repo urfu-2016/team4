@@ -1,6 +1,6 @@
 /* eslint quote-props: ["error", "as-needed", { "keywords": true, "unnecessary": false }] */
 const assert = require('assert');
-const parseQuery = require('../src/controllers/query-parser');
+const parseQuery = require('../tools/query-parser');
 describe('quests', () => {
     it('test parseQuery function', () => {
         assert.deepEqual(parseQuery({

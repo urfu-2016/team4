@@ -1,6 +1,6 @@
 let express = require('express');
 let app = express();
-let middlewares = require('./build/controllers/middlewares');
+let middlewares = require('./src/middlewares/middlewares');
 let remoteStatic = require('remote-static');
 app.set('views', 'build/hbs');
 
@@ -23,7 +23,7 @@ if (process.env.NODE_ENV && process.env.NODE_ENV === 'prod') {
     app.use('/static', express.static('build/public'));
 }
 
-app.use(require('connect-livereload')());
+// app.use(require('connect-livereload')());
 app.set('view engine', '.hbs');
 app.set('port', process.env.PORT || 8080);
 
@@ -44,9 +44,7 @@ mongoose.connect(
     (process.env.MONGO_PASS || require('./credentials').MONGO_PASS) +
     '@ds129090.mlab.com:29090/yaheckaton', mongoOpt);
 
-let routers = require('./build/controllers/routes');
-
-routers.initRouters(app);
+app.use('/', require('./src/apps/app/routes'));
 
 app.listen(app.get('port'), function () {
     console.log('Server start on ' +

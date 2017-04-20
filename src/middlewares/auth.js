@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
-const User = require('../../models/user');
+const User = require('../models/user');
 const passwordHash = require('password-hash');
 exports.init = app => {
     passport.use(new Strategy({
@@ -49,8 +49,15 @@ exports.init = app => {
     app.use(passport.session());
 
     app.use((req, res, next) => {
-        //
         res.locals.user = req.user;
         next();
     });
 };
+
+exports.isAuthenticated = (req, res, next) => {
+    if (req.user) {
+        return next();
+    }
+    res.redirect('/');
+};
+
