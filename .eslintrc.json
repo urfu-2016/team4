@@ -14,14 +14,14 @@
     ],
     "no-tabs": 2
   },
+  "env": {
+    "browser": true,
+    "node": true,
+    "mocha": true
+  },
   "globals": {
     "fetch": false,
     "Promise": false,
-    "document": false,
-    "block": false,
-    "describe": false,
-    "it": false,
-    "Event": false,
-    "location": false
+    "block": false
   }
 }

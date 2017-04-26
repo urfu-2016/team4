@@ -1,4 +1,4 @@
-/* eslint no-unused-vars: 'off' */
+/* globals createFlashMessage */
 function hideRegister() {
     let loginForm = document.querySelector('.general-popup-form-register').parentNode;
     loginForm.style.display = 'none';
@@ -46,7 +46,14 @@ function loginSubmitHandle(form) {
                 }
                 form.querySelector('.error').innerHTML = data.message;
             })
-            .catch(console.error);
+            .catch(error => {
+                if (error.message && error.message === 'Failed to fetch') {
+                    createFlashMessage('Нет соединения с сервером', 'error');
+                } else {
+                    createFlashMessage('Неизвестная ошибка. Попробуйте снова', 'error');
+                    console.error(error.message);
+                }
+            });
     });
 }
 function addListeners() {

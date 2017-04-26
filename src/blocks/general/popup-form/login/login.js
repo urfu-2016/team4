@@ -1,4 +1,4 @@
-/* eslint no-unused-vars: 'off' */
+/* globals createFlashMessage */
 function hideLogin() {
     let loginForm = block.parentNode;
     loginForm.style.display = 'none';
@@ -43,7 +43,14 @@ function loginSubmitHandle(form) {
                 }
                 form.querySelector('.error').innerHTML = data.message;
             })
-            .catch(console.error);
+            .catch(error => {
+                if (error.message && error.message === 'Failed to fetch') {
+                    createFlashMessage('Нет соединения с сервером', 'error');
+                } else {
+                    createFlashMessage('Неизвестная ошибка. Попробуйте снова', 'error');
+                    console.error(error.message);
+                }
+            });
     });
 }
 shadeClickHandle(block.parentNode);
