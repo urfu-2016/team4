@@ -10,13 +10,14 @@
     <title>Title</title>
 </head>
 <body>
+
 {{>general-header}}
 {{{body}}}
 <!--all local scripts here-->
 {{#each sections.scripts as |script|}}
     {{{script}}}
 {{/each}}
-
+<div class="flash-wrapper"></div>
 <!-------------------------->
 </body>
 </html>

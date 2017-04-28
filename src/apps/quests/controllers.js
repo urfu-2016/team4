@@ -84,6 +84,8 @@ exports.myQuestsCtrl = (req, res) => {
     let query = req.query;
     if (!Object.keys(query).length) {
         res.render('my-quests-page');
+
+        return;
     }
     let render = query.render;
     if (!req.user) {
