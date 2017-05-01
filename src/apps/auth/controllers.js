@@ -34,12 +34,10 @@ exports.signUpCtrl = (req, res) => {
         password: passwordHash.generate(req.body.password)
     });
 
-    user.save(function (err) {
+    user.save(err => {
         if (err) {
             if (err.toJSON().errmsg.includes('email')) {
                 res.status(409).json({message: 'Пользователь с таким email уже зарегестрирован'});
-            } else if (err.toJSON().errmsg.includes('name')) {
-                res.status(409).json({message: 'Пользователь с таким именем уже зарегестрирован'});
             } else {
                 res.status(409).json({message: err.toJSON().errmsg});
             }
@@ -49,6 +47,25 @@ exports.signUpCtrl = (req, res) => {
             });
         }
     });
+};
+
+exports.vkAuth = (req, res, next) => {
+    passport.authenticate('vkontakte', (err, user) => {
+        if (err) {
+            if (err.toJSON && err.toJSON().errmsg.includes('email')) {
+                res.redirect('/?emailexist');
+            } else {
+                next(err);
+            }
+        } else {
+            req.login(user, err => {
+                if (err) {
+                    return next(err);
+                }
+                res.redirect('/');
+            });
+        }
+    })(req, res, next);
 };
 
 exports.signOutCtrl = (req, res) => {

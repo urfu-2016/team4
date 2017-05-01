@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
+const VKontakteStrategy = require('passport-vkontakte').Strategy;
 const User = require('../models/user');
 const passwordHash = require('password-hash');
 exports.init = app => {
@@ -11,23 +12,26 @@ exports.init = app => {
         usernameField: 'email',
         passwordField: 'password'
     },
-        (email, password, cb) => {
-            User
-                .findOne({email: email})
-                .exec((err, user) => {
-                    if (err) {
-                        return cb(err);
-                    }
-                    if (!user) {
-                        return cb(null, false, {message: 'Юзера с данным email не существует'});
-                    }
-                    if (!passwordHash.verify(password, user.password)) {
-                        return cb(null, false, {message: 'Неверный пароль'});
-                    }
+    (email, password, cb) => {
+        User
+            .findOne({email: email})
+            .exec((err, user) => {
+                if (err) {
+                    return cb(err);
+                }
+                if (!user) {
+                    return cb(null, false, {message: 'Юзера с данным email не существует'});
+                }
+                if (user.vkId && !user.password) {
+                    return cb(null, false, {message: 'Данный юзер зарегестрирован через соцсеть Вконтакте'});
+                }
+                if (!passwordHash.verify(password, user.password)) {
+                    return cb(null, false, {message: 'Неверный пароль'});
+                }
 
-                    return cb(null, user);
-                });
-        }));
+                return cb(null, user);
+            });
+    }));
 
     passport.serializeUser((user, cb) => {
         cb(null, user._id);
@@ -38,6 +42,28 @@ exports.init = app => {
             cb(err, user);
         });
     });
+
+    passport.use(new VKontakteStrategy({
+        clientID: (process.env.VKONTAKTE_APP_ID || require('../../credentials').VKONTAKTE_APP_ID),
+        clientSecret: (process.env.VKONTAKTE_APP_SECRET || require('../../credentials').VKONTAKTE_APP_SECRET),
+        callbackURL: '/vk/cb'
+    },
+    /* eslint max-params: [0, 5] */
+    (accessToken, refreshToken, params, profile, done) => {
+        User.findOne({vkId: profile.id}).then(user => {
+            if (user) {
+                return done(null, user);
+            }
+            user = new User({
+                name: profile.displayName,
+                vkId: profile.id,
+                email: params.email
+            });
+            user.save(err => {
+                return done(err, user);
+            });
+        });
+    }));
 
     app.use(cookieParser());
     app.use(bodyParser.json());

@@ -11,16 +11,12 @@ const userSchema = new Schema({
     },
     email: {
         type: String,
-        unique: true,
-        required: true
+        unique: true
     },
-    password: {
-        type: String,
-        required: true
-    },
+    password: String,
+    vkId: Number,
     name: {
         type: String,
-        unique: true,
         required: true
     },
     rating: Number,

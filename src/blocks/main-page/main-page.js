@@ -2,6 +2,14 @@
 
 let typeTimer;
 let loader = block.querySelector('.general-loader');
+
+function checkEmail() {
+    let urlQuery = window.location.href.split('?').slice(1);
+    if (urlQuery.length && urlQuery[0] === 'emailexist') {
+        createFlashMessage('Пользователь с таким email уже зарегестрирован', 'error');
+    }
+}
+
 function filtersChanged() {
     if (typeTimer) {
         clearTimeout(typeTimer);
@@ -91,4 +99,4 @@ block.querySelectorAll('input[type="number"], input[type="text"]')
     });
 
 filtersChanged();
-
+checkEmail();
