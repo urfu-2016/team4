@@ -1,9 +1,6 @@
 /* eslint handle-callback-err: 'off' */
 const User = require('../../models/user');
 const cloudinary = require('../../tools/cloudinary');
-const fs = require('fs');
-const joinPath = require('path.join');
-const pathForImages = 'uploads/';
 
 function getFilteredQuests(quests, iAmAuthor) {
     return quests
@@ -13,22 +10,6 @@ function getFilteredQuests(quests, iAmAuthor) {
         .map(quest => {
             return quest.quest;
         });
-}
-
-function removeFilesInFolder(folder) {
-    fs.readdir(folder, (err, items) => {
-        if (err) {
-            console.log(err);
-        } else {
-            for (let i = 0; i < items.length; i++) {
-                fs.unlink(joinPath(folder, items[i]), function (err) {
-                    if (err) {
-                        console.info(err);
-                    }
-                });
-            }
-        }
-    });
 }
 
 function renderProfilePageForUser(req, res, isPost, result) {
@@ -76,7 +57,6 @@ exports.profileLoadAvatar = (req, res) => {
         return res.send('Ой, ошибочка, проверьте выбран ли файл');
     }
     cloudinary.savePhoto(req.file.path, result => {
-        removeFilesInFolder(pathForImages);
         renderProfilePageForUser(req, res, true, result);
     });
 };

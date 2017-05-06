@@ -1,5 +1,6 @@
 const Handlebars = require('handlebars');
 const authMiddleware = require('./auth');
+const bodyParser = require('body-parser');
 
 exports.init = app => {
     Handlebars.registerHelper('section', (name, options) => {
@@ -26,6 +27,12 @@ exports.init = app => {
         return a === b ? options.inverse(this) : options.fn(this);
     });
 
+    let jsonParser = bodyParser.json({extended: true, limit: 1024 * 1024 * 20, type: 'application/json'});
+    let urlencodedParser = bodyParser.urlencoded({extended: true, limit: 1024 * 1024 * 20,
+        type: 'application/x-www-form-urlencoding'});
+
+    app.post(jsonParser);
+    app.post(urlencodedParser);
     app.use((req, res, next) => {
         this.sections = {};
         res.locals.sections = this.sections;

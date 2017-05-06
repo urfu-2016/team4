@@ -1,6 +1,7 @@
 /* eslint camelcase: 'off', no-trailing-spaces: 'off' */
 'use strict';
 
+const fs = require('fs');
 let cloudinary = require('cloudinary');
 let credentials = process.env.CLOUDINARY_CLOUD_NAME ? process.env : require('../../credentials');
 const config = {
@@ -21,6 +22,11 @@ exports.savePhoto = (file, callback) => {
     cloudinary
         .uploader
         .upload(file, result => {
+            fs.unlink(file, function (err) {
+                if (err) {
+                    console.info(err);
+                }
+            });
             callback(result);
         });
 };
