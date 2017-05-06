@@ -1,11 +1,21 @@
 img {
-    height: 100%;
-    width: 400px;
-    object-fit: cover;
+    width: 800px;
+    margin: 10px auto;
+}
+
+.drag-n-drop {
+    width: 800px;
+    height: 400px;
 }
 
 @media @mobile {
-    img {
+    &,
+    img,
+    .drag-n-drop {
         width: 100%;
+    }
+
+    .drag-n-drop {
+        height: 200px;
     }
 }

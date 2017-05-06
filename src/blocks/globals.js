@@ -21,3 +21,28 @@ function createFlashMessage(text, type) {
         wrapper.removeChild(flash);
     });
 }
+
+/* добавлякем несколько listeners на элемент
+ ** @param {DOMElement} element - DOM element
+ ** @param {string} eventNames - имена событий через пробел
+ ** @param {Function} listener - функция обработки события
+ */
+function addListenerMulti(element, eventNames, listener) {
+    let events = eventNames.split(' ');
+    for (let i = 0, iLen = events.length; i < iLen; i++) {
+        element.addEventListener(events[i], listener, false);
+    }
+}
+
+/* узнаем свойства курсора или touch'а
+ ** @param {Event} e - Событие тача или курсора
+ ** @param {string} eventNames - имена событий через пробел
+ ** @returns {Object} - исвойства курсора или тача(только нажатие первого пальца)
+ */
+function getCursorInfo(e) {
+    if ('touches' in e) {
+        return e.touches[0];
+    }
+
+    return e;
+}
