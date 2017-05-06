@@ -77,6 +77,7 @@ function initBlock(block) {
             imgBlock.src = reader.result;
             block.style.height = 'auto';
             uploadBtn.style.opacity = 1;
+            uploadBtn.style.visibility = 'visible';
         }, false);
         reader.readAsDataURL(file);
     }
