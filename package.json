@@ -85,6 +85,6 @@
     "npm": "3.10.x"
   },
   "devDependencies": {
-    "mocha": "^3.2.0"
+    "mocha": "^3.3.0"
   }
 }
