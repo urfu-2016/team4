@@ -1,6 +1,10 @@
-<img src="{{#if user.photoURL}}
-    {{user.photoURL}}
+<img src="{{#if userPhoto}}
+    {{userPhoto}}
 {{else}}
     http://i.imgur.com/HQ3YU7n.gif
         {{/if}}" alt="{{user.name}}" class="photo"/>
 
+<form method="post" enctype="multipart/form-data">
+    <input type="file" name="avatar" accept="image/*,image/jpeg,image/png" />
+    {{> general-button text="Обновить аватар" type="submit" style="primary"}}
+</form>
