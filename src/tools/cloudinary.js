@@ -28,11 +28,6 @@ exports.savePhoto = (file, callback) => {
                 }
             });
             callback(result);
-            fs.unlink(file, function (err) {
-                if (err) {
-                    console.info(err);
-                }
-            });
         });
 };
 
