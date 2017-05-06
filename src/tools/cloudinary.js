@@ -3,7 +3,7 @@
 
 const fs = require('fs');
 let cloudinary = require('cloudinary');
-let credentials = process.env.CLOUDINARY_CLOUD_NAME ? process.env : require('../../credentials');
+let credentials = process.env.CLOUDINARY_CLOUD_NAME ? process.env : require('./../../credentials');
 const config = {
     cloud_name: credentials.CLOUDINARY_CLOUD_NAME,
     api_key: credentials.CLOUDINARY_API_KEY,
