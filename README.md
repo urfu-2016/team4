@@ -50,22 +50,49 @@
 5. Деплой - Heroku
 6. Continues Integration – Travis
 7. Сборщик проекта - Gulp
+8. Сервис хранения фотографий - Cloudinary
 
 # Директории
 
 ## 1. src
-### В ней пишем код, для каждой компоненты в blocks есть свои .hbs и .less файлы.
+### В ней пишем код, для каждой компоненты в blocks есть свои .hbs,.less и (если требуется)js файлы.
+### В js текущий блок можно получить в свойстве block
 ### Структура папок:
 ```
 `-- src
-  +-- blocks
-  |  +-- layouts
-  |  `-- ...
-  +-- controllers
-  |	 +-- middlewares.js
-  |  `-- routes.js
-  +-- view_models
-  `-- models
+    +-- apps
+    |   +-- app
+    |   |   +-- controllers.js
+    |   |   `-- routes.js
+    |   +-- auth
+    |   |   +-- controllers.js
+    |   |   `-- routes.js
+    |   +-- profile
+    |   |   +-- controllers.js
+    |   |   `-- routes.js
+    |   `-- quests
+    |       +-- controllers.js
+    |       `-- routes.js
+    +-- blocks
+    |   +-- layouts
+    |   +-- general
+    |   `-- ...
+    +-- middlewares
+    |   +-- auth.js
+    |   `-- middlewares.js
+    +-- models
+    |   +-- photo.js
+    |   +-- quest.js
+    |   `-- user.js
+    +-- tests
+    |   `-- ...
+    +-- tools
+    |	  +-- cloudinary.js
+    |   `-- query-parser.js
+    `-- view_models
+        +-- filter.js
+        `-- quest-filter.js
+
 ```
   
 ## 2. build
@@ -93,17 +120,32 @@ a {
 ### Структура папок:
 ```
 `-- build
-  +-- controllers
-  |	 +-- middlewares.js
-  |  `-- routes.js
-  +-- hbs
-  +-- layouts
-  +-- public
-  |  +-- img
-  |  +-- js
-  |     `-- polyfills.js
-  |  `-- css
-  |		`-- all.css
-  +-- view_models
-  `-- models
+    +-- controllers
+    |   +-- middlewares
+    |   |   `-- auth.js
+    |   +-- cloudinary.js
+    |	+-- middlewares.js
+    |   +-- query-parser.js
+    |   +-- quests.js
+    |   `-- routes.js
+    +-- hbs
+    |   `-- ...
+    +-- layouts
+    |   `-- main.hbs
+    +-- models
+    |   +-- photo.js
+    |   +-- quest.js
+    |   `-- user.js
+    +-- public
+    |   +-- img
+    |   |   `-- ...
+    |   +-- js
+    |   |   +-- polyfills.js
+    |   |   +-- globals.js
+    |   |   `-- ...
+    |   `-- css
+    |		`-- all.css
+    `-- view_models
+        +-- filter.js
+        `-- quest-filter.js
 ```
