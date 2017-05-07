@@ -1,4 +1,5 @@
 {{#each photos as | photo |}}
-    {{>item photo=photo}}
+    {{>item photo=photo index=@index blockClass='quest-photo'}}
 {{/each}}
-{{>item blockClass='new-photo'}}
+{{>item blockClass='new-photo quest-photo'}}
+<input type="hidden" name="photo-count" class="counter" value="0"/>

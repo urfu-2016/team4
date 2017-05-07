@@ -1,6 +1,21 @@
 & {
+    width: 800px;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 30px 20px;
+    position: relative;
+}
+
+.delete-btn a {
+    bottom: 50px;
+    right: 0;
+    position: absolute;
+    background: #ff533a;
+}
+
+@media @mobile {
+    & {
+        width: 100%;
+    }
 }
