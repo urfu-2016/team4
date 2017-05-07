@@ -26,13 +26,8 @@ exports.init = app => {
     Handlebars.registerHelper('if_neq', function (a, b, options) {
         return a === b ? options.inverse(this) : options.fn(this);
     });
-
-    let jsonParser = bodyParser.json({extended: true, limit: 1024 * 1024 * 20, type: 'application/json'});
-    let urlencodedParser = bodyParser.urlencoded({extended: true, limit: 1024 * 1024 * 20,
-        type: 'application/x-www-form-urlencoding'});
-
-    app.post(jsonParser);
-    app.post(urlencodedParser);
+    app.use(bodyParser.json({limit: '5mb'}));
+    app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
     app.use((req, res, next) => {
         this.sections = {};
         res.locals.sections = this.sections;
