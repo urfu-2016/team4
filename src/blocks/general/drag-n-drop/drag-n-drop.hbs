@@ -1,0 +1,15 @@
+<!-- htmllint attr-name-style="false" -->
+<!-- htmllint attr-no-dup="false" -->
+<div class="input-wrapper"></div>
+<img
+    {{bind-attr class="imgClass:imgClass"}} src="data:image/png;base64,noDataAtAll"
+    {{bind-attr alt="imgAlt:imgAlt"}} />
+<div class="input">
+    <img src="img/upload.svg" alt="upload" class="svg"/>
+    <label>Выберите изображение
+        <input type="file" name="files" id="file" class="file" />
+        <span class="dragndrop"> или перетащите</span></label>
+</div>
+<div class="uploading">Загружаем&hellip;</div>
+<div class="error">Ошибка!</div>
+{{>general-button text='Загрузить' style='primary' blockClass='upload-btn'}}

@@ -1,24 +1,5 @@
-/* eslint no-unused-vars: 'off' */
-/* eslint no-undef: 0 */
-/* добавлякем несколько listeners на элемент
- ** @param {DOMElement} element - DOM element
- ** @param {string} eventNames - имена событий через пробел
- ** @param {Function} listener - функция обработки события
- */
-function addListenerMulti(element, eventNames, listener) {
-    let events = eventNames.split(' ');
-    for (let i = 0, iLen = events.length; i < iLen; i++) {
-        element.addEventListener(events[i], listener, false);
-    }
-}
-
-function getCursorInfo(e) {
-    if ('touches' in e) {
-        return e.touches[0];
-    }
-
-    return e;
-}
+/* globals addListenerMulti */
+/* globals getCursorInfo */
 
 function initDraggable() {
     const draggable = block.querySelector('.draggable');
@@ -111,7 +92,7 @@ function initDraggable() {
         }
     }, 15);
 
-    addListenerMulti(block, 'mouseup touchend', e => {
+    addListenerMulti(block, 'mouseup touchend', () => {
         wasMouseDown = false;
         draggableClicked = false;
         scrollClicked = false;
