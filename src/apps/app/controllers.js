@@ -17,15 +17,12 @@ exports.ratingCtrl = (req, res) => {
 };
 
 exports.uploadPhoto = (req, res) => {
-    console.info(1);
     function decodeBase64Image(dataString) {
         let matches = dataString.replace(/data:([A-Za-z-+/]+);base64,/, '');
         matches = matches.split(' ').join('+');
-        let buffer = new Buffer(matches, 'base64');
 
-        return buffer;
+        return new Buffer(matches, 'base64');
     }
-
     let base64Data = req.body.image;
     let imageBuffer = decodeBase64Image(base64Data);
     let imageName = getFileName.gen();

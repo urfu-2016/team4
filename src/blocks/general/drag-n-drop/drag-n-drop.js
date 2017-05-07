@@ -28,12 +28,35 @@ function initBlock(block) {
         inputBlock.style.display = 'none';
         uploadBtn.style.display = 'none';
         block.classList.add('is-uploading');
-        setTimeout(() => {
-            // uploaded...
-            uploadingBlock.style.display = 'none';
-            block.replaceWith(imgBlock);
-            block.dispatchEvent(loadedEvent);
-        }, 1000);
+        uploadFile(imgBlock.src)
+            .then(link => {
+                uploadingBlock.style.display = 'none';
+                block.replaceWith(imgBlock);
+                let imgBlockClone = imgBlock.cloneNode();
+                imgBlockClone.src = link;
+                /*
+                 чтобы пользователь не видел мигающую картинку, нужно не просто поменять src,
+                 а подменить на уже загруженный склоннированный img с подставленной новой ссылкой
+                  */
+                imgBlockClone.addEventListener('load', () => {
+                    imgBlock.replaceWith(imgBlockClone);
+                });
+                block.dispatchEvent(loadedEvent);
+            })
+            .catch(error => {
+                uploadingBlock.style.display = 'none';
+                inputBlock.style.display = 'block';
+                if (error.message && error.message === 'Failed to fetch') {
+                    createFlashMessage('Нет соединения с сервером', 'error');
+                } else if (error === 404) {
+                    createFlashMessage('Ошибка: невозможно загрузить изображение', 'error');
+                } else if (error === 413) {
+                    createFlashMessage('Данное изображение слишком большое. Максимальный размер: 5мб', 'error');
+                } else {
+                    createFlashMessage('Неизвестная ощибка', 'error');
+                    console.error(error);
+                }
+            });
     });
 
     if (isAdvancedUpload) {
@@ -80,6 +103,28 @@ function initBlock(block) {
             uploadBtn.style.visibility = 'visible';
         }, false);
         reader.readAsDataURL(file);
+    }
+
+    function uploadFile(fileData) {
+        let url = '/uploadPhoto';
+
+        return fetch(url, {
+            method: 'post',
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                image: fileData
+            })
+        }).then(res => {
+            if (res.status !== 200) {
+                throw res.status;
+            }
+
+            return res.text();
+        });
     }
 }
 
