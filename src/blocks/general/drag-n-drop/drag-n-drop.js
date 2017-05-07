@@ -15,6 +15,7 @@ function initBlock(block) {
     let uploadBtn = block.querySelector('.upload-btn');
     let inputFile = block.querySelector('input[type="file"]');
     let loadedEvent = new Event('imgLoaded');
+    let setEvent = new Event('imgSet');
 
     inputFile.addEventListener('change', e => {
         let files = e.target.files;
@@ -31,17 +32,17 @@ function initBlock(block) {
         uploadFile(imgBlock.src)
             .then(link => {
                 uploadingBlock.style.display = 'none';
+                let imgBlockClone = imgBlock.cloneNode(true);
                 block.replaceWith(imgBlock);
-                let imgBlockClone = imgBlock.cloneNode();
-                imgBlockClone.src = link;
                 /*
                  чтобы пользователь не видел мигающую картинку, нужно не просто поменять src,
                  а подменить на уже загруженный склоннированный img с подставленной новой ссылкой
                   */
                 imgBlockClone.addEventListener('load', () => {
-                    imgBlock.replaceWith(imgBlockClone);
+                    imgBlock.parentNode.replaceChild(imgBlockClone, imgBlock);
+                    block.dispatchEvent(loadedEvent);
                 });
-                block.dispatchEvent(loadedEvent);
+                imgBlockClone.src = link;
             })
             .catch(error => {
                 uploadingBlock.style.display = 'none';
@@ -88,6 +89,7 @@ function initBlock(block) {
     }
 
     function makePreview(file) {
+        block.dispatchEvent(setEvent);
         if (!checkExt(file)) {
             return;
         }

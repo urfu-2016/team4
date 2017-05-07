@@ -31,7 +31,6 @@ exports.uploadPhoto = (req, res) => {
             console.log(err);
         }
     });
-
     cloudinary.savePhoto(joinPath(pathForImages, imageName), result => {
         //  в будущем здесь будет сохранение в бд
         // console.info(result.url); <- тут ссылка на картинку

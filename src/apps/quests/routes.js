@@ -13,6 +13,8 @@ app.get('/:id([0-9]+)/details', controllers.questDetailsCtrl);
 
 app.get('/new', isAuthenticated, controllers.newQuestCtrl);
 
+app.post('/new', isAuthenticated, controllers.newQuestPostCtrl);
+
 app.get('/:id([0-9]+)/edit', isAuthenticated);
 
 module.exports = app;
