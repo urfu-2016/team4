@@ -1,6 +1,6 @@
 <div class="head-info">
     <h1>{{profile.name}}</h1>
-    {{#if_eq profile user}}
+    {{#if_eq profile.id user.id}}
         {{> general-button style='link' href='/signout' text='Выход'}}
     {{/if_eq}}
 </div>
