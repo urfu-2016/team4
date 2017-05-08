@@ -2,11 +2,14 @@
 let changeAvatarBtn = block.querySelector('.change-avatar-btn');
 let dragNdrop = block.querySelector('.drag-n-drop');
 let cancelAvatarBtn = block.querySelector('.cancel-avatar-btn');
-let dragNdropClone = dragNdrop.cloneNode(true);
-let dragNdropInitFunction = dragNdrop.initFunction;
+let dragNdropClone;
+let dragNdropInitFunction;
 let avatarImg = block.querySelector('.avatar');
 let prevSrc = avatarImg.src;
+
 if (dragNdrop) {
+    dragNdropClone = dragNdrop.cloneNode(true);
+    dragNdropInitFunction = dragNdrop.initFunction;
     changeAvatarBtn.addEventListener('click', () => {
         cancelAvatarBtn.style.display = 'block';
         changeAvatarBtn.style.display = 'none';
