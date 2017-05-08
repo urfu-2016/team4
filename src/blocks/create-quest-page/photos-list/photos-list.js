@@ -1,7 +1,6 @@
 let photoBlock = block.querySelector('.new-photo');
 let counter = block.querySelector('.counter');
 counter.value = block.querySelectorAll('.quest-photo').length - 1;
-photoBlock.querySelector('.delete-btn').style.display = 'none';
 let cloned = photoBlock.cloneNode(true);
 let dragndropInitFunction = block.querySelector('.drag-n-drop').initFunction;
 let photoBlockInitFunction = photoBlock.initFunction;
