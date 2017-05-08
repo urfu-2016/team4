@@ -31,14 +31,14 @@ function initBlock(block) {
         block.classList.add('is-uploading');
         uploadFile(imgBlock.src)
             .then(link => {
-                uploadingBlock.style.display = 'none';
                 let imgBlockClone = imgBlock.cloneNode(true);
-                block.replaceWith(imgBlock);
                 /*
                  чтобы пользователь не видел мигающую картинку, нужно не просто поменять src,
                  а подменить на уже загруженный склоннированный img с подставленной новой ссылкой
                   */
                 imgBlockClone.addEventListener('load', () => {
+                    uploadingBlock.style.display = 'none';
+                    block.replaceWith(imgBlock);
                     imgBlock.parentNode.replaceChild(imgBlockClone, imgBlock);
                     block.dispatchEvent(loadedEvent);
                 });
