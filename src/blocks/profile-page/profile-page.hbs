@@ -10,22 +10,24 @@
 <div class="tabs">
     {{> general-tab
         name="tabs"
-        id="tab-active"
-        value="active"
+        id="tab-created"
+        value="created"
         checked="checked"
-        text="Опубликованные"
-        onchange="tabChanged(this)"
+        text="Автор"
     }}
     {{> general-tab
         name="tabs"
-        id="tab-finished"
-        value="finished"
-        text="Пройденные"
-        onchange="tabChanged(this)"
+        id="tab-in-process"
+        value="in-process"
+        text="Участник"
     }}
 </div>
-<div class="quests">
-    {{>general-loader}}
-    Функционал пока не готов
+<div class="content">
+    <div class="content-tab-created">
+        {{> quest-list quests=createdQuests}}
+    </div>
+    <div class="content-tab-in-process">
+        {{> quest-list quests=inProcessQuests}}
+    </div>
 </div>
 

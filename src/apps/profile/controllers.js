@@ -1,13 +1,13 @@
 /* eslint handle-callback-err: 'off' */
 const User = require('../../models/user');
 
-function getFilteredQuests(quests, iAmAuthor) {
+function getFilteredQuests(quests, iAmAuthor, user) {
     return quests
         .filter(quest => {
-            return (iAmAuthor ? !quest.isAuthor : quest.isAuthor);
+            return (iAmAuthor ? quest.isAuthor : !quest.isAuthor);
         })
         .map(quest => {
-            return quest.quest;
+            return quest.quest.wrapForUser(user);
         });
 }
 
@@ -15,7 +15,7 @@ function getUser(id) {
     return User.findOne({id: id}, 'name photoURL rating id quests')
         .populate({
             path: 'quests.quest',
-            select: 'title author photos description -_id id likesCount rating',
+            select: 'title author photos description _id id likesCount rating',
             populate: [
                 {
                     path: 'photos',
@@ -39,8 +39,8 @@ exports.profileCtrl = (req, res) => {
             }
             res.render('profile-page', {
                 profile: user,
-                createdQuests: getFilteredQuests(user.quests, true),
-                inProcessQuests: getFilteredQuests(user.quests, false)
+                createdQuests: getFilteredQuests(user.quests, true, user),
+                inProcessQuests: getFilteredQuests(user.quests, false, user)
             });
         });
 };
