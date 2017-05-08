@@ -27,12 +27,18 @@ const questSchema = new Schema({
  * @param user - экземпляр модели User из request
  * @return Object - json квеста с полем progress
  */
-questSchema.method('wrapForUser', function (user) {
+questSchema.methods.wrapForUser = function (user) {
     this.user = user;
     let wrapper = JSON.parse(JSON.stringify(this));
     let userQuests = [];
     if (user) {
-        userQuests = user.quests.map(wrapper => String(wrapper.quest));
+        userQuests = user.quests.map(wrapper => {
+            if ('_id' in wrapper.quest) {
+                return String(wrapper.quest._id);
+            }
+
+            return String(wrapper.quest);
+        });
     }
     let indexOfQuest = userQuests.indexOf(String(this._id));
     if (user && indexOfQuest > -1 && !user.quests[indexOfQuest].isAuthor) {
@@ -42,6 +48,7 @@ questSchema.method('wrapForUser', function (user) {
     }
 
     return wrapper;
-});
+};
 
 module.exports = mongoose.model('quest', questSchema);
+
