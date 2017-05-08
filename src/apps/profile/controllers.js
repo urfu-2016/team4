@@ -1,6 +1,5 @@
 /* eslint handle-callback-err: 'off' */
 const User = require('../../models/user');
-const cloudinary = require('../../tools/cloudinary');
 
 function getFilteredQuests(quests, iAmAuthor) {
     return quests
@@ -12,11 +11,8 @@ function getFilteredQuests(quests, iAmAuthor) {
         });
 }
 
-function renderProfilePageForUser(req, res, isPost, result) {
-    if (!req.user) {
-        return res.send('User Not found');
-    }
-    User.findById(req.user._id, 'name photoURL rating quests')
+function getUser(id) {
+    return User.findOne({id: id}, 'name photoURL rating id quests')
         .populate({
             path: 'quests.quest',
             select: 'title author photos description -_id id likesCount rating',
@@ -30,33 +26,36 @@ function renderProfilePageForUser(req, res, isPost, result) {
                     select: '-_id id name'
                 }
             ]
-        })
-        .exec((err, user) => {
-            if (isPost) {
-                user.photoURL = result.url;
-                user.save(function (err) {
-                    if (err) {
-                        console.info(err);
-                    }
-                });
-            }
-            res.render('profile-page', {
-                userPhoto: user.photoURL,
-                usersQuests: getFilteredQuests(user.quests, true),
-                inProcessQuests: getFilteredQuests(user.quests, false)
-            });
         });
 }
 
 exports.profileCtrl = (req, res) => {
-    renderProfilePageForUser(req, res);
+    getUser(req.params.id)
+        .exec((err, user) => {
+            if (!user) {
+                res.status(404);
+
+                return res.render('page-404');
+            }
+            res.render('profile-page', {
+                profile: user,
+                createdQuests: getFilteredQuests(user.quests, true),
+                inProcessQuests: getFilteredQuests(user.quests, false)
+            });
+        });
 };
 
-exports.profileLoadAvatar = (req, res) => {
-    if (!req.file) {
-        return res.send('Ой, ошибочка, проверьте выбран ли файл');
-    }
-    cloudinary.savePhoto(req.file.path, result => {
-        renderProfilePageForUser(req, res, true, result);
+exports.profileSaveAvatar = (req, res) => {
+    getUser(req.user.id).exec((err, user) => {
+        user.photoURL = req.body.url;
+        user.save(function (err) {
+            if (err) {
+                console.info(err);
+
+                return res.sendStatus(500);
+            }
+        });
+
+        return res.sendStatus(200);
     });
 };

@@ -1,6 +1,11 @@
 <div class="head-info">
-    <h1>{{user.name}}</h1>
-    {{> general-button style='link' href='/signout' text='Выход'}}
+    <h1>{{profile.name}}</h1>
+    {{#if_eq profile user}}
+        {{> general-button style='link' href='/signout' text='Выход'}}
+    {{/if_eq}}
 </div>
 {{>line}}
 {{>line}}
+<p>
+    Рейтинг: {{#if profile.rating}}{{profile.rating}}{{else}}0{{/if}}
+</p>

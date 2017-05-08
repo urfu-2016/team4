@@ -1,3 +1,3 @@
 <div class="param-name">Параметр</div>
-<div class="param-value">Значение </div>
-{{#if user}}{{>general-button img='img/edit.svg' alt='edit'}}{{/if}}
+<div class="param-value">Значение</div>
+{{#if_eq user.id profile.id}}{{>general-button img='img/edit.svg' alt='edit'}}{{/if_eq}}

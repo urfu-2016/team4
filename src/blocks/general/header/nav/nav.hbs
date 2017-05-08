@@ -6,7 +6,7 @@
 {{>general-button text='Рейтинги' href='/rating' style='link'}}
 {{#if user}}
         {{>general-button text='Мои Квесты' href='/quests/my' style='link'}}
-        {{>general-button text='Профиль' href='/profile' style='link'}}
+        {{>general-button text='Профиль' href=(concat "/profile/" user.id) style='link'}}
 
 {{else}}
     {{>general-button text='Войти' style='link' class='login'}}

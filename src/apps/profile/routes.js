@@ -6,7 +6,7 @@ const multer = require('multer');
 const pathForImages = 'uploads/';
 const upload = multer({dest: pathForImages});
 
-app.get('/', isAuthenticated, controllers.profileCtrl);
-app.post('/', isAuthenticated, upload.single('avatar'), controllers.profileLoadAvatar);
+app.get('/:id([0-9]+)', controllers.profileCtrl);
+app.post('/', isAuthenticated, upload.single('avatar'), controllers.profileSaveAvatar);
 
 module.exports = app;
