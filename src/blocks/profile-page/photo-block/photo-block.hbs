@@ -1,10 +1,14 @@
-<img src="{{#if userPhoto}}
-    {{userPhoto}}
+<img src="{{#if profile.photoURL}}
+    {{profile.photoURL}}
 {{else}}
     http://i.imgur.com/HQ3YU7n.gif
-        {{/if}}" alt="{{user.name}}" class="photo"/>
-
-<form method="post" enctype="multipart/form-data">
-    <input type="file" name="avatar" accept="image/*,image/jpeg,image/png" />
-    {{> general-button text="Обновить аватар" type="submit" style="primary"}}
-</form>
+        {{/if}}" alt="{{profile.name}}" class="avatar"/>
+{{#if_eq profile.id user.id}}
+    {{>general-drag-n-drop imgClass="new-avatar" imgAlt="avatar" blockClass="drag-n-drop"}}
+    {{>general-button text="изменить" style="border" blockClass='change-avatar-btn'}}
+    {{>general-button text="отменить" style="border" blockClass='cancel-avatar-btn'}}
+{{/if_eq}}
+<!--<form method="post" enctype="multipart/form-data">-->
+    <!--<input type="file" name="avatar" accept="image/*,image/jpeg,image/png" />-->
+    <!--{{> general-button text="Обновить аватар" type="submit" style="primary"}}-->
+<!--</form>-->
