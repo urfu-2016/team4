@@ -1,9 +1,9 @@
 require('../../models/photo');
 require('../../models/user');
 const Quest = require('../../models/quest');
-const User = require('../../models/user');
 const toObjectId = require('mongoose').Types.ObjectId;
 const parseQuery = require('../../tools/query-parser');
+const getUser = require('../profile/controllers').getUser;
 
 /**
  * callback функция сортировки моделей по populate field
@@ -136,60 +136,43 @@ exports.myQuestsCtrl = (req, res) => {
 
 exports.questCtrl = (req, res) => {
     let questId = req.params.id;
-    let buttonText = 'Начать квест';
-    let requirementAuthorization = '';
-    if (!req.user) {
-        requirementAuthorization = 'Вы должны авторизоваться, чтобы участвовать в квестах.';
-    }
     Quest.findOne({id: questId})
-        .populate('photos', '-_id url')
+        .populate('photos', 'url')
         .exec((err, quest) => {
+            if (err || !quest) {
+                res.status(404);
+
+                return res.render('page-404');
+            }
+            let context = {
+                quest: quest,
+                checkedPhotos: []
+            };
+
             if (req.user) {
-                User.findOne({id: req.user.id})
+                getUser(req.user.id)
                     .exec((err, user) => {
                         if (err || !user) {
                             return res.send('полльзователь с таким id не найден');
                         }
-                        user.quests.forEach(userQuest => {
-                            if (userQuest.id === quest.id) {
-                                buttonText = 'Продолжить квест';
+                        context.checkedPhotos = user.quests.reduce((acc, el) => {
+                            if (el.quest._id.equals(quest._id)) {
+                                return acc.concat(el.checkPhotos);
                             }
-                        });
-                    });
-            }
-            if (err || !quest) {
-                return res.send('quest number was not found');
-            }
-            res.render('quest-description-page', {
-                title: quest.title,
-                description: quest.description,
-                photos: quest.photos,
-                requirementAuthorization: requirementAuthorization,
-                buttonText: buttonText
-            });
-        });
-};
 
-exports.questDetailsCtrl = (req, res) => {
-    let requirementAuthorization = '';
-    let description = 'Здесь вы можете сверить своё местоположение с тем, что изображено на картинке';
-    if (!req.user) {
-        requirementAuthorization = 'Вы должны авторизоваться, чтобы участвовать в квестах.';
-        description = '';
-    }
-    let questId = req.params.id;
-    Quest.findOne({id: questId})
-        .populate('photos', '-_id url')
-        .exec((err, quest) => {
-            if (err || !quest) {
-                return res.send('quest number was not found');
+                            return acc;
+                        }, [])
+                            .map(photoId => {
+                                return quest.photos
+                                    .findIndex(questPhoto => {
+                                        return photoId.equals(questPhoto._id);
+                                    });
+                            });
+                        res.render('quest-description-page', context);
+                    });
+            } else {
+                res.render('quest-description-page', context);
             }
-            res.render('photos-page', {
-                title: quest.title,
-                photos: quest.photos,
-                requirementAuthorization: requirementAuthorization,
-                description: description
-            });
         });
 };
 
