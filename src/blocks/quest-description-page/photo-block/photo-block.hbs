@@ -8,11 +8,13 @@
             <img src="{{photo.url}}" alt="photo" class="photo"/>
         </div>
         {{#if ../user}}
-            {{#if_not_in @index ../checkedPhotos}}
-                <form action="/quests/{{../quest.id}}/checkPhoto/{{@index}}" method="post">
-                    {{>general-button text='Зачекинить' type='submit' style='primary'}}
-                </form>
-            {{/if_not_in}}
+            {{#if_neq ../iAmAuthor true}}
+                {{#if_not_in @index ../checkedPhotos}}
+                    <form action="/quests/{{../quest.id}}/checkPhoto/{{@index}}" method="post">
+                        {{>general-button text='Зачекинить' type='submit' style='primary'}}
+                    </form>
+                {{/if_not_in}}
+            {{/if_neq}}
         {{/if}}
     </div>
 {{/each}}

@@ -3,8 +3,12 @@
     <div class="description">
         {{quest.description}}
     </div>
+    Автор: <a href="/profile/{{quest.author.id}}">{{quest.author.name}}</a>
     {{#if_eq user undefined}}
         <h2>Для прохождения квеста вам необходимо авторизоваться</h2>
     {{/if_eq}}
+    {{#if iAmAuthor}}
+        <h2>Автор квеста не может быть участником</h2>
+    {{/if}}
     {{>photo-block}}
 </section>

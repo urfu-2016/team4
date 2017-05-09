@@ -138,6 +138,7 @@ exports.questCtrl = (req, res) => {
     let questId = req.params.id;
     Quest.findOne({id: questId})
         .populate('photos', 'url')
+        .populate('author', 'name id')
         .exec((err, quest) => {
             if (err || !quest) {
                 res.status(404);
@@ -146,15 +147,28 @@ exports.questCtrl = (req, res) => {
             }
             let context = {
                 quest: quest,
-                checkedPhotos: []
+                checkedPhotos: [],
+                iAmAuthor: false
             };
 
+            if (!quest.isPublished) {
+                if (req.user && quest.author._id.equals(req.user._id)) {
+                    return res.redirect('/quest/' + quest.id + '/edit');
+                }
+                res.status(404);
+
+                return res.render('page-404');
+            }
             if (req.user) {
+                if (quest.author._id.equals(req.user._id)) {
+                    context.iAmAuthor = true;
+                }
                 getUser(req.user.id)
                     .exec((err, user) => {
                         if (err || !user) {
                             return res.send('полльзователь с таким id не найден');
                         }
+
                         context.checkedPhotos = user.quests.reduce((acc, el) => {
                             if (el.quest._id.equals(quest._id)) {
                                 return acc.concat(el.checkPhotos);
