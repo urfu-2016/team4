@@ -1,18 +1,14 @@
-<h2>{{title}}</h2>
+<h2>{{quest.title}}</h2>
 <section class="description-and-photos">
     <div class="description">
-        {{description}}
+        {{quest.description}}
     </div>
-    <div class="draggable">
-        {{>photo-block}}
-    </div>
-    <div class="scroll">
-    </div>
-</section>
-<section class="buttons">
-    {{#if requirementAuthorization}}
-        {{requirementAuthorization}}
-    {{else}}
-        {{>general-button text=buttonText style='primary'}}
+    Автор: <a href="/profile/{{quest.author.id}}">{{quest.author.name}}</a>
+    {{#if_eq user undefined}}
+        <h2>Для прохождения квеста вам необходимо авторизоваться</h2>
+    {{/if_eq}}
+    {{#if iAmAuthor}}
+        <h2>Автор квеста не может быть участником</h2>
     {{/if}}
+    {{>photo-block}}
 </section>

@@ -48,7 +48,7 @@ function imgLoadedSlot() {
             } else if (error === 404) {
                 createFlashMessage('Ошибка: невозможно установить изображение', 'error');
             } else {
-                createFlashMessage('Неизвестная ощибка', 'error');
+                createFlashMessage('Неизвестная ошибка', 'error');
                 console.error(error);
             }
         })

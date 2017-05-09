@@ -29,6 +29,8 @@ function getUser(id) {
         });
 }
 
+exports.getUser = getUser;
+
 exports.profileCtrl = (req, res) => {
     getUser(req.params.id)
         .exec((err, user) => {

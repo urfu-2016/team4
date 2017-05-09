@@ -1,3 +1,20 @@
-{{#each photos}}
-	<div id="{{@index}}"><img src="{{this.url}}" alt="photo" class="photo"/></div>
+{{#each quest.photos as | photo |}}
+    <div class="photo-{{@index}}">
+        <div class="photo-wrapper">
+            <div class="status-wrapper {{#if_not_in @index ../checkedPhotos}}hidden{{/if_not_in}}">
+                <div class="passed">Найдено</div>
+                <div class="checking">Проверяем...</div>
+            </div>
+            <img src="{{photo.url}}" alt="photo" class="photo"/>
+        </div>
+        {{#if ../user}}
+            {{#if_neq ../iAmAuthor true}}
+                {{#if_not_in @index ../checkedPhotos}}
+                    <form action="/quests/{{../quest.id}}/checkPhoto/{{@index}}" method="post">
+                        {{>general-button text='Зачекинить' type='submit' style='primary'}}
+                    </form>
+                {{/if_not_in}}
+            {{/if_neq}}
+        {{/if}}
+    </div>
 {{/each}}

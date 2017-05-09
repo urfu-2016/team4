@@ -9,8 +9,6 @@ app.get('/my', isAuthenticated, controllers.myQuestsCtrl);
 
 app.get('/:id([0-9]+)', controllers.questCtrl);
 
-app.get('/:id([0-9]+)/details', controllers.questDetailsCtrl);
-
 app.get('/new', isAuthenticated, controllers.newQuestCtrl);
 
 app.post('/new', isAuthenticated, controllers.newQuestPostCtrl);
