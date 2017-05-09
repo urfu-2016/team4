@@ -41,6 +41,9 @@ function imgLoadedSlot() {
     cancelAvatarBtn.style.display = 'none';
     changeAvatarBtn.style.display = 'block';
     linkImage(avatarImg.src)
+        .then(() => {
+            prevSrc = avatarImg.src;
+        })
         .catch(error => {
             avatarImg.src = prevSrc;
             if (error.message && error.message === 'Failed to fetch') {
@@ -51,9 +54,6 @@ function imgLoadedSlot() {
                 createFlashMessage('Неизвестная ошибка', 'error');
                 console.error(error);
             }
-        })
-        .then(() => {
-            prevSrc = avatarImg.src;
         });
 }
 

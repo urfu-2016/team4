@@ -30,6 +30,14 @@ function sortPopulated(data, populateName, a, b) {
     return 0;
 }
 
+function isAuthor(quest, user) {
+    if (quest.author._id) {
+        return Boolean(quest.author._id.equals(user._id));
+    }
+
+    return Boolean(quest.author.equals(user._id));
+}
+
 exports.questsCtrl = (req, res) => {
     let query = req.query;
     let render = query.render;
@@ -152,7 +160,7 @@ exports.questCtrl = (req, res) => {
             };
 
             if (!quest.isPublished) {
-                if (req.user && quest.author._id.equals(req.user._id)) {
+                if (req.user && isAuthor(quest, req.user)) {
                     return res.redirect('/quest/' + quest.id + '/edit');
                 }
                 res.status(404);
@@ -160,7 +168,7 @@ exports.questCtrl = (req, res) => {
                 return res.render('page-404');
             }
             if (req.user) {
-                if (quest.author._id.equals(req.user._id)) {
+                if (isAuthor(quest, req.user)) {
                     context.iAmAuthor = true;
                 }
                 getUser(req.user.id)
@@ -190,20 +198,72 @@ exports.questCtrl = (req, res) => {
         });
 };
 
+function setPhotoChecked(user, quest, photo) {
+    return new Promise((resolve, reject) => {
+        let questIndex = user.quests.findIndex(userQuest => {
+            return userQuest.quest._id.equals(quest._id);
+        });
+
+        if (questIndex === -1) {
+            user.quests.push({
+                quest: quest,
+                progress: Math.round(100 / quest.photos.length),
+                checkPhotos: [photo],
+                isAuthor: 0
+            });
+        } else {
+            let userQuest = user.quests[questIndex];
+            let photoCount = userQuest.checkPhotos.length + 1;
+            userQuest.progress = Math.round(photoCount * 100 / quest.photos.length);
+            userQuest.checkPhotos.push(photo);
+        }
+
+        return user.save(err => {
+            if (err) {
+                reject(err);
+            }
+            resolve();
+        });
+    });
+}
+
 exports.questCheckPhotoCtrl = (req, res) => {
     let index = req.params.index;
     Quest.findOne({id: req.params.id})
         .populate('photos', 'url geoPosition')
         .exec((err, quest) => {
             if (err || !quest || index >= quest.photos.length) {
+                console.error(err);
                 res.status(404);
 
                 return res.render('page-404');
             }
+            if (isAuthor(quest, req.user)) {
+                return res.sendStatus(400);
+            }
+            let photo = quest.photos[index];
             let position = quest.photos[index].geoPosition;
-            console.log(position);
-            // установить юзеру сооответствующие поля и проверить локацию
-            res.sendStatus(200);
+            if (Math.round(position.lat * 1000) !== Math.round(req.body.lat * 1000) ||
+                Math.round(position.lng * 1000) !== Math.round(req.body.lng * 1000)) {
+                return res.sendStatus(400);
+            }
+
+            getUser(req.user.id)
+                .exec((err, user) => {
+                    if (err || !user) {
+                        console.error(err);
+
+                        return req.sendStatus(500);
+                    }
+                    setPhotoChecked(user, quest, photo)
+                        .then(() => {
+                            res.sendStatus(200);
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            res.sendStatus(500);
+                        });
+                });
         });
 };
 
