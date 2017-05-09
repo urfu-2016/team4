@@ -1,5 +1,7 @@
 /* globals addListenerMulti */
 /* globals createFlashMessage */
+let intel = require('intel');
+
 function initBlock(block) {
     let isAdvancedUpload = (function () {
         let div = document.createElement('div');
@@ -48,12 +50,16 @@ function initBlock(block) {
                 uploadingBlock.style.display = 'none';
                 inputBlock.style.display = 'block';
                 if (error.message && error.message === 'Failed to fetch') {
+                    intel.info('Нет соединения с сервером');
                     createFlashMessage('Нет соединения с сервером', 'error');
                 } else if (error === 404) {
+                    intel.info('Ошибка: невозможно загрузить изображение');
                     createFlashMessage('Ошибка: невозможно загрузить изображение', 'error');
                 } else if (error === 413) {
+                    intel.info('Изображение слишком большое');
                     createFlashMessage('Данное изображение слишком большое. Максимальный размер: 5мб', 'error');
                 } else {
+                    intel.info('Неизвестная ощибка' + error);
                     createFlashMessage('Неизвестная ощибка', 'error');
                     console.error(error);
                 }
@@ -83,6 +89,7 @@ function initBlock(block) {
         if (file.type.startsWith('image')) {
             return true;
         }
+        intel.log('Данный файл не является изображением: ' + file.type);
         createFlashMessage('Данный файл не является изображением', 'error');
 
         return false;
@@ -122,6 +129,7 @@ function initBlock(block) {
             })
         }).then(res => {
             if (res.status !== 200) {
+                intel.warn('Загрузка фото ' + res.status);
                 throw res.status;
             }
 

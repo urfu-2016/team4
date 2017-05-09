@@ -1,7 +1,6 @@
 const Handlebars = require('handlebars');
 const authMiddleware = require('./auth');
 const bodyParser = require('body-parser');
-const logger = require('./intel-logger');
 
 exports.init = app => {
     Handlebars.registerHelper('section', (name, options) => {

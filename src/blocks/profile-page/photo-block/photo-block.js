@@ -6,6 +6,7 @@ let dragNdropClone;
 let dragNdropInitFunction;
 let avatarImg = block.querySelector('.avatar');
 let prevSrc = avatarImg.src;
+let intel = require('intel');
 
 if (dragNdrop) {
     dragNdropClone = dragNdrop.cloneNode(true);
@@ -47,10 +48,13 @@ function imgLoadedSlot() {
         .catch(error => {
             avatarImg.src = prevSrc;
             if (error.message && error.message === 'Failed to fetch') {
+                intel.warn(error.message + ' Нет соединения с сервером');
                 createFlashMessage('Нет соединения с сервером', 'error');
             } else if (error === 404) {
+                intel.warn('Ошибка: невозможно установить изображение');
                 createFlashMessage('Ошибка: невозможно установить изображение', 'error');
             } else {
+                intel.warn('Неизвестная ощибка ' + error);
                 createFlashMessage('Неизвестная ошибка', 'error');
                 console.error(error);
             }

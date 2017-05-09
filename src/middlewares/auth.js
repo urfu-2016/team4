@@ -7,6 +7,7 @@ const Strategy = require('passport-local').Strategy;
 const VKontakteStrategy = require('passport-vkontakte').Strategy;
 const User = require('../models/user');
 const passwordHash = require('password-hash');
+let intel = require('intel');
 exports.init = app => {
     passport.use(new Strategy({
         usernameField: 'email',
@@ -17,17 +18,26 @@ exports.init = app => {
             .findOne({email: email})
             .exec((err, user) => {
                 if (err) {
+                    intel.warn(err);
+
                     return cb(err);
                 }
                 if (!user) {
+                    intel.warn(email + ': Юзера с данным email не существует');
+
                     return cb(null, false, {message: 'Юзера с данным email не существует'});
                 }
                 if (user.vkId && !user.password) {
+                    intel.warn(user.vkId + ' Данный юзер зарегестрирован через соцсеть Вконтакте');
+
                     return cb(null, false, {message: 'Данный юзер зарегестрирован через соцсеть Вконтакте'});
                 }
                 if (!passwordHash.verify(password, user.password)) {
+                    intel.warn('Логин' + email + ' - неверный пароль:' + password);
+
                     return cb(null, false, {message: 'Неверный пароль'});
                 }
+                intel.info('Пользователь ' + user.name + 'успешно вошел');
 
                 return cb(null, user);
             });

@@ -1,4 +1,5 @@
 /* globals createFlashMessage */
+let intel = require('intel');
 
 let typeTimer;
 let loader = block.querySelector('.general-loader');
@@ -55,13 +56,16 @@ function filterQuests() {
         })
         .catch(error => {
             if (error.message && error.message === 'Failed to fetch') {
+                intel.warn(error.message + ' Нет соединения с сервером');
                 createFlashMessage('Нет соединения с сервером', 'error');
                 listElement.innerHTML = 'Ошибка: Данные по квестам не найдены';
             } else if (error === 404) {
+                intel.warn('Ошибка: невозможно установить изображение');
                 createFlashMessage('Ошибка: Данные по квестам не найдены', 'error');
                 listElement.innerHTML = 'Ошибка: Данные по квестам не найдены';
             } else {
-                createFlashMessage('Неизвестная ошибка, не возможно загрузить данные', 'error');
+                intel.warn('Неизвестная ощибка ' + error);
+                createFlashMessage('Неизвестная ошибка, невозможно загрузить данные', 'error');
                 listElement.innerHTML = 'Неизвестная ошибка';
                 console.log(error);
             }
