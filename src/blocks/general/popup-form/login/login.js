@@ -1,4 +1,5 @@
 /* globals createFlashMessage */
+
 function hideLogin() {
     let loginForm = block.parentNode;
     loginForm.style.display = 'none';
