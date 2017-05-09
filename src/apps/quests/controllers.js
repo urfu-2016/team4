@@ -190,6 +190,23 @@ exports.questCtrl = (req, res) => {
         });
 };
 
+exports.questCheckPhotoCtrl = (req, res) => {
+    let index = req.params.index;
+    Quest.findOne({id: req.params.id})
+        .populate('photos', 'url geoPosition')
+        .exec((err, quest) => {
+            if (err || !quest || index >= quest.photos.length) {
+                res.status(404);
+
+                return res.render('page-404');
+            }
+            let position = quest.photos[index].geoPosition;
+            console.log(position);
+            // установить юзеру сооответствующие поля и проверить локацию
+            res.sendStatus(200);
+        });
+};
+
 exports.newQuestCtrl = (req, res) => {
     res.render('create-quest-page', {
         photos: []

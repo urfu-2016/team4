@@ -9,6 +9,8 @@ app.get('/my', isAuthenticated, controllers.myQuestsCtrl);
 
 app.get('/:id([0-9]+)', controllers.questCtrl);
 
+app.post('/:id([0-9]+)/checkPhoto/:index([0-9]+)', controllers.questCheckPhotoCtrl);
+
 app.get('/new', isAuthenticated, controllers.newQuestCtrl);
 
 app.post('/new', isAuthenticated, controllers.newQuestPostCtrl);
