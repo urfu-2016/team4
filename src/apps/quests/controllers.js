@@ -1,9 +1,11 @@
 require('../../models/photo');
 require('../../models/user');
 const Quest = require('../../models/quest');
+const Photo = require('../../models/photo');
 const toObjectId = require('mongoose').Types.ObjectId;
 const parseQuery = require('../../tools/query-parser');
 const getUser = require('../profile/controllers').getUser;
+const photoTools = require('../../tools/photo-tools');
 
 /**
  * callback функция сортировки моделей по populate field
@@ -40,7 +42,7 @@ exports.questsCtrl = (req, res) => {
     questData.find.isPublished = 1;
     Quest.find(
         questData.find,
-        ['title', 'photos', 'description,', '_id', 'id', 'likesCount', 'rating', 'author'],
+        ['title', 'photos', 'description,', '_id', 'id', 'likesCount', 'rating', 'author', 'isPublished'],
         questData.options
     )
         .populate({
@@ -111,8 +113,7 @@ exports.myQuestsCtrl = (req, res) => {
         return true;
     });
     let questIds = quests.map(quest => toObjectId(quest.quest));
-    Quest.find({_id: {$in: questIds}},
-        ['title', 'photos', 'description,', '_id', 'id', 'likesCount', 'rating', 'author'])
+    Quest.find({_id: {$in: questIds}})
         .populate({
             path: 'author',
             select: '-_id id name'
@@ -153,7 +154,7 @@ exports.questCtrl = (req, res) => {
 
             if (!quest.isPublished) {
                 if (req.user && quest.author._id.equals(req.user._id)) {
-                    return res.redirect('/quest/' + quest.id + '/edit');
+                    return res.redirect('/quests/' + quest.id + '/edit');
                 }
                 res.status(404);
 
@@ -196,13 +197,185 @@ exports.newQuestCtrl = (req, res) => {
     });
 };
 
+function savePhotos(photos, done) {
+    let count = 0;
+    if (!photos.length) {
+        done();
+    }
+    photos.forEach(photo => {
+        photo.save(err => {
+            count++;
+            if (err) {
+                done(err);
+            }
+
+            if (count === photos.length) {
+                done();
+            }
+        });
+    });
+}
+
+function applyQuestData(quest, post, done) {
+    let photos = [];
+    let deletedCount = 0;
+    let photosToDelete = [];
+    if (!post['quest-title']) {
+        return done('title error');
+    }
+    for (let i = 0; i < parseInt(post['photo-count']); i++) {
+        let prefix = 'photo-block-' + i;
+
+        if (!post[prefix + '-edited']) {
+            // ничего не делали с изображением
+            continue;
+        }
+
+        let latlng = post[prefix + '-location'].split(', ').map(strCoord => {
+            return Number(strCoord);
+        });
+
+        if (latlng.length !== 2) {
+            return done(new Error('lat lng not formatted'));
+        }
+
+        let photo;
+        if (i - deletedCount < quest.photos.length) {
+            photo = quest.photos[i - deletedCount];
+        } else {
+            photo = new Photo({
+                url: post[prefix + '-photo'],
+                geoPosition: {
+                    lat: latlng[0],
+                    lng: latlng[1]
+                }
+            });
+        }
+
+        if (post[prefix + '-deleted']) {
+            if (i - deletedCount < quest.photos.length) {
+                // удалили сохранненую фотку
+                quest.photos.splice(i - deletedCount++, 1);
+            }
+            photosToDelete.push(photo);
+            // удаляем из cloudinary все загруженные фотки
+        } else {
+            // добавили новую
+            photos.push(photo);
+        }
+    }
+
+    if (post.publish) {
+        quest.isPublished = 1;
+    }
+
+    photoTools.deletePhotos(photosToDelete, err => {
+        if (err) {
+            done(err);
+        }
+        savePhotos(photos, err => {
+            if (err) {
+                done(err);
+            }
+            quest.photos = quest.photos.concat(photos);
+            quest.save(err => {
+                if (err) {
+                    done(err);
+                }
+                done();
+            });
+        });
+    });
+}
+
 exports.newQuestPostCtrl = (req, res) => {
-    console.log(req.body);
-    res.render('create-quest-page', {
-        photos: []
+    let post = req.body;
+    let quest = new Quest({
+        title: post['quest-title'],
+        description: post['quest-description'],
+        rating: 0,
+        likesCount: 0,
+        author: req.user,
+        photos: [],
+        isPublished: 0
+    });
+    applyQuestData(quest, post, err => {
+        if (err) {
+            console.error(err);
+
+            return res.sendStatus(500);
+        }
+        getUser(req.user.id)
+            .exec((err, user) => {
+                if (err || !user) {
+                    console.error(err, user);
+
+                    return res.sendStatus(500);
+                }
+
+                user.quests.push({
+                    quest: quest,
+                    isAuthor: 1
+                });
+
+                user.save(err => {
+                    if (err) {
+                        console.error(err);
+
+                        return res.sendStatus(500);
+                    }
+
+                    return res.redirect('/quests/' + quest.id + '/edit');
+                });
+            });
     });
 };
 
+exports.editQuestPostCtrl = (req, res) => {
+    let post = req.body;
+    Quest.findOne({id: req.params.id})
+        .populate('photos', 'url')
+        .exec((err, quest) => {
+            if (err || !quest) {
+                console.error(err, quest);
+
+                return res.sendStatus(500);
+            }
+
+            applyQuestData(quest, post, err => {
+                if (err) {
+                    console.error(err);
+
+                    return res.sendStatus(500);
+                }
+
+                if (quest.isPublished) {
+                    return res.redirect('/quests/' + quest.id);
+                }
+
+                return res.redirect('/quests/' + quest.id + '/edit');
+            });
+        });
+};
+
 exports.questEdit = (req, res) => {
-    res.sendStatus(404);
+    Quest.findOne({id: req.params.id})
+        .populate('photos', 'url')
+        .exec((err, quest) => {
+            if (err || !quest) {
+                console.log(err, quest);
+                res.status(404);
+
+                return res.render('page-404');
+            }
+
+            if (quest.isPublished) {
+                return res.redirect('/quests/' + quest.id);
+            }
+
+            return res.render('create-quest-page', {
+                photos: quest.photos.map(photo => photo.url),
+                quest: quest
+            });
+        });
 };

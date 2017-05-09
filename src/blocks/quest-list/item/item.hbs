@@ -28,4 +28,8 @@
 <div>
     author: <a href="/profile/{{quest.author.id}}">{{quest.author.name}}</a>
 </div>
-
+{{#if_eq quest.author.id user.id}}
+    {{#if_eq quest.isPublished 0}}
+        (Не опубликован)
+    {{/if_eq}}
+{{/if_eq}}

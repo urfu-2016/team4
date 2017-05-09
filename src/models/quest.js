@@ -2,7 +2,8 @@
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+const autoIncrement = require('mongoose-auto-increment');
+autoIncrement.initialize(mongoose.connection);
 /* eslint new-cap: 0 */
 const questSchema = new Schema({
     id: Number,
@@ -50,5 +51,6 @@ questSchema.methods.wrapForUser = function (user) {
     return wrapper;
 };
 
+questSchema.plugin(autoIncrement.plugin, {model: 'quest', field: 'id'});
 module.exports = mongoose.model('quest', questSchema);
 
