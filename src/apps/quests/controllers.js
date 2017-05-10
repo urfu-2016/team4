@@ -162,7 +162,7 @@ exports.questCtrl = (req, res) => {
 
             if (!quest.isPublished) {
                 if (req.user && isAuthor(quest, req.user)) {
-                    return res.redirect('/quest/' + quest.id + '/edit');
+                    return res.redirect('/quests/' + quest.id + '/edit');
                 }
                 res.status(404);
 
