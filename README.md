@@ -1,6 +1,6 @@
 # team4. "Фотоквест"
 
-## Сайт: http://super-photo-quest.herokuapp.com
+## Сайт: https://super-photo-quest.herokuapp.com
 ## Workflow
 
 ### 1. Подготовка к разработке
@@ -154,3 +154,12 @@ a {
 
 ## Логгер
 Конфиг находится в файле intel-logger.js. Можно указать путь к логу файлу, уровень с которого записывать события и формат сообщений.
+Сейчас пишутся сообщения начиная с уровня WARN и выше
+1. intel.TRACE
+2. intel.VERBOSE
+3. intel.DEBUG
+4. intel.INFO 
+5. intel.WARN
+6. intel.ERROR
+7. intel.CRITICAL
+Синтаксис: intel.'уровень'('Сообщение')
