@@ -1,6 +1,6 @@
 # team4. "Фотоквест"
 
-## Сайт: http://super-photo-quest.herokuapp.com
+## Сайт: https://super-photo-quest.herokuapp.com
 ## Workflow
 
 ### 1. Подготовка к разработке
