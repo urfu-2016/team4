@@ -5,8 +5,10 @@ const Photo = require('../../models/photo');
 const toObjectId = require('mongoose').Types.ObjectId;
 const parseQuery = require('../../tools/query-parser');
 const getUser = require('../profile/controllers').getUser;
+const cacheTools = require('../../tools/cache-tools');
+const getCacheKey = cacheTools.getCacheKey;
 const photoTools = require('../../tools/photo-tools');
-
+const wrapForUser = require('../../tools/quest-tools').wrapForUser;
 /**
  * callback функция сортировки моделей по populate field
  *
@@ -74,7 +76,7 @@ exports.questsCtrl = (req, res) => {
                 data.sort(sortPopulated.bind(null, authorData.options.sort, 'author'));
             }
             data = data.map(quest => {
-                return quest.wrapForUser(req.user);
+                return wrapForUser(quest, req.user);
             });
             if (render === '') {
                 res.render('quest-list', {
@@ -107,6 +109,17 @@ exports.myQuestsCtrl = (req, res) => {
 
         return;
     }
+    let cachePrefix = 'my-quests-';
+    if (query.active === '') {
+        cachePrefix += 'active';
+    }
+    if (query.finished === '') {
+        cachePrefix += 'finished';
+    }
+    if (query.created === '') {
+        cachePrefix += 'created';
+    }
+
     let quests = req.user.quests.filter(quest => {
         if (query.active === '') {
             return quest.progress < 100 && !quest.isAuthor;
@@ -127,10 +140,12 @@ exports.myQuestsCtrl = (req, res) => {
             select: '-_id id name'
         })
         .populate('photos', '-_id url')
+        .cache(0, getCacheKey(cachePrefix, req.user))
+        .lean()
         .exec()
         .then(data => {
             data = data.map(quest => {
-                return quest.wrapForUser(req.user);
+                return wrapForUser(quest, req.user);
             });
             if (render === '') {
                 res.render('quest-list', {
@@ -148,6 +163,8 @@ exports.questCtrl = (req, res) => {
     Quest.findOne({id: questId})
         .populate('photos', 'url')
         .populate('author', 'name id')
+        .cache(0, getCacheKey('quest-' + questId))
+        .lean()
         .exec((err, quest) => {
             if (err || !quest) {
                 res.status(404);
@@ -215,7 +232,12 @@ function setPhotoChecked(user, quest, photo) {
         } else {
             let userQuest = user.quests[questIndex];
             let photoCount = userQuest.checkPhotos.length + 1;
-            userQuest.progress = Math.round(photoCount * 100 / quest.photos.length);
+            let progress = Math.round(photoCount * 100 / quest.photos.length);
+            if (progress === 1) {
+                cacheTools.clearCache('my-quests-finished', user);
+                cacheTools.clearCache('my-quests-active', user);
+            }
+            userQuest.progress = progress;
             userQuest.checkPhotos.push(photo);
         }
 
@@ -223,6 +245,7 @@ function setPhotoChecked(user, quest, photo) {
             if (err) {
                 reject(err);
             }
+            cacheTools.clearCache('user', user);
             resolve();
         });
     });
@@ -232,6 +255,8 @@ exports.questCheckPhotoCtrl = (req, res) => {
     let index = req.params.index;
     Quest.findOne({id: req.params.id})
         .populate('photos', 'url geoPosition')
+        .cache(0, getCacheKey('quest-' + req.params.id))
+        .lean()
         .exec((err, quest) => {
             if (err || !quest || index >= quest.photos.length) {
                 console.error(err);
@@ -359,6 +384,10 @@ function applyQuestData(quest, post, done) {
                 if (err) {
                     done(err);
                 }
+                cacheTools.clearCache('my-quests-created', quest.author);
+                if (quest.isPublished) {
+                    cacheTools.clearCache('quest-' + quest.id);
+                }
                 done();
             });
         });
@@ -401,6 +430,7 @@ exports.newQuestPostCtrl = (req, res) => {
 
                         return res.sendStatus(500);
                     }
+                    cacheTools.clearCache('user', user);
 
                     return res.redirect('/quests/' + quest.id + '/edit');
                 });
@@ -412,6 +442,8 @@ exports.editQuestPostCtrl = (req, res) => {
     let post = req.body;
     Quest.findOne({id: req.params.id})
         .populate('photos', 'url')
+        .cache(0, getCacheKey('quest-' + req.params.id))
+        .lean()
         .exec((err, quest) => {
             if (err || !quest) {
                 console.error(err, quest);
@@ -438,9 +470,11 @@ exports.editQuestPostCtrl = (req, res) => {
 exports.questEdit = (req, res) => {
     Quest.findOne({id: req.params.id})
         .populate('photos', 'url')
+        .cache(0, getCacheKey('quest-' + req.params.id))
+        .lean()
         .exec((err, quest) => {
             if (err || !quest) {
-                console.log(err, quest);
+                console.error(err, quest);
                 res.status(404);
 
                 return res.render('page-404');
