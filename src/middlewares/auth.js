@@ -33,11 +33,11 @@ exports.init = app => {
                     return cb(null, false, {message: 'Данный юзер зарегестрирован через соцсеть Вконтакте'});
                 }
                 if (!passwordHash.verify(password, user.password)) {
-                    intel.warn('Логин' + email + ' - неверный пароль:' + password);
+                    intel.warn('Логин ' + email + ' - неверный пароль:' + password);
 
                     return cb(null, false, {message: 'Неверный пароль'});
                 }
-                intel.info('Пользователь ' + user.name + 'успешно вошел');
+                intel.info('Пользователь ' + user.name + ' успешно вошел');
 
                 return cb(null, user);
             });

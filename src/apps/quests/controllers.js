@@ -89,7 +89,7 @@ exports.questsCtrl = (req, res) => {
             }
         })
         .catch(err => {
-            intel.log('Неверные параметры' + err);
+            intel.log('Неверные параметры ' + err);
 
             res.send('wrong parameters.' + err);
         });
@@ -195,7 +195,7 @@ exports.questCtrl = (req, res) => {
                 getUser(req.user.id)
                     .exec((err, user) => {
                         if (err || !user) {
-                            intel.log(req.user.email + 'Пользователь не найден');
+                            intel.log(req.user.email + ' Пользователь не найден');
 
                             return res.send('Пользователь с таким id не найден');
                         }

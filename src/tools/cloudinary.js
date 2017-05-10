@@ -25,7 +25,7 @@ exports.savePhoto = (file, callback) => {
         .upload(file, result => {
             fs.unlink(file, function (err) {
                 if (err) {
-                    intel.warn('Сохрание фото: ' + err);
+                    intel.warn('Сохранение фото: ' + err);
                     console.info(err);
                 }
             });

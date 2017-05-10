@@ -1,6 +1,6 @@
 # team4. "Фотоквест"
 
-## Сайт: https://super-photo-quest.herokuapp.com
+## Сайт: http://super-photo-quest.herokuapp.com
 ## Workflow
 
 ### 1. Подготовка к разработке
@@ -51,6 +51,7 @@
 6. Continues Integration – Travis
 7. Сборщик проекта - Gulp
 8. Сервис хранения фотографий - Cloudinary
+9. Логгер - intel
 
 # Директории
 
@@ -79,6 +80,7 @@
     |   `-- ...
     +-- middlewares
     |   +-- auth.js
+    |   +-- intel-logger.js
     |   `-- middlewares.js
     +-- models
     |   +-- photo.js
@@ -149,3 +151,6 @@ a {
         +-- filter.js
         `-- quest-filter.js
 ```
+
+## Логгер
+Конфиг находится в файле intel-logger.js. Можно указать путь к логу файлу, уровень с которого записывать события и формат сообщений.
