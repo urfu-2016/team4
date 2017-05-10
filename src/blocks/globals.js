@@ -1,5 +1,4 @@
 /* eslint no-unused-vars:0 */
-let intel = require('intel');
 
 function createFlashMessage(text, type) {
     let wrapper = document.querySelector('.flash-wrapper');
@@ -10,7 +9,6 @@ function createFlashMessage(text, type) {
     flash.appendChild(flashInner);
     flash.classList.add('flash');
     if (type) {
-        intel.info(type + 'сгенерировано');
         flash.classList.add(type);
     }
     wrapper.appendChild(flash);
