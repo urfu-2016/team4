@@ -14,8 +14,9 @@ function getFilteredQuests(quests, iAmAuthor, user) {
         });
 }
 
-function getUser(id) {
-    return User.findOne({id: id}, 'name photoURL rating id quests')
+function getUser(id, cached) {
+    cached = cached === undefined ? true : cached;
+    let query = User.findOne({id: id}, 'name photoURL rating id quests')
         .populate({
             path: 'quests.quest',
             select: 'title author photos description _id id likesCount rating',
@@ -29,9 +30,14 @@ function getUser(id) {
                     select: '-_id id name'
                 }
             ]
-        })
-        .cache(0, getCacheKey('user', id))
-        .lean();
+        });
+    if (cached) {
+        query = query
+            .cache(0, getCacheKey('user', id))
+            .lean();
+    }
+
+    return query;
 }
 
 exports.getUser = getUser;
@@ -53,7 +59,7 @@ exports.profileCtrl = (req, res) => {
 };
 
 exports.profileSaveAvatar = (req, res) => {
-    getUser(req.user.id).exec((err, user) => {
+    getUser(req.user.id, false).exec((err, user) => {
         user.photoURL = req.body.url;
         user.save(function (err) {
             if (err) {

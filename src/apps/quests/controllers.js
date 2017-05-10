@@ -274,7 +274,7 @@ exports.questCheckPhotoCtrl = (req, res) => {
                 return res.sendStatus(400);
             }
 
-            getUser(req.user.id)
+            getUser(req.user.id, false)
                 .exec((err, user) => {
                     if (err || !user) {
                         console.error(err);
@@ -318,7 +318,7 @@ function savePhotos(photos, done) {
     });
 }
 
-function applyQuestData(quest, post, done) {
+function applyQuestData(quest, user, post, done) {
     let photos = [];
     let deletedCount = 0;
     let photosToDelete = [];
@@ -384,10 +384,8 @@ function applyQuestData(quest, post, done) {
                 if (err) {
                     done(err);
                 }
-                cacheTools.clearCache('my-quests-created', quest.author);
-                if (quest.isPublished) {
-                    cacheTools.clearCache('quest-' + quest.id);
-                }
+                cacheTools.clearCache('my-quests-created', user);
+                cacheTools.clearCache('quest-' + quest.id);
                 done();
             });
         });
@@ -405,13 +403,13 @@ exports.newQuestPostCtrl = (req, res) => {
         photos: [],
         isPublished: 0
     });
-    applyQuestData(quest, post, err => {
+    applyQuestData(quest, req.user, post, err => {
         if (err) {
             console.error(err);
 
             return res.sendStatus(500);
         }
-        getUser(req.user.id)
+        getUser(req.user.id, false)
             .exec((err, user) => {
                 if (err || !user) {
                     console.error(err, user);
@@ -442,8 +440,6 @@ exports.editQuestPostCtrl = (req, res) => {
     let post = req.body;
     Quest.findOne({id: req.params.id})
         .populate('photos', 'url')
-        .cache(0, getCacheKey('quest-' + req.params.id))
-        .lean()
         .exec((err, quest) => {
             if (err || !quest) {
                 console.error(err, quest);
@@ -451,7 +447,7 @@ exports.editQuestPostCtrl = (req, res) => {
                 return res.sendStatus(500);
             }
 
-            applyQuestData(quest, post, err => {
+            applyQuestData(quest, req.user, post, err => {
                 if (err) {
                     console.error(err);
 
