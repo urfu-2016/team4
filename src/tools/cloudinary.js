@@ -69,22 +69,3 @@ exports.deletePhoto = (publicId, callback) => {
             callback(result);
         });
 };
-
-/**
- * переименование фотографии
- *
- * @param oldPublicId
- * @param newPublicId
- * @param callback
- */
-exports.renamePhoto = (oldPublicId, newPublicId, callback) => {
-    cloudinary
-        .uploader
-        .rename(
-            oldPublicId,
-            newPublicId,
-            callback ?
-                result => callback(result) :
-                result => console.info(result)
-        );
-};
