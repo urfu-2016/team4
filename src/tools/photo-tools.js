@@ -1,14 +1,14 @@
-// const cloudinary = require('./cloudinary');
+const cloudinary = require('./cloudinary');
 
 function deletePhoto(photo, done) {
-    // let url = photo.url;
+    let publicId = photo.url
+        .split('/')[photo.url.split('/').length - 1]
+        .split('.')[0];
     photo.remove(err => {
         if (err) {
             return done(err);
         }
-        // тут нужно допилить функционал удаления из cloudinary
-        // cloudinary.deletePhoto()
-        done();
+        cloudinary.deletePhoto(publicId, done);
     });
 }
 
