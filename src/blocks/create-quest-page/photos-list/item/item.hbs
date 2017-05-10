@@ -2,7 +2,9 @@
 {{>photo photo=photo blockClass=''}}
 {{>geo-button blockClass=''}}
 {{>general-button text='удалить' style='primary' blockClass='delete-btn'}}
-<input type="checkbox" class="edited" name="photo-block-{{index}}-edited" />
-<input type="checkbox" class="deleted" name="photo-block-{{index}}-deleted" />
+<input type="checkbox" class="edited" name="photo-block-{{index}}-edited"/>
+<input type="checkbox" class="deleted" name="photo-block-{{index}}-deleted"/>
 <input name="photo-block-{{index}}-photo" class="photo-link" {{bind-attr value="photo:photo"}}/>
-<input name="photo-block-{{index}}-location" class="photo-location"/>
+
+<!--Value тестовое значение пока нет карты-->
+<input name="photo-block-{{index}}-location" value="56.827273, 60.529914" class="photo-location"/>
