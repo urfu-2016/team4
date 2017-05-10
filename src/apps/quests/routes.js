@@ -15,6 +15,8 @@ app.get('/new', isAuthenticated, controllers.newQuestCtrl);
 
 app.post('/new', isAuthenticated, controllers.newQuestPostCtrl);
 
-app.get('/:id([0-9]+)/edit', isAuthenticated);
+app.post('/:id([0-9]+)/edit', isAuthenticated, controllers.editQuestPostCtrl);
+
+app.get('/:id([0-9]+)/edit', isAuthenticated, controllers.questEdit);
 
 module.exports = app;
