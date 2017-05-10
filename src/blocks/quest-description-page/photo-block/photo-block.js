@@ -41,7 +41,7 @@ function formSubmited(form, e) {
             });
     }, error => {
         createFlashMessage('Невозможно определить геолокацию', 'error');
-        statusWrapper.classList.remove('hidden');
+        statusWrapper.classList.add('hidden');
         submitBtn.disabled = false;
         console.error(error);
     }, {
