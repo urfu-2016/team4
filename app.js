@@ -28,6 +28,13 @@ app.set('view engine', '.hbs');
 app.set('port', process.env.PORT || 8080);
 
 let mongoose = require('mongoose');
+let cachegoose = require('cachegoose');
+
+cachegoose(mongoose, {
+    engine: 'redis',
+    port: 6379,         /* the query results will be cached in memory. */
+    host: 'localhost'
+});
 
 let mongoOpt = {
     server: {

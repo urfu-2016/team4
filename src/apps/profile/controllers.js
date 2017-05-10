@@ -1,5 +1,8 @@
 /* eslint handle-callback-err: 'off' */
 const User = require('../../models/user');
+const cacheTools = require('../../tools/cache-tools');
+const getCacheKey = cacheTools.getCacheKey;
+const wrapForUser = require('../../tools/quest-tools').wrapForUser;
 
 function getFilteredQuests(quests, iAmAuthor, user) {
     return quests
@@ -7,7 +10,7 @@ function getFilteredQuests(quests, iAmAuthor, user) {
             return (iAmAuthor ? quest.isAuthor : !quest.isAuthor);
         })
         .map(quest => {
-            return quest.quest.wrapForUser(user);
+            return wrapForUser(quest.quest, user);
         });
 }
 
@@ -26,7 +29,9 @@ function getUser(id) {
                     select: '-_id id name'
                 }
             ]
-        });
+        })
+        .cache(0, getCacheKey('user', id))
+        .lean();
 }
 
 exports.getUser = getUser;
@@ -56,6 +61,7 @@ exports.profileSaveAvatar = (req, res) => {
 
                 return res.sendStatus(500);
             }
+            cacheTools.clearCache('user', req.user);
         });
 
         return res.sendStatus(200);
