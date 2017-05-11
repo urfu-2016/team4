@@ -8,7 +8,8 @@
     "surge:deploy": "surge -p ./build/public -d super-photo-quest.surge.sh",
     "test:watch": "npm run test -- -w",
     "test": "mocha src/tests/",
-    "lint": "npm test & gulp lint"
+    "lint": "npm test & gulp lint",
+    "build": "node node_modules/gulp/bin/gulp build"
   },
   "dependencies": {
     "assert": "^1.4.1",
