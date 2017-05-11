@@ -2,6 +2,7 @@ require('../../models/photo');
 require('../../models/user');
 const Quest = require('../../models/quest');
 const Photo = require('../../models/photo');
+const User = require('../../models/user');
 const toObjectId = require('mongoose').Types.ObjectId;
 const parseQuery = require('../../tools/query-parser');
 const getUser = require('../profile/controllers').getUser;
@@ -522,5 +523,35 @@ exports.questParticipate = (req, res) => {
                         return res.redirect('/quests/my');
                     });
                 });
+        });
+};
+
+exports.removeQuestCtrl = (req, res) => {
+    Quest.findById(req.params.id)
+        .populate('photos')
+        .exec((err, quest) => {
+            if (err) {
+                return res.status(500).send({message: 'Error'});
+            }
+            if (!isAuthor(quest, req.user)) {
+                return res.status(403).send({message: 'You are cheater!'});
+            }
+            photoTools.deletePhotos(quest.photos, result => {
+                console.log(result);
+                User.findById(quest.author, (err, user) => {
+                    if (!err) {
+                        user.quests = user.quests.filter((usersQuest => {
+                            return usersQuest !== quest._id;
+                        }));
+                        user.save();
+                        quest.remove(err => {
+                            if (!err) {
+                                cacheTools.clearCache('my-quests-created', user);
+                                res.redirect('/quests/my');
+                            }
+                        });
+                    }
+                });
+            });
         });
 };

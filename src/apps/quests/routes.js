@@ -21,4 +21,6 @@ app.get('/:id([0-9]+)/edit', isAuthenticated, controllers.questEdit);
 
 app.get('/:id([0-9]+)/participate', isAuthenticated, controllers.questParticipate);
 
+app.post('/:id([0-9]+)/remove', isAuthenticated, controllers.removeQuestCtrl);
+
 module.exports = app;

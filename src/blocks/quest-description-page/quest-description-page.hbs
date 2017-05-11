@@ -21,4 +21,11 @@
     {{/if}}
 
     {{>photo-block}}
+    {{#if quest.isPublished}}
+        {{#if iAmAuthor}}
+            <form method="post" action="quest/{{quest.id}}/remove">
+                {{>general-button text='Удалить' style='danger' type='submit' blockClass='remove-btn'}}
+            </form>
+        {{/if}}
+    {{/if}}
 </section>
