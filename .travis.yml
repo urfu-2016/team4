@@ -17,6 +17,7 @@ deploy:
   app: super-photo-quest
   on:
     repo: urfu-2016/team4
+  skip_cleanup: true
 - provider: surge
   project: "./build/public/"
   domain: super-photo-quest.surge.sh
