@@ -1,4 +1,5 @@
 /* eslint no-unused-vars:0 */
+
 function createFlashMessage(text, type) {
     let wrapper = document.querySelector('.flash-wrapper');
     let flash = document.createElement('div');

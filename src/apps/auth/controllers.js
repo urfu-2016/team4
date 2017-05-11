@@ -1,15 +1,20 @@
 const passport = require('passport');
 const passwordHash = require('password-hash');
 const User = require('../../models/user');
+let intel = require('intel');
 
 exports.signInCtrl = (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) {
+            intel.warn(err);
+
             return next(err);
         }
         if (user) {
             req.login(user, err => {
                 if (err) {
+                    intel.warn(err);
+
                     return next(err);
                 }
 
@@ -37,8 +42,12 @@ exports.signUpCtrl = (req, res) => {
     user.save(err => {
         if (err) {
             if (err.toJSON().errmsg.includes('email')) {
+                intel.info(err.toJSON().errmsg + ' Пользователь с таким email уже зарегестрирован');
+
                 res.status(409).json({message: 'Пользователь с таким email уже зарегестрирован'});
             } else {
+                intel.info(err.toJSON().errmsg);
+
                 res.status(409).json({message: err.toJSON().errmsg});
             }
         } else {
@@ -55,11 +64,15 @@ exports.vkAuth = (req, res, next) => {
             if (err.toJSON && err.toJSON().errmsg.includes('email')) {
                 res.redirect('/?emailexist');
             } else {
+                intel.warn(err);
+
                 next(err);
             }
         } else {
             req.login(user, err => {
                 if (err) {
+                    intel.warn(err);
+
                     return next(err);
                 }
                 res.redirect('/');

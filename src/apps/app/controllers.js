@@ -5,6 +5,7 @@ const joinPath = require('path.join');
 const fs = require('fs');
 const pathForImages = 'uploads/';
 const getFileName = require('unique-name');
+let intel = require('intel');
 
 exports.indexCtrl = (req, res) => {
     res.render('main-page', {
@@ -28,6 +29,7 @@ exports.uploadPhoto = (req, res) => {
     let imageName = getFileName.gen();
     fs.writeFile(joinPath(pathForImages, imageName), imageBuffer, function (err) {
         if (err) {
+            intel.warn(err);
             console.log(err);
         }
     });

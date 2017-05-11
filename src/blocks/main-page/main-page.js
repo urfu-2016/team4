@@ -61,7 +61,7 @@ function filterQuests() {
                 createFlashMessage('Ошибка: Данные по квестам не найдены', 'error');
                 listElement.innerHTML = 'Ошибка: Данные по квестам не найдены';
             } else {
-                createFlashMessage('Неизвестная ошибка, не возможно загрузить данные', 'error');
+                createFlashMessage('Неизвестная ошибка, невозможно загрузить данные', 'error');
                 listElement.innerHTML = 'Неизвестная ошибка';
                 console.log(error);
             }

@@ -1,5 +1,6 @@
 /* eslint camelcase: 'off', no-trailing-spaces: 'off' */
 'use strict';
+let intel = require('intel');
 
 const fs = require('fs');
 let cloudinary = require('cloudinary');
@@ -24,6 +25,7 @@ exports.savePhoto = (file, callback) => {
         .upload(file, result => {
             fs.unlink(file, function (err) {
                 if (err) {
+                    intel.warn('Сохранение фото: ' + err);
                     console.info(err);
                 }
             });

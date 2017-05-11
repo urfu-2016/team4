@@ -51,6 +51,7 @@
 6. Continues Integration – Travis
 7. Сборщик проекта - Gulp
 8. Сервис хранения фотографий - Cloudinary
+9. Логгер - intel
 
 # Директории
 
@@ -79,6 +80,7 @@
     |   `-- ...
     +-- middlewares
     |   +-- auth.js
+    |   +-- intel-logger.js
     |   `-- middlewares.js
     +-- models
     |   +-- photo.js
@@ -149,3 +151,15 @@ a {
         +-- filter.js
         `-- quest-filter.js
 ```
+
+## Логгер
+Конфиг находится в файле intel-logger.js. Можно указать путь к логу файлу, уровень с которого записывать события и формат сообщений.
+Сейчас пишутся сообщения начиная с уровня WARN и выше
+1. intel.TRACE
+2. intel.VERBOSE
+3. intel.DEBUG
+4. intel.INFO 
+5. intel.WARN
+6. intel.ERROR
+7. intel.CRITICAL
+Синтаксис: intel.'уровень'('Сообщение')

@@ -9,6 +9,7 @@ const cacheTools = require('../../tools/cache-tools');
 const getCacheKey = cacheTools.getCacheKey;
 const photoTools = require('../../tools/photo-tools');
 const wrapForUser = require('../../tools/quest-tools').wrapForUser;
+let intel = require('intel');
 /**
  * callback функция сортировки моделей по populate field
  *
@@ -88,6 +89,8 @@ exports.questsCtrl = (req, res) => {
             }
         })
         .catch(err => {
+            intel.log('Неверные параметры ' + err);
+
             res.send('wrong parameters.' + err);
         });
 };
@@ -192,7 +195,9 @@ exports.questCtrl = (req, res) => {
                 getUser(req.user.id)
                     .exec((err, user) => {
                         if (err || !user) {
-                            return res.send('полльзователь с таким id не найден');
+                            intel.log(req.user.email + ' Пользователь не найден');
+
+                            return res.send('Пользователь с таким id не найден');
                         }
 
                         context.checkedPhotos = user.quests.reduce((acc, el) => {

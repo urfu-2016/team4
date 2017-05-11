@@ -6,6 +6,7 @@ let publishBtn = block.querySelector('.publish-btn');
 let publishInput = block.querySelector('.publish');
 let nameInput = block.querySelector('.create-quest-page-quest-title input');
 let counter = block.querySelector('.counter');
+
 publishBtn.addEventListener('click', () => {
     publishInput.checked = 'true';
 });

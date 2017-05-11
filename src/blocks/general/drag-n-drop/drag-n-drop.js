@@ -1,5 +1,6 @@
 /* globals addListenerMulti */
 /* globals createFlashMessage */
+
 function initBlock(block) {
     let isAdvancedUpload = (function () {
         let div = document.createElement('div');
