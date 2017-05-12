@@ -351,23 +351,23 @@ function applyQuestData(quest, user, post, done) {
             photo = quest.photos[i - deletedCount];
         } else {
             photo = new Photo({
-                url: post[prefix + '-photo'],
-                geoPosition: {
-                    lat: latlng[0],
-                    lng: latlng[1]
-                }
+                url: post[prefix + '-photo']
+
             });
         }
-
-        if (post[prefix + '-deleted']) {
-            if (i - deletedCount < quest.photos.length) {
-                // удалили сохранненую фотку
+        photo.geoPosition = {
+            lat: latlng[0],
+            lng: latlng[1]
+        };
+        if (i - deletedCount < quest.photos.length) {
+            // если фотка уже была добавлена
+            if (post[prefix + '-deleted']) {
                 quest.photos.splice(i - deletedCount++, 1);
+                photosToDelete.push(photo);
             }
+        } else if (post[prefix + '-deleted']) {
             photosToDelete.push(photo);
-            // удаляем из cloudinary все загруженные фотки
         } else {
-            // добавили новую
             photos.push(photo);
         }
     }
