@@ -8,24 +8,58 @@ function deletePhoto(photo, done) {
         if (err) {
             return done(err);
         }
-        cloudinary.deletePhoto(publicId, done);
+        cloudinary.deletePhoto(publicId, () => {
+            // независимо от результата не возвращаем ошибку
+            done();
+        });
     });
 }
 
 function deletePhotos(photos, done) {
     let count = 0;
     if (!photos.length) {
-        done();
+        return done();
     }
+    let hadError = false;
     photos.forEach(photo => {
         deletePhoto(photo, err => {
             count++;
+            if (hadError) {
+                return;
+            }
             if (err) {
-                done(err);
+                hadError = true;
+
+                return done(err);
             }
 
             if (count === photos.length) {
-                done();
+                return done();
+            }
+        });
+    });
+}
+
+function savePhotos(photos, done) {
+    let count = 0;
+    if (!photos.length) {
+        return done();
+    }
+    let hadError = false;
+    photos.forEach(photo => {
+        photo.save(err => {
+            count++;
+            if (hadError) {
+                return;
+            }
+            if (err) {
+                hadError = true;
+
+                return done(err);
+            }
+
+            if (count === photos.length) {
+                return done();
             }
         });
     });
@@ -33,3 +67,4 @@ function deletePhotos(photos, done) {
 
 exports.deletePhoto = deletePhoto;
 exports.deletePhotos = deletePhotos;
+exports.savePhotos = savePhotos;

@@ -304,25 +304,6 @@ exports.newQuestCtrl = (req, res) => {
     });
 };
 
-function savePhotos(photos, done) {
-    let count = 0;
-    if (!photos.length) {
-        done();
-    }
-    photos.forEach(photo => {
-        photo.save(err => {
-            count++;
-            if (err) {
-                done(err);
-            }
-
-            if (count === photos.length) {
-                done();
-            }
-        });
-    });
-}
-
 function applyQuestData(quest, user, post, done) {
     let photos = [];
     let deletedCount = 0;
@@ -371,27 +352,27 @@ function applyQuestData(quest, user, post, done) {
             photos.push(photo);
         }
     }
-
     if (post.publish) {
         quest.isPublished = 1;
     }
 
     photoTools.deletePhotos(photosToDelete, err => {
         if (err) {
-            done(err);
+            return done(err);
         }
-        savePhotos(photos, err => {
+        photoTools.savePhotos(photos, err => {
             if (err) {
-                done(err);
+                return done(err);
             }
             quest.photos = quest.photos.concat(photos);
             quest.save(err => {
                 if (err) {
-                    done(err);
+                    return done(err);
                 }
                 cacheTools.clearCache('my-quests-created', user);
                 cacheTools.clearCache('quest-' + quest.id);
-                done();
+
+                return done();
             });
         });
     });
