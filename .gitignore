@@ -2,7 +2,6 @@
 uploads/
 node_modules/
 build/
-log/
 .DS_Store
 
 # files:
@@ -10,4 +9,5 @@ credentials.js
 npm-debug.log
 nbproject/
 .vs
+logs.log
 
