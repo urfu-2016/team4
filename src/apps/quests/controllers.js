@@ -527,6 +527,7 @@ exports.questParticipate = (req, res) => {
 };
 
 function deleteQuestFromUsers(quest, res) {
+    let isGoodProcessStatus = true;
     User
         .find({'quests.quest': quest._id})
         .exec((err, users) => {
@@ -539,13 +540,15 @@ function deleteQuestFromUsers(quest, res) {
                 });
                 user.save(err => {
                     if (err) {
+                        isGoodProcessStatus = false;
                         intel.warn(err);
-
-                        return res.status(500).send({message: 'Error'});
                     }
-                    deleteQuestPhotos(quest, res);
                 });
             });
+            if (isGoodProcessStatus) {
+                return deleteQuestPhotos(quest, res);
+            }
+            res.status(500).send({message: 'Error'});
         });
 }
 
