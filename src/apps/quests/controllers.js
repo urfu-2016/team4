@@ -542,6 +542,43 @@ function deleteQuestFromUsers(quest) {
         });
 }
 
+function removeQuest(quest, res, user) {
+    quest.remove(err => {
+        if (err) {
+            intel.warn(err);
+
+            return res.status(500).send({message: 'Error'});
+        }
+        cacheTools.clearCache('my-quests-created', user);
+        cacheTools.clearCache('quest-' + quest.id);
+        res.redirect('/quests/my');
+    });
+}
+
+function deleteQuestPhotos(quest, res) {
+    photoTools.deletePhotos(quest.photos, () => {
+        User.findById(quest.author, (err, user) => {
+            if (err || !user) {
+                intel.warn(err);
+
+                return res.status(500).send({message: 'Error'});
+            }
+            user.quests = user.quests.filter((usersQuest => {
+                return usersQuest !== quest._id;
+            }));
+            user.save(err => {
+                if (err) {
+                    intel.warn(err);
+
+                    return res.status(500).send({message: 'Error'});
+                }
+                cacheTools.clearCache('user', user);
+                removeQuest(quest, res, user);
+            });
+        });
+    });
+}
+
 exports.removeQuestCtrl = (req, res) => {
     Quest.findById(req.params.id)
         .populate('photos')
@@ -555,29 +592,5 @@ exports.removeQuestCtrl = (req, res) => {
                 return res.status(403).send({message: 'You are cheater!'});
             }
             deleteQuestFromUsers(quest);
-            photoTools.deletePhotos(quest.photos, () => {
-                User.findById(quest.author, (err, user) => {
-                    if (err || !user) {
-                        intel.warn(err);
-
-                        return res.status(500).send({message: 'Error'});
-                    }
-                    user.quests = user.quests.filter((usersQuest => {
-                        return usersQuest !== quest._id;
-                    }));
-                    user.save();
-                    quest.remove(err => {
-                        if (err) {
-                            intel.warn(err);
-
-                            return res.status(500).send({message: 'Error'});
-                        }
-                        cacheTools.clearCache('my-quests-created', user);
-                        cacheTools.clearCache('quest-' + quest.id);
-                        cacheTools.clearCache('user', user);
-                        res.redirect('/quests/my');
-                    });
-                });
-            });
         });
 };
