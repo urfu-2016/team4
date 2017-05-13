@@ -4,7 +4,11 @@
         {{quest.description}}
     </div>
     Автор: <a href="/profile/{{quest.author.id}}">{{quest.author.name}}</a>
-
+    {{#if quest.id}}
+        <form method="get" action="{{quest.id}}/like">
+            {{>general-button text='Нравится' type='submit' blockClass='like-btn'}}
+        </form>
+    {{/if}}
     {{#if user}}
         {{#unless iAmAuthor}}
             {{#unless iAmParticipant}}

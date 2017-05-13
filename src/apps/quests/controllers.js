@@ -635,8 +635,58 @@ exports.removeQuestCtrl = (req, res) => {
 
                     return res.sendStatus(500);
                 }
-
                 res.redirect('/quests/my');
             });
         });
+};
+
+function addLikedQuestToUser(id, quest, fin) {
+    User.findById(id, (err, user) => {
+        if (err || !user) {
+            intel.warn(err);
+            return fin(err);
+        }
+        let questIndex = getUserLikeQuestsIndex(quest, user);
+        if (questIndex === -1) {
+            user.likeQuests.push(quest._id);
+        } else {
+            return fin(new Error('onlyOne'));
+        }
+        return user.save(err => {
+            if (err) {
+                return fin(err);
+            }
+            cacheTools.clearCache('user', user);
+            fin();
+        });
+    });
+}
+function getUserLikeQuestsIndex(quest, user) {
+    return user.likeQuests.findIndex(likeQuests => {
+        return likeQuests.equals(quest._id);
+    });
+}
+exports.addLikeCtrl = (req, res) => {
+    Quest.findOne({id: req.params.id}).exec((err, quest) => {
+        if (err || !quest) {
+            return res.sendStatus(500);
+        }
+        addLikedQuestToUser(req.user, quest, err => {
+            if (err && err.message === 'onlyOne') {
+                return res.redirect('/quests/' + quest.id);
+            }
+            if (err) {
+                intel.warn(err);
+                return res.sendStatus(500);
+            }
+            quest.likesCount++;
+            return quest.save(err => {
+                if (err) {
+                    return res.sendStatus(500);
+                }
+                cacheTools.clearCache('quest', quest);
+                return res.redirect('/quests/' + quest.id);
+            });
+        });
+    });
 };
