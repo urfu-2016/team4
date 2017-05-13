@@ -3,19 +3,12 @@
 let form = block.querySelector('form');
 let photoListBlock = block.querySelector('.photo-list');
 let publishBtn = block.querySelector('.publish-btn');
-let removeBtn = block.querySelector('.remove-btn');
 let publishInput = block.querySelector('.publish');
 let nameInput = block.querySelector('.create-quest-page-quest-title input');
 let counter = block.querySelector('.counter');
 
 publishBtn.addEventListener('click', () => {
     publishInput.checked = 'true';
-});
-removeBtn.addEventListener('click', () => {
-    let removeURL = window.location.pathname
-        .slice(0, window.location.pathname.indexOf('edit'));
-    form.setAttribute('action', removeURL + 'remove');
-    form.submit();
 });
 form.addEventListener('submit', e => {
     if (photoListBlock.hasImageSet()) {

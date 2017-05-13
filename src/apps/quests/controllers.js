@@ -601,7 +601,7 @@ function removeQuestFromAuthor(quest, done) {
             return done(err);
         }
         user.quests = user.quests.filter((usersQuest => {
-            return usersQuest !== quest._id;
+            return !usersQuest.quest.equals(quest._id);
         }));
         user.save(err => {
             if (err) {
@@ -615,7 +615,7 @@ function removeQuestFromAuthor(quest, done) {
 }
 
 exports.removeQuestCtrl = (req, res) => {
-    Quest.findById(req.params.id)
+    Quest.findOne({id: req.params.id})
         .populate('photos')
         .exec((err, quest) => {
             if (err) {
@@ -625,6 +625,9 @@ exports.removeQuestCtrl = (req, res) => {
             }
             if (!isAuthor(quest, req.user)) {
                 return res.status(403).send({message: 'You are cheater!'});
+            }
+            if (!quest) {
+                return res.redirect('/quests/my');
             }
             removeQuest(quest, req.user, err => {
                 if (err) {
