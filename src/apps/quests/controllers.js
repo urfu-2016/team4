@@ -526,7 +526,7 @@ exports.questParticipate = (req, res) => {
         });
 };
 
-function deleteQuestFromUsers(quest) {
+function deleteQuestFromUsers(quest, res) {
     User
         .find({'quests.quest': quest._id})
         .exec((err, users) => {
@@ -537,7 +537,14 @@ function deleteQuestFromUsers(quest) {
                 user.quests = user.quests.filter(userQuest => {
                     return userQuest.quest !== quest._id;
                 });
-                user.save();
+                user.save(err => {
+                    if (err) {
+                        intel.warn(err);
+
+                        return res.status(500).send({message: 'Error'});
+                    }
+                    deleteQuestPhotos(quest, res);
+                });
             });
         });
 }
@@ -591,6 +598,6 @@ exports.removeQuestCtrl = (req, res) => {
             if (!isAuthor(quest, req.user)) {
                 return res.status(403).send({message: 'You are cheater!'});
             }
-            deleteQuestFromUsers(quest);
+            deleteQuestFromUsers(quest, res);
         });
 };
