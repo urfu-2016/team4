@@ -566,7 +566,12 @@ function removeQuest(quest, res, user) {
 }
 
 function deleteQuestPhotos(quest, res) {
-    photoTools.deletePhotos(quest.photos, () => {
+    photoTools.deletePhotos(quest.photos, err => {
+        if (err) {
+            intel.warn(err);
+
+            return res.status(500).send({message: 'Error'});
+        }
         User.findById(quest.author, (err, user) => {
             if (err || !user) {
                 intel.warn(err);
