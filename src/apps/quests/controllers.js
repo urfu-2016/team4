@@ -571,7 +571,7 @@ function removeQuestFromUsers(quest, done) {
             let hadError = false;
             users.forEach((user, count) => {
                 user.quests = user.quests.filter(userQuest => {
-                    return userQuest.quest !== quest._id;
+                    return !userQuest.quest.equals(quest._id);
                 });
                 user.save(err => {
                     if (hadError) {
