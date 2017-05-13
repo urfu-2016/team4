@@ -526,72 +526,90 @@ exports.questParticipate = (req, res) => {
         });
 };
 
-function deleteQuestFromUsers(quest, res) {
+function removeQuest(quest, user, done) {
+    removeQuestFromUsers(quest, err => {
+        if (err) {
+            return done(err);
+        }
+        photoTools.deletePhotos(quest.photos, err => {
+            if (err) {
+                return done(err);
+            }
+            removeQuestFromAuthor(quest, err => {
+                if (err) {
+                    return done(err);
+                }
+                removeQuestFromDB(quest, user, err => {
+                    if (err) {
+                        return done(err);
+                    }
+                    done();
+                });
+            });
+        });
+    });
+}
+
+function removeQuestFromDB(quest, user, done) {
+    quest.remove(err => {
+        if (err) {
+            return done(err);
+        }
+        cacheTools.clearCache('my-quests-created', user);
+        cacheTools.clearCache('quest-' + quest.id);
+
+        return done();
+    });
+}
+function removeQuestFromUsers(quest, done) {
     User
         .find({'quests.quest': quest._id})
         .exec((err, users) => {
             if (err) {
-                return intel.warn(err);
+                return done(err);
             }
+            let hadError = false;
             users.forEach((user, count) => {
                 user.quests = user.quests.filter(userQuest => {
                     return userQuest.quest !== quest._id;
                 });
                 user.save(err => {
+                    if (hadError) {
+                        return;
+                    }
                     if (err) {
-                        intel.warn(err);
+                        hadError = true;
 
-                        return res.status(500).send({message: 'Error'});
+                        return done(err);
                     }
-                    if (count === users.length - 1) {
-                        deleteQuestPhotos(quest, res);
-                    }
+
                     cacheTools.clearCache('user', user);
                     cacheTools.clearCache('my-quests-finished', user);
                     cacheTools.clearCache('my-quests-active', user);
+
+                    if (count === users.length - 1) {
+                        return done();
+                    }
                 });
             });
         });
 }
 
-function removeQuest(quest, res, user) {
-    quest.remove(err => {
-        if (err) {
-            intel.warn(err);
-
-            return res.status(500).send({message: 'Error'});
+function removeQuestFromAuthor(quest, done) {
+    User.findById(quest.author, (err, user) => {
+        if (err || !user) {
+            return done(err);
         }
-        cacheTools.clearCache('my-quests-created', user);
-        cacheTools.clearCache('quest-' + quest.id);
-        res.redirect('/quests/my');
-    });
-}
-
-function deleteQuestPhotos(quest, res) {
-    photoTools.deletePhotos(quest.photos, err => {
-        if (err) {
-            intel.warn(err);
-
-            return res.status(500).send({message: 'Error'});
-        }
-        User.findById(quest.author, (err, user) => {
-            if (err || !user) {
-                intel.warn(err);
-
-                return res.status(500).send({message: 'Error'});
+        user.quests = user.quests.filter((usersQuest => {
+            return usersQuest !== quest._id;
+        }));
+        user.save(err => {
+            if (err) {
+                return done(err);
             }
-            user.quests = user.quests.filter((usersQuest => {
-                return usersQuest !== quest._id;
-            }));
-            user.save(err => {
-                if (err) {
-                    intel.warn(err);
+            cacheTools.clearCache('user', user);
 
-                    return res.status(500).send({message: 'Error'});
-                }
-                cacheTools.clearCache('user', user);
-                removeQuest(quest, res, user);
-            });
+            return done();
         });
     });
 }
@@ -608,6 +626,14 @@ exports.removeQuestCtrl = (req, res) => {
             if (!isAuthor(quest, req.user)) {
                 return res.status(403).send({message: 'You are cheater!'});
             }
-            deleteQuestFromUsers(quest, res);
+            removeQuest(quest, req.user, err => {
+                if (err) {
+                    intel.warn(err);
+
+                    return res.sendStatus(500);
+                }
+
+                res.redirect('/quests/my');
+            });
         });
 };
