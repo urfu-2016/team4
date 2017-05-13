@@ -164,7 +164,7 @@ exports.myQuestsCtrl = (req, res) => {
 exports.questCtrl = (req, res) => {
     let questId = req.params.id;
     Quest.findOne({id: questId})
-        .populate('photos', 'url')
+        .populate('photos', 'url geoPosition')
         .populate('author', 'name id')
         .cache(0, getCacheKey('quest-' + questId))
         .lean()
@@ -352,6 +352,7 @@ function applyQuestData(quest, user, post, done) {
             photos.push(photo);
         }
     }
+
     if (post.publish) {
         quest.isPublished = 1;
     }
@@ -360,11 +361,11 @@ function applyQuestData(quest, user, post, done) {
         if (err) {
             return done(err);
         }
-        photoTools.savePhotos(photos, err => {
+        quest.photos = quest.photos.concat(photos);
+        photoTools.savePhotos(quest.photos, err => {
             if (err) {
                 return done(err);
             }
-            quest.photos = quest.photos.concat(photos);
             quest.save(err => {
                 if (err) {
                     return done(err);
@@ -451,7 +452,7 @@ exports.editQuestPostCtrl = (req, res) => {
 
 exports.questEdit = (req, res) => {
     Quest.findOne({id: req.params.id})
-        .populate('photos', 'url')
+        .populate('photos', 'url geoPosition')
         .cache(0, getCacheKey('quest-' + req.params.id))
         .lean()
         .exec((err, quest) => {
@@ -467,7 +468,7 @@ exports.questEdit = (req, res) => {
             }
 
             return res.render('create-quest-page', {
-                photos: quest.photos.map(photo => photo.url),
+                photos: quest.photos,
                 quest: quest
             });
         });

@@ -3,3 +3,11 @@
 {{/each}}
 {{>item blockClass='new-photo quest-photo'}}
 <input type="hidden" name="photo-count" class="counter" value="0"/>
+{{>general-shade }}
+<div class="pop-up">
+    <div class="map" id="map">
+    </div>
+        {{>general-button text='Указать местоположение'
+        style='primary' class='set-geolocation'}}
+    </div>
+</div>

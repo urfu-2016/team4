@@ -68,6 +68,10 @@ exports.deletePhoto = (publicId, callback) => {
     cloudinary
         .uploader
         .destroy(publicId, result => {
-            callback(result);
+            if (result.result === 'ok') {
+                callback(null, result);
+            } else {
+                callback(result);
+            }
         });
 };

@@ -4,7 +4,6 @@
 {{>general-button text='удалить' style='primary' blockClass='delete-btn'}}
 <input type="checkbox" class="edited" name="photo-block-{{index}}-edited"/>
 <input type="checkbox" class="deleted" name="photo-block-{{index}}-deleted"/>
-<input name="photo-block-{{index}}-photo" class="photo-link" {{bind-attr value="photo:photo"}}/>
-
-<!--Value тестовое значение пока нет карты-->
-<input name="photo-block-{{index}}-location" value="56.827273, 60.529914" class="photo-location"/>
+<input name="photo-block-{{index}}-photo" class="photo-link" value="{{photo.url}}"/>
+<input name="photo-block-{{index}}-location"
+    value="{{photo.geoPosition.lat}}, {{photo.geoPosition.lng}}" class="photo-location"/>
