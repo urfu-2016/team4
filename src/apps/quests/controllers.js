@@ -2,6 +2,7 @@ require('../../models/photo');
 require('../../models/user');
 const Quest = require('../../models/quest');
 const Photo = require('../../models/photo');
+const User = require('../../models/user');
 const toObjectId = require('mongoose').Types.ObjectId;
 const parseQuery = require('../../tools/query-parser');
 const getUser = require('../profile/controllers').getUser;
@@ -522,5 +523,120 @@ exports.questParticipate = (req, res) => {
                         return res.redirect('/quests/my');
                     });
                 });
+        });
+};
+
+function removeQuest(quest, user, done) {
+    removeQuestFromUsers(quest, err => {
+        if (err) {
+            return done(err);
+        }
+        photoTools.deletePhotos(quest.photos, err => {
+            if (err) {
+                return done(err);
+            }
+            removeQuestFromAuthor(quest, err => {
+                if (err) {
+                    return done(err);
+                }
+                removeQuestFromDB(quest, user, err => {
+                    if (err) {
+                        return done(err);
+                    }
+                    done();
+                });
+            });
+        });
+    });
+}
+
+function removeQuestFromDB(quest, user, done) {
+    quest.remove(err => {
+        if (err) {
+            return done(err);
+        }
+        cacheTools.clearCache('my-quests-created', user);
+        cacheTools.clearCache('quest-' + quest.id);
+
+        return done();
+    });
+}
+function removeQuestFromUsers(quest, done) {
+    User
+        .find({'quests.quest': quest._id})
+        .exec((err, users) => {
+            if (err) {
+                return done(err);
+            }
+            let hadError = false;
+            users.forEach((user, count) => {
+                user.quests = user.quests.filter(userQuest => {
+                    return !userQuest.quest.equals(quest._id);
+                });
+                user.save(err => {
+                    if (hadError) {
+                        return;
+                    }
+                    if (err) {
+                        hadError = true;
+
+                        return done(err);
+                    }
+
+                    cacheTools.clearCache('user', user);
+                    cacheTools.clearCache('my-quests-finished', user);
+                    cacheTools.clearCache('my-quests-active', user);
+
+                    if (count === users.length - 1) {
+                        return done();
+                    }
+                });
+            });
+        });
+}
+
+function removeQuestFromAuthor(quest, done) {
+    User.findById(quest.author, (err, user) => {
+        if (err || !user) {
+            return done(err);
+        }
+        user.quests = user.quests.filter((usersQuest => {
+            return !usersQuest.quest.equals(quest._id);
+        }));
+        user.save(err => {
+            if (err) {
+                return done(err);
+            }
+            cacheTools.clearCache('user', user);
+
+            return done();
+        });
+    });
+}
+
+exports.removeQuestCtrl = (req, res) => {
+    Quest.findOne({id: req.params.id})
+        .populate('photos')
+        .exec((err, quest) => {
+            if (err) {
+                intel.warn(err);
+
+                return res.status(500).send({message: 'Error'});
+            }
+            if (!isAuthor(quest, req.user)) {
+                return res.status(403).send({message: 'You are cheater!'});
+            }
+            if (!quest) {
+                return res.redirect('/quests/my');
+            }
+            removeQuest(quest, req.user, err => {
+                if (err) {
+                    intel.warn(err);
+
+                    return res.sendStatus(500);
+                }
+
+                res.redirect('/quests/my');
+            });
         });
 };
