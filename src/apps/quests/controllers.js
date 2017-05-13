@@ -43,6 +43,12 @@ function isAuthor(quest, user) {
     return Boolean(quest.author.equals(user._id));
 }
 
+function getUserQuestIndex(quest, user) {
+    return user.quests.findIndex(userQuest => {
+        return userQuest.quest._id.equals(quest._id);
+    });
+}
+
 exports.questsCtrl = (req, res) => {
     let query = req.query;
     let render = query.render;
@@ -177,7 +183,8 @@ exports.questCtrl = (req, res) => {
             let context = {
                 quest: quest,
                 checkedPhotos: [],
-                iAmAuthor: false
+                iAmAuthor: false,
+                iAmParticipant: false
             };
 
             if (!quest.isPublished) {
@@ -199,7 +206,9 @@ exports.questCtrl = (req, res) => {
 
                             return res.send('Пользователь с таким id не найден');
                         }
-
+                        if (getUserQuestIndex(quest, user) !== -1) {
+                            context.iAmParticipant = true;
+                        }
                         context.checkedPhotos = user.quests.reduce((acc, el) => {
                             if (el.quest._id.equals(quest._id)) {
                                 return acc.concat(el.checkPhotos);
@@ -223,9 +232,7 @@ exports.questCtrl = (req, res) => {
 
 function setPhotoChecked(user, quest, photo) {
     return new Promise((resolve, reject) => {
-        let questIndex = user.quests.findIndex(userQuest => {
-            return userQuest.quest._id.equals(quest._id);
-        });
+        let questIndex = getUserQuestIndex(quest, user);
 
         if (questIndex === -1) {
             user.quests.push({
@@ -474,5 +481,46 @@ exports.questEdit = (req, res) => {
                 photos: quest.photos,
                 quest: quest
             });
+        });
+};
+
+exports.questParticipate = (req, res) => {
+    Quest.findOne({id: req.params.id})
+        .populate('photos', 'url geoPosition')
+        .cache(0, getCacheKey('quest-' + req.params.id))
+        .lean()
+        .exec((err, quest) => {
+            if (err || !quest || isAuthor(quest, req.user)) {
+                return res.sendStatus(500);
+            }
+            getUser(req.user.id, false)
+                .exec((err, user) => {
+                    if (err || !user) {
+                        console.error(err);
+
+                        return req.sendStatus(500);
+                    }
+                    let questIndex = getUserQuestIndex(quest, user);
+
+                    if (questIndex === -1) {
+                        user.quests.push({
+                            quest: quest,
+                            progress: 0,
+                            checkPhotos: [],
+                            isAuthor: 0
+                        });
+                    }
+
+                    return user.save(err => {
+                        if (err) {
+                            return res.sendStatus(500);
+                        }
+                        cacheTools.clearCache('user', user);
+                        cacheTools.clearCache('my-quests-active', user);
+                        cacheTools.clearCache('my-quests-finished', user);
+
+                        return res.redirect('/quests/my');
+                    });
+                });
         });
 };
