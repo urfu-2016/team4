@@ -305,6 +305,9 @@ exports.newQuestCtrl = (req, res) => {
 };
 
 function applyQuestData(quest, user, post, done) {
+    if (!isAuthor(quest, user)) {
+        return done('Вы не автор');
+    }
     let photos = [];
     let deletedCount = 0;
     let photosToDelete = [];
