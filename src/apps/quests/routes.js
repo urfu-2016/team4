@@ -19,4 +19,6 @@ app.post('/:id([0-9]+)/edit', isAuthenticated, controllers.editQuestPostCtrl);
 
 app.get('/:id([0-9]+)/edit', isAuthenticated, controllers.questEdit);
 
+app.get('/:id([0-9]+)/participate', isAuthenticated, controllers.questParticipate);
+
 module.exports = app;

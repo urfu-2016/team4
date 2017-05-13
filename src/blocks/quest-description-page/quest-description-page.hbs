@@ -4,11 +4,21 @@
         {{quest.description}}
     </div>
     Автор: <a href="/profile/{{quest.author.id}}">{{quest.author.name}}</a>
-    {{#if_eq user undefined}}
+
+    {{#if user}}
+        {{#unless iAmAuthor}}
+            {{#unless iAmParticipant}}
+                {{>general-button text="добавить в 'Мои Квесты'" style='border'
+                    href=(concat "/quests/" (concat quest.id '/participate'))}}
+            {{/unless}}
+        {{/unless}}
+    {{else}}
         <h2>Для прохождения квеста вам необходимо авторизоваться</h2>
-    {{/if_eq}}
+
+    {{/if}}
     {{#if iAmAuthor}}
         <h2>Автор квеста не может быть участником</h2>
     {{/if}}
+
     {{>photo-block}}
 </section>
