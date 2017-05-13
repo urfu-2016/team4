@@ -117,13 +117,19 @@ function init() {
 
         createFlashMessage('Координаты установлены!');
     });
+    let geoOptions = {
+        enableHighAccuracy: true,
+        maximumAge: 10,
+        timeout: 5000
+    };
     navigator.geolocation.getCurrentPosition(position => {
         let coords = [position.coords.latitude, position.coords.longitude];
         initMap(coords);
     }, () => {
         createFlashMessage('Не удалось определить местоположение', 'error');
         initMap([56.8, 60.6]);
-    });
+    },
+    geoOptions);
 
     function initMap(coords) {
         myMap = new ymaps.Map('map', {
