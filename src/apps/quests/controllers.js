@@ -376,6 +376,8 @@ function applyQuestData(quest, user, post, done) {
             if (err) {
                 return done(err);
             }
+            quest.title = post['quest-title'];
+            quest.description = post['quest-description'];
             quest.save(err => {
                 if (err) {
                     return done(err);
@@ -392,8 +394,6 @@ function applyQuestData(quest, user, post, done) {
 exports.newQuestPostCtrl = (req, res) => {
     let post = req.body;
     let quest = new Quest({
-        title: post['quest-title'],
-        description: post['quest-description'],
         rating: 0,
         likesCount: 0,
         author: req.user,
