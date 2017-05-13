@@ -527,28 +527,30 @@ exports.questParticipate = (req, res) => {
 };
 
 function deleteQuestFromUsers(quest, res) {
-    let isGoodProcessStatus = true;
     User
         .find({'quests.quest': quest._id})
         .exec((err, users) => {
             if (err) {
                 return intel.warn(err);
             }
-            users.forEach(user => {
+            users.forEach((user, count) => {
                 user.quests = user.quests.filter(userQuest => {
                     return userQuest.quest !== quest._id;
                 });
                 user.save(err => {
                     if (err) {
-                        isGoodProcessStatus = false;
                         intel.warn(err);
+
+                        return res.status(500).send({message: 'Error'});
                     }
+                    if (count === users.length - 1) {
+                        deleteQuestPhotos(quest, res);
+                    }
+                    cacheTools.clearCache('user', user);
+                    cacheTools.clearCache('my-quests-finished', user);
+                    cacheTools.clearCache('my-quests-active', user);
                 });
             });
-            if (isGoodProcessStatus) {
-                return deleteQuestPhotos(quest, res);
-            }
-            res.status(500).send({message: 'Error'});
         });
 }
 
