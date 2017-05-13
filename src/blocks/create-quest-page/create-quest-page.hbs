@@ -6,8 +6,10 @@
     {{>general-button text='Опубликовать' style='primary' type='submit' blockClass='publish-btn'}}
 </form>
 {{#unless quest.isPublished}}
-    <form method="post" action="remove">
-        {{>general-button text='Удалить' style='danger' type='submit' blockClass='remove-btn'}}
-    </form>
+    {{#if quest.id}}
+        <form method="post" action="remove">
+            {{>general-button text='Удалить' style='danger' type='submit' blockClass='remove-btn'}}
+        </form>
+    {{/if}}
 {{/unless}}
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
