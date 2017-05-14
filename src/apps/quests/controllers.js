@@ -673,7 +673,7 @@ exports.addLikeCtrl = (req, res) => {
         if (err || !quest) {
             return res.sendStatus(500);
         }
-        addLikedQuestToUser(req.user, quest, err => {
+        addLikedQuestToUser(req.user._id, quest, err => {
             if (err && err.message === 'onlyOne') {
                 return res.redirect('/quests/' + quest.id);
             }
