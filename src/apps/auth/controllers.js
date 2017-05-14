@@ -64,7 +64,8 @@ exports.vkAuth = (req, res, next) => {
         host: req.headers.host,
         protocol: req.protocol
     });
-
+    console.log(req.protocol);
+    console.log(url);
     passport.authenticate('vkontakte', (err, user) => {
         if (err) {
             if (err.toJSON && err.toJSON().errmsg.includes('email')) {
