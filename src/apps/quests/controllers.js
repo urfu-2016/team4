@@ -649,7 +649,12 @@ function addLikedQuestToUser(id, quest, fin) {
 
             return fin(err);
         }
-        user.likeQuests.push(quest._id);
+        let questIndex = getUserLikeQuestsIndex(quest, user);
+        if (questIndex === -1) {
+            user.likeQuests.push(quest._id);
+        } else {
+            return fin(new Error('onlyOneClick'));
+        }
 
         return user.save(err => {
             if (err) {
@@ -660,22 +665,28 @@ function addLikedQuestToUser(id, quest, fin) {
         });
     });
 }
+
 function getUserLikeQuestsIndex(quest, user) {
     return user.likeQuests.findIndex(likeQuests => {
         return likeQuests.equals(quest._id);
     });
 }
+
 exports.addLikeCtrl = (req, res) => {
     Quest.findOne({id: req.params.id}).exec((err, quest) => {
         if (err || !quest) {
             return res.sendStatus(500);
         }
         addLikedQuestToUser(req.user._id, quest, err => {
+            if (err && err.message === 'onlyOneClick') {
+                return res.redirect('/quests/' + quest.id);
+            }
             if (err) {
                 intel.warn(err);
 
                 return res.sendStatus(500);
             }
+            quest.likesCount++;
             quest.likesCount++;
 
             return quest.save(err => {
@@ -698,7 +709,11 @@ function delLikedQuestToUser(id, quest, fin) {
             return fin(err);
         }
         let questIndex = getUserLikeQuestsIndex(quest, user);
-        user.likeQuests.splice(questIndex, 1);
+        if (questIndex > -1) {
+            user.likeQuests.splice(questIndex, 1);
+        } else {
+            return fin(new Error('onlyOneClick'));
+        }
 
         return user.save(err => {
             if (err) {
@@ -716,7 +731,7 @@ exports.delLikeCtrl = (req, res) => {
             return res.sendStatus(500);
         }
         delLikedQuestToUser(req.user._id, quest, err => {
-            if (err && err.message === 'onlyOne') {
+            if (err && err.message === 'onlyOneClick') {
                 return res.redirect('/quests/' + quest.id);
             }
             if (err) {
@@ -725,6 +740,7 @@ exports.delLikeCtrl = (req, res) => {
                 return res.sendStatus(500);
             }
             quest.likesCount--;
+            quest.rating--;
 
             return quest.save(err => {
                 if (err) {
