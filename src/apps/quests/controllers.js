@@ -255,6 +255,10 @@ function setPhotoChecked(user, quest, photo) {
             userQuest.progress = progress;
             userQuest.checkPhotos.push(photo);
         }
+        if (!user.rating) {
+            user.rating = 0;
+        }
+        user.rating++;
 
         return user.save(err => {
             if (err) {
@@ -270,8 +274,6 @@ exports.questCheckPhotoCtrl = (req, res) => {
     let index = req.params.index;
     Quest.findOne({id: req.params.id})
         .populate('photos', 'url geoPosition')
-        .cache(0, getCacheKey('quest-' + req.params.id))
-        .lean()
         .exec((err, quest) => {
             if (err || !quest || index >= quest.photos.length) {
                 console.error(err);
@@ -284,10 +286,19 @@ exports.questCheckPhotoCtrl = (req, res) => {
             }
             let photo = quest.photos[index];
             let position = quest.photos[index].geoPosition;
+
             if (Math.round(position.lat * 1000) !== Math.round(req.body.lat * 1000) ||
                 Math.round(position.lng * 1000) !== Math.round(req.body.lng * 1000)) {
                 return res.sendStatus(400);
             }
+            quest.rating++;
+            quest.save(err => {
+                if (err) {
+                    return res.sendStatus(500);
+                }
+                cacheTools.clearCache('my-quests-active');
+                cacheTools.clearCache('my-quests-finished');
+            });
 
             getUser(req.user.id, false)
                 .exec((err, user) => {
