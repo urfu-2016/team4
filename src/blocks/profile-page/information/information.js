@@ -21,6 +21,7 @@ addButton.addEventListener('click', () => {
     }
 
     let index_ = (parseInt(lastIndex, 10) + 1);
+    console.log(index_)
 
     newLine.childNodes[0].innerText = index_.toString();
 
@@ -63,7 +64,6 @@ deleteButtons.forEach(button => {
 
 function addInfo(info) {
     let url = '/profile/addInfo';
-
     return fetch(url, {
         method: 'post',
         credentials: 'include',
@@ -71,9 +71,7 @@ function addInfo(info) {
             Accept: 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            info: info
-        })
+        body: JSON.stringify(info)
     }).then(res => {
         if (res.status !== 200) {
             throw res.status;

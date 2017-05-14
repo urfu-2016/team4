@@ -5,7 +5,7 @@
     {{/if_eq}}
 </div>
 {{#each profile.information}}
-    {{>line user=../user profile=../profile}}
+    {{>line this=../this user=../user profile=../profile}}
 {{/each}}
 
 {{>line hidden=true profile=profile blockClass="hidden sample"}}

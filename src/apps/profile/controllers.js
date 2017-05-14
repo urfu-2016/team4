@@ -76,7 +76,7 @@ exports.profileSaveAvatar = (req, res) => {
 
 exports.profileSaveInformation = (req, res) => {
     getUser(req.user.id, false).exec((err, user) => {
-        let info = req.body.info;
+        let info = req.body;
         if (info.edit) {
             for (let i = 0; i < user.information.length; i++) {
                 if (user.information[i].index === info.index) {
@@ -95,13 +95,14 @@ exports.profileSaveInformation = (req, res) => {
             }
             cacheTools.clearCache('user', req.user);
         });
+
         return res.sendStatus(200);
     });
 };
 
 exports.profileDeleteInformation = (req, res) => {
     getUser(req.user.id, false).exec((err, user) => {
-        let index = parseInt(req.body.index.index, 10);
+        let index = parseInt(req.body.index, 10);
         let deleteIndex = 0;
 
         for (let i = 0; i < user.information.length; i++) {

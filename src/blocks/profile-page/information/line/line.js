@@ -13,12 +13,15 @@ function initBlock(block) {
     });
 
     saveButton.addEventListener('click', () => {
-        saveButton.classList.add('hidden');
-        editButton.classList.remove('hidden');
-
         var name = block.querySelector('input.param-name').value;
         var value = block.querySelector('input.param-value').value;
         var index_ = parseInt(block.querySelector('.index').innerText, 10);
+
+        if (!name || !value) {
+            createFlashMessage('Все поля должны быть заполнены', 'error');
+            return;
+        }
+
         addInfo({name: name, value: value, index: index_, edit: true})
             .catch(error => {
                 if (error.message && error.message === 'Failed to fetch') {
@@ -30,6 +33,9 @@ function initBlock(block) {
                     console.error(error);
                 }
             });
+
+        saveButton.classList.add('hidden');
+        editButton.classList.remove('hidden');
 
         inputs.forEach(el => el.setAttribute('type', 'hidden'));
         divs.forEach(el => el.style.display = "block");
@@ -64,9 +70,7 @@ function initBlock(block) {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                index: index
-            })
+            body: JSON.stringify(index)
         }).then(res => {
             if (res.status !== 200) {
                 throw res.status;
@@ -77,7 +81,6 @@ function initBlock(block) {
 
     function addInfo(info) {
         let url = '/profile/addInfo';
-
         return fetch(url, {
             method: 'post',
             credentials: 'include',
@@ -85,9 +88,7 @@ function initBlock(block) {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                info: info
-            })
+            body: JSON.stringify(info)
         }).then(res => {
             if (res.status !== 200) {
                 throw res.status;
