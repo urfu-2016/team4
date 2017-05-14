@@ -644,6 +644,7 @@ function addLikedQuestToUser(id, quest, fin) {
     User.findById(id, (err, user) => {
         if (err || !user) {
             intel.warn(err);
+
             return fin(err);
         }
         let questIndex = getUserLikeQuestsIndex(quest, user);
@@ -652,6 +653,7 @@ function addLikedQuestToUser(id, quest, fin) {
         } else {
             return fin(new Error('onlyOne'));
         }
+
         return user.save(err => {
             if (err) {
                 return fin(err);
@@ -677,14 +679,17 @@ exports.addLikeCtrl = (req, res) => {
             }
             if (err) {
                 intel.warn(err);
+
                 return res.sendStatus(500);
             }
             quest.likesCount++;
+
             return quest.save(err => {
                 if (err) {
                     return res.sendStatus(500);
                 }
                 cacheTools.clearCache('quest', quest);
+
                 return res.redirect('/quests/' + quest.id);
             });
         });
