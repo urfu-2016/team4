@@ -36,6 +36,11 @@ const userSchema = new Schema({
     likeQuests: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'quest'
+    }],
+    information: [{
+        index: Number,
+        name: String,
+        value: String
     }]
 });
 

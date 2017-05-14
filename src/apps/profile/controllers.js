@@ -16,7 +16,7 @@ function getFilteredQuests(quests, iAmAuthor, user) {
 
 function getUser(id, cached) {
     cached = cached === undefined ? true : cached;
-    let query = User.findOne({id: id}, 'name photoURL rating id quests')
+    let query = User.findOne({id: id}, 'name photoURL rating id quests information')
         .populate({
             path: 'quests.quest',
             select: 'title author photos description _id id likesCount rating isPublished',
@@ -70,6 +70,56 @@ exports.profileSaveAvatar = (req, res) => {
             cacheTools.clearCache('user', req.user);
         });
 
+        return res.sendStatus(200);
+    });
+};
+
+exports.profileSaveInformation = (req, res) => {
+    getUser(req.user.id, false).exec((err, user) => {
+        let info = req.body.info;
+        if (info.edit) {
+            for (let i = 0; i < user.information.length; i++) {
+                if (user.information[i].index === info.index) {
+                    user.information[i].name = info.name;
+                    user.information[i].value = info.value;
+                }
+            }
+        } else {
+            user.information.push({name: info.name, value: info.value, index: info.index});
+        }
+        user.save(function (err) {
+            if (err) {
+                console.info(err);
+
+                return res.sendStatus(500);
+            }
+            cacheTools.clearCache('user', req.user);
+        });
+        return res.sendStatus(200);
+    });
+};
+
+exports.profileDeleteInformation = (req, res) => {
+    getUser(req.user.id, false).exec((err, user) => {
+        let index = parseInt(req.body.index.index, 10);
+        let deleteIndex = 0;
+
+        for (let i = 0; i < user.information.length; i++) {
+            if (user.information[i].index === index) {
+                deleteIndex = i;
+                break;
+            }
+        }
+        user.information.splice(deleteIndex, 1);
+
+        user.save(function (err) {
+            if (err) {
+                console.info(err);
+
+                return res.sendStatus(500);
+            }
+            cacheTools.clearCache('user', req.user);
+        });
         return res.sendStatus(200);
     });
 };

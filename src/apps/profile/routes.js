@@ -8,5 +8,7 @@ const upload = multer({dest: pathForImages});
 
 app.get('/:id([0-9]+)', controllers.profileCtrl);
 app.post('/', isAuthenticated, upload.single('avatar'), controllers.profileSaveAvatar);
+app.post('/addInfo', isAuthenticated, controllers.profileSaveInformation);
+app.post('/deleteInfo', isAuthenticated, controllers.profileDeleteInformation);
 
 module.exports = app;

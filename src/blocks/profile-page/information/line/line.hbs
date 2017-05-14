@@ -1,3 +1,31 @@
-<div class="param-name">Параметр</div>
-<div class="param-value">Значение</div>
-{{#if_eq user.id profile.id}}{{>general-button img='img/edit.svg' alt='edit'}}{{/if_eq}}
+{{#if hidden}}
+    <div class="index hidden">-1</div>
+    <div class="param-name text hidden"></div>
+    <div class="param-value text hidden"></div>
+    <input class="param-name input"  placeholder="Имя" value="" />
+    <input class="param-value input"  placeholder="Значение" value="" />
+    {{#if_eq user.id profile.id}}
+        {{>general-button img='img/edit.svg' alt='edit' blockClass='hidden' class='edit'}}
+    {{/if_eq}}
+    {{#if_eq user.id profile.id}}
+        {{>general-button text='Сохранить' blockClass='' class='save btn' type='submit'}}
+    {{/if_eq}}
+    {{#if_eq user.id profile.id}}
+        {{>general-button img='img/delete.svg' blockClass='' alt='delete' class='delete'}}
+    {{/if_eq}}
+{{else}}
+    <div class="index hidden">{{this.index}}</div>
+    <div class="param-name text">{{this.name}}</div>
+    <div class="param-value text">{{this.value}}</div>
+    <input class="param-name input" type="hidden" value="{{this.name}}" />
+    <input class="param-value input" type="hidden" value="{{this.value}}" />
+    {{#if_eq user.id profile.id}}
+        {{>general-button img='img/edit.svg' alt='edit' class='edit'}}
+    {{/if_eq}}
+    {{#if_eq user.id profile.id}}
+        {{>general-button text='Сохранить' blockClass='hidden' class='save btn' type='submit'}}
+    {{/if_eq}}
+    {{#if_eq user.id profile.id}}
+        {{>general-button img='img/delete.svg' alt='delete' class='delete'}}
+    {{/if_eq}}
+{{/if}}

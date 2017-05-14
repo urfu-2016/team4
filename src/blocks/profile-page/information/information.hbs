@@ -4,8 +4,13 @@
         {{> general-button style='link' href='/signout' text='Выход'}}
     {{/if_eq}}
 </div>
-{{>line}}
-{{>line}}
+{{#each profile.information}}
+    {{>line user=../user profile=../profile}}
+{{/each}}
+
+{{>line hidden=true profile=profile blockClass="hidden sample"}}
+{{#if_eq user.id profile.id}}{{>general-button text='Добавить' class='add btn' type='submit'}}{{/if_eq}}
+
 <p>
     Рейтинг: {{#if profile.rating}}{{profile.rating}}{{else}}0{{/if}}
 </p>
