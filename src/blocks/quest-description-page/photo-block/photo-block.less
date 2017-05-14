@@ -2,13 +2,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
 }
 
 img {
     border: @border;
     border-width: 2px;
     border-radius: 10%;
-    width: 800px;
+    min-width: 370px;
+    max-width: 100%;
 }
 
 .checking,
@@ -34,7 +36,10 @@ img {
     padding: 0;
     overflow: hidden;
     position: relative;
-    width: 800px;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .checking {
