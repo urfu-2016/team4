@@ -71,3 +71,10 @@ function checkGeolocation(position, url) {
         return res.text();
     });
 }
+
+if (!navigator.geolocation) {
+    createFlashMessage('Определение геолокации не поддерживается данным браузером', 'error');
+    block.querySelectorAll('.checkin-btn').forEach(btn => {
+        btn.remove();
+    });
+}

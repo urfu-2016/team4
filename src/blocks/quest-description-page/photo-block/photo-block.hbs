@@ -11,7 +11,11 @@
             {{#if_neq ../iAmAuthor true}}
                 {{#if_not_in @index ../checkedPhotos}}
                     <form action="/quests/{{../quest.id}}/checkPhoto/{{@index}}" method="post">
-                        {{>general-button text='Зачекинить' type='submit' style='primary'}}
+                        {{>general-button
+                            text='Зачекинить'
+                            type='submit'
+                            style='primary'
+                            blockClass='checkin-btn'}}
                     </form>
                 {{/if_not_in}}
             {{/if_neq}}
