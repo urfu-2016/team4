@@ -185,7 +185,8 @@ exports.questCtrl = (req, res) => {
                 quest: quest,
                 checkedPhotos: [],
                 iAmAuthor: false,
-                iAmParticipant: false
+                iAmParticipant: false,
+                iLikeIt: false
             };
 
             if (!quest.isPublished) {
@@ -200,6 +201,7 @@ exports.questCtrl = (req, res) => {
                 if (isAuthor(quest, req.user)) {
                     context.iAmAuthor = true;
                 }
+                context.iLikeIt = (getUserLikeQuestsIndex(quest, req.user) !== -1);
                 getUser(req.user.id)
                     .exec((err, user) => {
                         if (err || !user) {
@@ -647,12 +649,7 @@ function addLikedQuestToUser(id, quest, fin) {
 
             return fin(err);
         }
-        let questIndex = getUserLikeQuestsIndex(quest, user);
-        if (questIndex === -1) {
-            user.likeQuests.push(quest._id);
-        } else {
-            return fin(new Error('onlyOne'));
-        }
+        user.likeQuests.push(quest._id);
 
         return user.save(err => {
             if (err) {
@@ -674,6 +671,51 @@ exports.addLikeCtrl = (req, res) => {
             return res.sendStatus(500);
         }
         addLikedQuestToUser(req.user._id, quest, err => {
+            if (err) {
+                intel.warn(err);
+
+                return res.sendStatus(500);
+            }
+            quest.likesCount++;
+
+            return quest.save(err => {
+                if (err) {
+                    return res.sendStatus(500);
+                }
+                cacheTools.clearCache('quest', quest);
+
+                return res.redirect('/quests/' + quest.id);
+            });
+        });
+    });
+};
+
+function delLikedQuestToUser(id, quest, fin) {
+    User.findById(id, (err, user) => {
+        if (err || !user) {
+            intel.warn(err);
+
+            return fin(err);
+        }
+        let questIndex = getUserLikeQuestsIndex(quest, user);
+        user.likeQuests.splice(questIndex, 1);
+
+        return user.save(err => {
+            if (err) {
+                return fin(err);
+            }
+            cacheTools.clearCache('user', user);
+            fin();
+        });
+    });
+}
+
+exports.delLikeCtrl = (req, res) => {
+    Quest.findOne({id: req.params.id}).exec((err, quest) => {
+        if (err || !quest) {
+            return res.sendStatus(500);
+        }
+        delLikedQuestToUser(req.user._id, quest, err => {
             if (err && err.message === 'onlyOne') {
                 return res.redirect('/quests/' + quest.id);
             }
@@ -682,7 +724,7 @@ exports.addLikeCtrl = (req, res) => {
 
                 return res.sendStatus(500);
             }
-            quest.likesCount++;
+            quest.likesCount--;
 
             return quest.save(err => {
                 if (err) {

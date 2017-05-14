@@ -4,12 +4,20 @@
         {{quest.description}}
     </div>
     Автор: <a href="/profile/{{quest.author.id}}">{{quest.author.name}}</a>
-    {{#if quest.id}}
-        <form method="get" action="{{quest.id}}/like">
-            {{>general-button text='Нравится' type='submit' blockClass='like-btn'}}
-        </form>
-    {{/if}}
     {{#if user}}
+        {{#if iLikeIt}}
+            {{#if quest.id }}
+                <form method="get" action="{{quest.id}}/dislike">
+                    {{>general-button text='Не нравится' type='submit' blockClass='dislike-btn'}}
+                </form>
+            {{/if}}
+        {{else}}
+            {{#if quest.id }}
+                <form method="get" action="{{quest.id}}/like">
+                    {{>general-button text='Нравится' type='submit' blockClass='like-btn'}}
+                </form>
+            {{/if}}
+        {{/if}}
         {{#unless iAmAuthor}}
             {{#unless iAmParticipant}}
                 {{>general-button text="добавить в 'Мои Квесты'" style='border'
