@@ -1,4 +1,6 @@
 let express = require('express');
+const morgan = require('morgan');
+
 let app = express();
 let middlewares = require('./src/middlewares/middlewares');
 let remoteStatic = require('remote-static');
@@ -22,6 +24,8 @@ if (process.env.NODE_ENV && process.env.NODE_ENV === 'prod') {
     console.log('dev');
     app.use('/static', express.static('build/public'));
 }
+
+app.use(morgan('combined'));
 
 // app.use(require('connect-livereload')());
 app.set('view engine', '.hbs');
