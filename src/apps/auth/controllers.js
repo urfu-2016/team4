@@ -2,7 +2,6 @@ const passport = require('passport');
 const passwordHash = require('password-hash');
 const User = require('../../models/user');
 const intel = require('intel');
-const format = require('url').format;
 
 exports.signInCtrl = (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
@@ -60,12 +59,6 @@ exports.signUpCtrl = (req, res) => {
 };
 
 exports.vkAuth = (req, res, next) => {
-    const url = format({
-        host: req.headers.host,
-        protocol: req.protocol
-    });
-    console.log(req.protocol);
-    console.log(url);
     passport.authenticate('vkontakte', (err, user) => {
         if (err) {
             if (err.toJSON && err.toJSON().errmsg.includes('email')) {
@@ -83,7 +76,12 @@ exports.vkAuth = (req, res, next) => {
                     return next(err);
                 }
 
-                res.redirect(url);
+                let url = req.headers.host;
+                if (url.includes('herokuapp')) {
+                    return res.redirect('https://' + url);
+                }
+
+                return res.redirect('/');
             });
         }
     })(req, res, next);
