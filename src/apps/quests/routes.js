@@ -23,4 +23,8 @@ app.get('/:id([0-9]+)/participate', isAuthenticated, controllers.questParticipat
 
 app.post('/:id([0-9]+)/remove', isAuthenticated, controllers.removeQuestCtrl);
 
+app.get('/:id([0-9]+)/like', isAuthenticated, controllers.addLikeCtrl);
+
+app.get('/:id([0-9]+)/dislike', isAuthenticated, controllers.delLikeCtrl);
+
 module.exports = app;

@@ -1,11 +1,28 @@
+<div class="quest-header">
 <h2>{{quest.title}}</h2>
+{{#if user}}
+{{#if iLikeIt}}
+    {{#if quest.id }}
+        <form method="get" class="like-button" action="{{quest.id}}/dislike">
+            {{>general-button text='Не нравится' type='submit' blockClass='dislike-btn'}}
+        </form>
+    {{/if}}
+{{else}}
+    {{#if quest.id }}
+        <form method="get" class="like-button" action="{{quest.id}}/like">
+            {{>general-button text='Нравится' type='submit' blockClass='like-btn'}}
+        </form>
+    {{/if}}
+{{/if}}
+{{/if}}
+</div>
 <section class="description-and-photos">
     <div class="description">
         {{quest.description}}
     </div>
     Автор: <a href="/profile/{{quest.author.id}}">{{quest.author.name}}</a>
-
     {{#if user}}
+
         {{#unless iAmAuthor}}
             {{#unless iAmParticipant}}
                 {{>general-button text="добавить в 'Мои Квесты'" style='border'

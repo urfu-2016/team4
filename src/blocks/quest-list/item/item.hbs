@@ -18,15 +18,18 @@
     {{/if}}
 </div>
 <h2 class="text-center">{{quest.title}}</h2>
+<div class="quest-descr">
 <div>
-    likes: {{quest.likesCount}}
+    Автор: <a href="/profile/{{quest.author.id}}">{{quest.author.name}}</a>
+</div>
+<div class="rating">
+<div>
+    ❤️ {{quest.likesCount}}
 </div>
 <div>
-    rating: {{quest.rating}}
+    📈 {{quest.rating}}
 </div>
-
-<div>
-    author: <a href="/profile/{{quest.author.id}}">{{quest.author.name}}</a>
+</div>
 </div>
 {{#if_eq quest.author.id user.id}}
     {{#if_eq quest.isPublished 0}}
