@@ -10,6 +10,7 @@ const cacheTools = require('../../tools/cache-tools');
 const getCacheKey = cacheTools.getCacheKey;
 const photoTools = require('../../tools/photo-tools');
 const wrapForUser = require('../../tools/quest-tools').wrapForUser;
+const geolib = require('geolib');
 let intel = require('intel');
 /**
  * callback функция сортировки моделей по populate field
@@ -286,9 +287,10 @@ exports.questCheckPhotoCtrl = (req, res) => {
             }
             let photo = quest.photos[index];
             let position = quest.photos[index].geoPosition;
-
-            if (Math.round(position.lat * 1000) !== Math.round(req.body.lat * 1000) ||
-                Math.round(position.lng * 1000) !== Math.round(req.body.lng * 1000)) {
+            if (geolib.getDistance(
+                    {latitude: req.body.lat, longitude: req.body.lng},
+                    {latitude: position.lat, longitude: position.lng}
+                ) > 500) {
                 return res.sendStatus(400);
             }
             quest.rating++;
