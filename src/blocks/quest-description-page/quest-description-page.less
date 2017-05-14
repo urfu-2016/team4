@@ -25,6 +25,7 @@
 .quest-header {
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
 }
 
 .like-button {
@@ -34,4 +35,47 @@
 .quest-title {
     word-wrap: break-word;
     max-width: 70%;
+}
+
+.author-like-wrapper {
+    display: flex;
+    position: relative;
+}
+
+.author-like-wrapper .btn {
+    margin: 0;
+    position: absolute;
+    width: 100px;
+    right: 0;
+}
+
+h2 {
+    margin: 0;
+}
+
+h2.quest-title {
+    margin: 10px;
+}
+
+@media @mobile {
+    form {
+        margin: 0;
+        padding: 0 auto;
+    }
+
+    .quest-title {
+        max-width: 100%;
+    }
+
+    .author-like-wrapper {
+        flex-direction: column;
+        margin: 0;
+    }
+
+    .author-like-wrapper .btn {
+        margin: 20px auto;
+        position: static;
+        width: 100%;
+        right: 0;
+    }
 }
