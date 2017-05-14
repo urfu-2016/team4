@@ -363,8 +363,15 @@ function applyQuestData(quest, user, post, done) {
             photos.push(photo);
         }
     }
-
     if (post.publish) {
+        let photosForCheck = quest.photos.concat(photos);
+        let checkMissingGeolocation = photosForCheck.some(photo => {
+            return photo.geoPosition.lat === 0 && photo.geoPosition.lng === 0;
+        });
+        if (checkMissingGeolocation) {
+            return done(new Error('missing geolocation'));
+        }
+
         quest.isPublished = 1;
     }
 
@@ -437,7 +444,7 @@ exports.newQuestPostCtrl = (req, res) => {
 exports.editQuestPostCtrl = (req, res) => {
     let post = req.body;
     Quest.findOne({id: req.params.id})
-        .populate('photos', 'url')
+        .populate('photos', 'url geoPosition')
         .exec((err, quest) => {
             if (err || !quest) {
                 console.error(err, quest);
