@@ -1,7 +1,8 @@
 const passport = require('passport');
 const passwordHash = require('password-hash');
 const User = require('../../models/user');
-let intel = require('intel');
+const intel = require('intel');
+const format = require('url').format;
 
 exports.signInCtrl = (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
@@ -59,6 +60,11 @@ exports.signUpCtrl = (req, res) => {
 };
 
 exports.vkAuth = (req, res, next) => {
+    const url = format({
+        host: req.headers.host,
+        protocol: req.protocol
+    });
+
     passport.authenticate('vkontakte', (err, user) => {
         if (err) {
             if (err.toJSON && err.toJSON().errmsg.includes('email')) {
@@ -75,7 +81,8 @@ exports.vkAuth = (req, res, next) => {
 
                     return next(err);
                 }
-                res.redirect('/');
+
+                res.redirect(url);
             });
         }
     })(req, res, next);
