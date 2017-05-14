@@ -1,4 +1,5 @@
 let addButton = block.querySelector('.add').parentNode;
+let deleteButtons = block.querySelectorAll('.delete');
 
 addButton.addEventListener('click', () => {
     let sample = block.querySelector('.sample');
@@ -6,12 +7,14 @@ addButton.addEventListener('click', () => {
     newLine.classList.remove('hidden');
     newLine.classList.remove('sample');
 
-    let lastLine = [].slice.call(block.querySelectorAll('.profile-page-information-line'))
-        .filter(item => {return !item.classList.contains('hidden');})
-        .pop();
+    let lines = [].slice.call(block.querySelectorAll('.profile-page-information-line'))
+        .filter(item => {return !item.classList.contains('hidden');});
+
+    let lastLine = lines.pop();
 
     let lastIndex = -1;
-    if(lastLine) {
+
+    if (lastLine) {
         lastIndex = lastLine
             .childNodes[0]
             .innerText;
@@ -23,6 +26,7 @@ addButton.addEventListener('click', () => {
 
     block.insertBefore(newLine, sample);
     sample.initFunction(newLine);
+    addDeleteListener(newLine.querySelector('.delete'));
 
     addInfo({name: "", value: "", index: index_, edit: false})
         .catch(error => {
@@ -35,6 +39,26 @@ addButton.addEventListener('click', () => {
                 console.error(error);
             }
         });
+
+    if (lines.length >= 13) {
+        addButton.childNodes[1].disabled = true;
+    }
+});
+
+function addDeleteListener(button) {
+    button.addEventListener('click', () => {
+        let lines = [].slice.call(block.querySelectorAll('.profile-page-information-line'))
+            .filter(item => {return !item.classList.contains('hidden');});
+
+        console.log(lines.length);
+        if (lines.length <= 15) {
+            addButton.childNodes[1].disabled = false;
+        }
+    });
+}
+
+deleteButtons.forEach(button => {
+    addDeleteListener(button);
 });
 
 function addInfo(info) {

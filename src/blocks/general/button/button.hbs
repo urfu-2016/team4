@@ -3,7 +3,9 @@
 {{#if_eq type "submit" }}
     <input type="submit"
         class="btn {{#if style}}btn-{{style}}{{else}}btn-default{{/if}}{{#if class}} {{class}}{{/if}}"
-        value="{{text}}"/>
+        value="{{text}}"
+        {{#if disabled}} disabled="true" {{else}} disabled="false"{{/if}}
+    />
 {{else}}
     <a class="btn {{#if style}}btn-{{style}}{{else}}btn-default{{/if}}{{#if class}} {{class}}{{/if}}"
         {{bind-attr href="href:href"}}>
