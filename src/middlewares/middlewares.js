@@ -1,9 +1,22 @@
+
 const Handlebars = require('handlebars');
 const authMiddleware = require('./auth');
 const bodyParser = require('body-parser');
 require('./intel-logger').init();
 
+let ExpressHandlebars = require('express-handlebars').ExpressHandlebars;
+
 exports.init = app => {
+    ExpressHandlebars.prototype._renderTemplate = (template, context, options) => {
+        let data = template(context, options);
+        if (this.sections) {
+            context.sections = this.sections;
+            this.sections = [];
+            data = template(context, options);
+        }
+
+        return data;
+    };
     Handlebars.registerHelper('section', (name, options) => {
         if (!this.sections) {
             this.sections = {};
@@ -50,11 +63,6 @@ exports.init = app => {
 
     app.use(bodyParser.json({limit: '5mb'}));
     app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
-    app.use((req, res, next) => {
-        this.sections = {};
-        res.locals.sections = this.sections;
-        next();
-    });
 
     authMiddleware.init(app);
 };
