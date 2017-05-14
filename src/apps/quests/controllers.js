@@ -37,7 +37,7 @@ function sortPopulated(data, populateName, a, b) {
 }
 
 function isAuthor(quest, user) {
-    if (quest.author._id) {
+    if (quest && quest.author._id) {
         return Boolean(quest.author._id.equals(user._id));
     }
 
