@@ -37,7 +37,7 @@ function sortPopulated(data, populateName, a, b) {
 }
 
 function isAuthor(quest, user) {
-    if (quest.author._id) {
+    if (quest && quest.author._id) {
         return Boolean(quest.author._id.equals(user._id));
     }
 
@@ -643,11 +643,11 @@ exports.removeQuestCtrl = (req, res) => {
 
                 return res.status(500).send({message: 'Error'});
             }
-            if (!isAuthor(quest, req.user)) {
-                return res.status(403).send({message: 'You are cheater!'});
-            }
             if (!quest) {
                 return res.redirect('/quests/my');
+            }
+            if (!isAuthor(quest, req.user)) {
+                return res.status(403).send({message: 'You are cheater!'});
             }
             removeQuest(quest, req.user, err => {
                 if (err) {
