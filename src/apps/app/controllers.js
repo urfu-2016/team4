@@ -34,6 +34,6 @@ exports.uploadPhoto = (req, res) => {
         }
     });
     cloudinary.savePhoto(joinPath(pathForImages, imageName), result => {
-        res.send(result.url);
+        res.send(result.secure_url);
     });
 };
