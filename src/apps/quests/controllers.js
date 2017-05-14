@@ -687,7 +687,7 @@ exports.addLikeCtrl = (req, res) => {
                 return res.sendStatus(500);
             }
             quest.likesCount++;
-            quest.likesCount++;
+            quest.rating++;
 
             return quest.save(err => {
                 if (err) {
