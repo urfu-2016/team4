@@ -59,6 +59,9 @@ exports.questsCtrl = (req, res) => {
     let questData = parsedQuery.Quest || {find: {}, options: {}};
     let authorData = parsedQuery.Author || {find: {}, options: {}};
     questData.find.isPublished = 1;
+    if (questData.options.sort.title) {
+        questData.options.sort.title *= -1;
+    }
     Quest.find(
         questData.find,
         ['title', 'photos', 'description,', '_id', 'id', 'likesCount', 'rating', 'author', 'isPublished'],
