@@ -1,3 +1,4 @@
+/* globals createFlashMessage */
 let addButton = block.querySelector('.add').parentNode;
 let deleteButtons = block.querySelectorAll('.delete');
 
@@ -8,7 +9,9 @@ addButton.addEventListener('click', () => {
     newLine.classList.remove('sample');
 
     let lines = [].slice.call(block.querySelectorAll('.profile-page-information-line'))
-        .filter(item => {return !item.classList.contains('hidden');});
+        .filter(item => {
+            return !item.classList.contains('hidden');
+        });
 
     let lastLine = lines.pop();
 
@@ -21,7 +24,6 @@ addButton.addEventListener('click', () => {
     }
 
     let index_ = (parseInt(lastIndex, 10) + 1);
-    console.log(index_)
 
     newLine.childNodes[0].innerText = index_.toString();
 
@@ -29,7 +31,7 @@ addButton.addEventListener('click', () => {
     sample.initFunction(newLine);
     addDeleteListener(newLine.querySelector('.delete'));
 
-    addInfo({name: "", value: "", index: index_, edit: false})
+    addInfo({name: '', value: '', index: index_, edit: false})
         .catch(error => {
             if (error.message && error.message === 'Failed to fetch') {
                 createFlashMessage('Нет соединения с сервером', 'error');
@@ -49,9 +51,10 @@ addButton.addEventListener('click', () => {
 function addDeleteListener(button) {
     button.addEventListener('click', () => {
         let lines = [].slice.call(block.querySelectorAll('.profile-page-information-line'))
-            .filter(item => {return !item.classList.contains('hidden');});
+            .filter(item => {
+                return !item.classList.contains('hidden');
+            });
 
-        console.log(lines.length);
         if (lines.length <= 15) {
             addButton.childNodes[1].disabled = false;
         }
@@ -64,6 +67,7 @@ deleteButtons.forEach(button => {
 
 function addInfo(info) {
     let url = '/profile/addInfo';
+
     return fetch(url, {
         method: 'post',
         credentials: 'include',
@@ -76,6 +80,7 @@ function addInfo(info) {
         if (res.status !== 200) {
             throw res.status;
         }
+
         return res.text();
     });
 }

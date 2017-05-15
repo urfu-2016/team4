@@ -121,6 +121,7 @@ exports.profileDeleteInformation = (req, res) => {
             }
             cacheTools.clearCache('user', req.user);
         });
+
         return res.sendStatus(200);
     });
 };

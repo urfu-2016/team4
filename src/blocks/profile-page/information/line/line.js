@@ -1,3 +1,4 @@
+/* globals createFlashMessage */
 function initBlock(block) {
     let editButton = block.querySelector('.edit').parentNode;
     let saveButton = block.querySelector('.save').parentNode;
@@ -9,7 +10,9 @@ function initBlock(block) {
         editButton.classList.add('hidden');
         saveButton.classList.remove('hidden');
         inputs.forEach(el => el.setAttribute('type', 'text'));
-        divs.forEach(el => el.style.display = "none");
+        divs.forEach(el => {
+            el.style.display = 'none';
+        });
     });
 
     saveButton.addEventListener('click', () => {
@@ -19,6 +22,7 @@ function initBlock(block) {
 
         if (!name || !value) {
             createFlashMessage('Все поля должны быть заполнены', 'error');
+
             return;
         }
 
@@ -38,7 +42,9 @@ function initBlock(block) {
         editButton.classList.remove('hidden');
 
         inputs.forEach(el => el.setAttribute('type', 'hidden'));
-        divs.forEach(el => el.style.display = "block");
+        divs.forEach(el => {
+            el.style.display = 'block';
+        });
         block.querySelector('div.param-name').innerText = name;
         block.querySelector('div.param-value').innerText = value;
     });
@@ -75,12 +81,14 @@ function initBlock(block) {
             if (res.status !== 200) {
                 throw res.status;
             }
+
             return res.text();
         });
     }
 
     function addInfo(info) {
         let url = '/profile/addInfo';
+
         return fetch(url, {
             method: 'post',
             credentials: 'include',
@@ -93,6 +101,7 @@ function initBlock(block) {
             if (res.status !== 200) {
                 throw res.status;
             }
+
             return res.text();
         });
     }
