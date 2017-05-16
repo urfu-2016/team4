@@ -13,10 +13,6 @@ exports.indexCtrl = (req, res) => {
     });
 };
 
-exports.ratingCtrl = (req, res) => {
-    res.render('ratings-page');
-};
-
 exports.uploadPhoto = (req, res) => {
     function decodeBase64Image(dataString) {
         let matches = dataString.replace(/data:([A-Za-z-+/]+);base64,/, '');
