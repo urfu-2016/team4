@@ -1,0 +1,5 @@
+<div class="{{#if_eq member.id user.id}}block-own{{else}}block-default{{/if_eq}}">
+    <span>№ позиции: <strong>{{number}}</strong></span>
+    <a href="{{link}}"><strong>{{name}}</strong></a>
+    <span>Рейтинг: <strong>{{#if rating}}{{rating}}{{else}}0{{/if}}</strong></span>
+</div>

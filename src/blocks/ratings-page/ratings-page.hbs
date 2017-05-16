@@ -1,17 +1,16 @@
-{{> general-search-bar placeholder="Фильтр по никнейму"}}
-{{> user-block number="1"
-    link="/Zeace"
-    name="Zeace"
-    rating="568"
-    style="own"
-}}
-{{> user-block number="1"
-    link="/Zeace"
-    name="Zeace"
-    rating="568"
-}}
-{{> user-block number="1"
-    link="/Zeace"
-    name="Zeace"
-    rating="568"
-}}
+{{> general-search-bar placeholder="Фильтр по никнейму" blockClass='search'}}
+{{#if user }}
+    {{> users-list-item number=user.position
+        link=(concat '/profile/' user.id)
+        name=user.name
+        rating=user.rating
+        member=user
+    }}
+    <br/>
+{{/if}}
+
+{{>users-list blockClass='users'}}
+{{>general-loader blockClass='loader'}}
+<div class="searched">
+
+</div>

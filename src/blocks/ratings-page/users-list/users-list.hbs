@@ -1,0 +1,11 @@
+{{#each members as | member | }}
+    {{> item number=member.position
+        link=(concat '/profile/' member.id)
+        name=member.name
+        rating=member.rating
+        member=member
+        user=../user
+    }}
+{{/each}}
+
+

@@ -5,7 +5,7 @@ const isAuthenticated = require('./../../middlewares/auth').isAuthenticated;
 
 app.get('/', controllers.indexCtrl);
 
-app.get('/rating', controllers.ratingCtrl);
+app.use('/rating', require('./../ratings/routes'));
 
 app.use('/', require('./../auth/routes'));
 
