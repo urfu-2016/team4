@@ -7,7 +7,7 @@ const wrapForUser = require('../../tools/quest-tools').wrapForUser;
 function getFilteredQuests(quests, iAmAuthor, user) {
     return quests
         .filter(quest => {
-            return (iAmAuthor ? quest.isAuthor : !quest.isAuthor);
+            return (iAmAuthor ? quest.isAuthor : !quest.isAuthor) && quest.quest.isPublished;
         })
         .map(quest => {
             return wrapForUser(quest.quest, user);
@@ -19,7 +19,7 @@ function getUser(id, cached) {
     let query = User.findOne({id: id}, 'name photoURL rating id quests')
         .populate({
             path: 'quests.quest',
-            select: 'title author photos description _id id likesCount rating',
+            select: 'title author photos description _id id likesCount rating isPublished',
             populate: [
                 {
                     path: 'photos',
