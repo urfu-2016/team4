@@ -12,9 +12,9 @@
 {{#if_eq user.id profile.id}}
 
     {{#if_len_ls profile.information 15}}
-        {{>general-button text='Добавить' class='add btn' type='submit'}}
+        {{>general-button text='Добавить информацию' class='add btn' type='submit'}}
     {{else}}
-        {{>general-button text='Добавить' class='add btn' type='submit' disabled=true}}
+        {{>general-button text='Добавить информацию' class='add btn' type='submit' disabled=true}}
     {{/if_len_ls}}
 {{/if_eq}}
 
