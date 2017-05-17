@@ -28,6 +28,10 @@ function filterQuests() {
         let reverse = queryElement.querySelector('.general-check-box input').checked;
         let include = queryElement.querySelector('.general-search-bar input').value;
         let greaterThan = queryElement.querySelector('.general-numeric-input input').value;
+        let comboBoxSelect = block.querySelector('.general-combo-box select');
+        if (['Quest__title'].indexOf(comboBoxSelect.value) !== -1) {
+            reverse = !reverse;
+        }
         let params =
             '?render&Quest__opt__limit=50&' + value.replace('__', '__opt__sort__') + '=' +
             (reverse ? '-1' : '1');
