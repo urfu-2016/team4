@@ -105,6 +105,10 @@ exports.profileDeleteInformation = (req, res) => {
         let index = parseInt(req.body.index, 10);
         let deleteIndex = 0;
 
+        if (!user.information) {
+            user.information = [];
+        }
+
         for (let i = 0; i < user.information.length; i++) {
             if (user.information[i].index === index) {
                 deleteIndex = i;

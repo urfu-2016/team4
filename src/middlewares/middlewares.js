@@ -62,7 +62,7 @@ exports.init = app => {
     });
 
     Handlebars.registerHelper('if_len_ls', function (a, b, options) {
-        return a.length < b ? options.fn(this) : options.inverse(this);
+        return !a || a.length < b ? options.fn(this) : options.inverse(this);
     });
 
     app.use(bodyParser.json({limit: '5mb'}));
