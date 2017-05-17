@@ -14,11 +14,11 @@
         {{>general-button img='img/delete.svg' blockClass='' alt='delete' class='delete'}}
     {{/if_eq}}
 {{else}}
-    <div class="index hidden">{{this.index}}</div>
-    <div class="param-name text">{{this.name}}</div>
-    <div class="param-value text">{{this.value}}</div>
-    <input class="param-name input" type="hidden" value="{{this.name}}" required />
-    <input class="param-value input" type="hidden" value="{{this.value}}" required />
+    <div class="index hidden">{{info.index}}</div>
+    <div class="param-name text">{{info.name}}</div>
+    <div class="param-value text">{{info.value}}</div>
+    <input class="param-name input" type="hidden" value="{{info.name}}" required />
+    <input class="param-value input" type="hidden" value="{{info.value}}" required />
     {{#if_eq user.id profile.id}}
         {{>general-button img='img/edit.svg' alt='edit' class='edit'}}
     {{/if_eq}}
