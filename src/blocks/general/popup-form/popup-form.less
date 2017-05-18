@@ -6,11 +6,12 @@
     border: @border;
     background: #fff;
     position: fixed;
-    top: 20%;
+    top: 50%;
+    transform: translateY(-50%);
     width: 280px;
     left: 0;
     right: 0;
-    margin: 5% auto;
+    margin: 0 auto;
 }
 
 h1 {
@@ -29,8 +30,8 @@ h1 {
 @media @mobile {
     & {
         top: 50px;
+        transform: translateY(0);
         position: absolute;
-        display: none;
-        width: 80%;
+        width: 70%;
     }
 }
